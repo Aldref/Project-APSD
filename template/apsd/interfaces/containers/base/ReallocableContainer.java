@@ -1,30 +1,44 @@
 package apsd.interfaces.containers.base;
 
-// import apsd.classes.utilities.Natural;
-// import apsd.interfaces.traits.Reallocable;
+import apsd.classes.utilities.Natural;
+import apsd.interfaces.traits.Reallocable;
 
 /** Interface: ClearableContainer che è anche Reallocable. */
-public interface ReallocableContainer { // Must extend ClearableContainer, Reallocable
+public interface ReallocableContainer extends ClearableContainer, Reallocable {
 
   double GROW_FACTOR = 2.0; // Must be strictly greater than 1.
   double SHRINK_FACTOR = 2.0; // Must be strictly greater than 1.
 
   // Capacity
+  Natural Capacity();
 
   // Grow
+  default void Grow(){
+    this.Realloc(Natural.Of((long)(this.Capacity().ToLong() * GROW_FACTOR)));
+  };
+
+  default void Grow(Natural n){
+    this.Realloc(Natural.Of((long)(this.Capacity().ToLong() + n.ToLong() * GROW_FACTOR)));
+  };
 
   // Shrink
+  default void Shrink(){
+    this.Realloc(Natural.Of((long)(this.Capacity().ToLong() / SHRINK_FACTOR)));
+  };
 
   /* ************************************************************************ */
   /* Override specific member functions from Container                        */
   /* ************************************************************************ */
 
-  // ...
+  @Override
+  Natural Size();
 
   /* ************************************************************************ */
   /* Override specific member functions from ClearableContainer               */
   /* ************************************************************************ */
 
-  // ...
-
+  @Override
+  default void Clear(){
+    this.Realloc(Natural.ONE);
+  }
 }
