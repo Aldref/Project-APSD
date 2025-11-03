@@ -25,7 +25,7 @@ public interface ResizableContainer extends ReallocableContainer{ // Must extend
   /* ************************************************************************ */
 
   @Override
-  Natural Size();
+  abstract Natural Size();
 
   /* ************************************************************************ */
   /* Override specific member functions from ReallocableContainer             */
