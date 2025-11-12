@@ -3,8 +3,10 @@ import apsd.classes.utilities.Box;
 
 /** Interface: Container con supporto alla rimozione di un dato. */
 public interface RemovableContainer<Data> extends Container{ 
+
   // Remove
   boolean Remove(Data data);
+
   // RemoveAll
   default boolean RemoveAll(TraversableContainer<Data> container){
     if (container == null) return false;
@@ -18,6 +20,7 @@ public interface RemovableContainer<Data> extends Container{
     });
     return removed.Get();
   }
+  
   // RemoveSome
   default boolean RemoveSome(TraversableContainer<Data> container){
     if (container == null) return false;

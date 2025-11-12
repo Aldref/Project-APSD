@@ -7,18 +7,18 @@ import apsd.interfaces.traits.Predicate;
 /** Interface: TraversableContainer con supporto all'iterazione. */
 public interface IterableContainer<Data> extends TraversableContainer<Data> {
 
-  // FIterator
-  FIterator<Data> FIterator();
+  //ForwardIterator
+  ForwardIterator<Data> ForwardIterator();
 
-  // BIterator
-  BIterator<Data> BIterator();
+  // BackwardIterator
+  BackwardIterator<Data> BackwardIterator();
 
   // IsEqual
   default boolean IsEqual(IterableContainer<Data> num){
     if(num == null || !Size().equals(num.Size())) return false;
 
-    ForwardIterator<Data> it1 = FIterator();
-    ForwardIterator<Data> it2 = num.FIterator();
+    ForwardIterator<Data> it1 = ForwardIterator();
+    ForwardIterator<Data> it2 = num.ForwardIterator();
     while(it1.IsValid() && it2.IsValid()){
       //confronto per evitare il nullpointerexception
       Data d1 = it1.DataNNext();
@@ -35,6 +35,7 @@ public interface IterableContainer<Data> extends TraversableContainer<Data> {
   @Override
   default boolean TraverseForward(Predicate<Data> fun){
     ForwardIterator<Data> it = ForwardIterator();
+    if (it == null || fun == null) return false;
     while(it.IsValid()){
       if(fun.Apply(it.DataNNext())) { return true; }
     }
@@ -44,6 +45,7 @@ public interface IterableContainer<Data> extends TraversableContainer<Data> {
   @Override
   default boolean TraverseBackward(Predicate<Data> fun){
     BackwardIterator<Data> it = BackwardIterator();
+    if (it == null || fun == null) return false;
     while(it.IsValid()){
       if(fun.Apply(it.DataNNext())) { return true; }
     }
