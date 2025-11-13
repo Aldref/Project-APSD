@@ -8,17 +8,17 @@ import apsd.interfaces.traits.Predicate;
 public interface IterableContainer<Data> extends TraversableContainer<Data> {
 
   //ForwardIterator
-  ForwardIterator<Data> ForwardIterator();
+  ForwardIterator<Data> FIterator();
 
   // BackwardIterator
-  BackwardIterator<Data> BackwardIterator();
+  BackwardIterator<Data> BIterator();
 
   // IsEqual
   default boolean IsEqual(IterableContainer<Data> num){
     if(num == null || !Size().equals(num.Size())) return false;
 
-    ForwardIterator<Data> it1 = ForwardIterator();
-    ForwardIterator<Data> it2 = num.ForwardIterator();
+    ForwardIterator<Data> it1 = FIterator();
+    ForwardIterator<Data> it2 = num.FIterator();
     while(it1.IsValid() && it2.IsValid()){
       //confronto per evitare il nullpointerexception
       Data d1 = it1.DataNNext();

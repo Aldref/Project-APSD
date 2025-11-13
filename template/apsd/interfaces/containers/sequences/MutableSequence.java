@@ -10,7 +10,7 @@ public interface MutableSequence<Data> extends Sequence<Data>, MutableIterableCo
   // SetAt
   default void SetAt(Data element, Natural num){
     long idx = ExcIfOutOfBound(num);
-    MutableForwardIterator<Data> it = MutableForwardIterator();
+    MutableForwardIterator<Data> it = FIterator();
     it.Next(Natural.Of(idx));          
     it.SetCurrent(element);                
   }
@@ -18,7 +18,7 @@ public interface MutableSequence<Data> extends Sequence<Data>, MutableIterableCo
   // GetNSetAt
   default Data GetNSetAt(Data element, Natural num){
     long idx = ExcIfOutOfBound(num);
-    MutableForwardIterator<Data> it = MutableForwardIterator();
+    MutableForwardIterator<Data> it = FIterator();
     it.Next(Natural.Of(idx));          
     Data oldData = it.GetCurrent();  
     it.SetCurrent(element);                
@@ -55,17 +55,12 @@ public interface MutableSequence<Data> extends Sequence<Data>, MutableIterableCo
     long idx2 = ExcIfOutOfBound(num2);
     if (idx1 == idx2) return; 
 
-    MutableForwardIterator<Data> it1 = MutableForwardIterator();
-    MutableForwardIterator<Data> it2 = MutableForwardIterator();
-    it1.Next(Natural.Of(idx1));
-    Data data1 = it1.GetCurrent();
-
-    it2.Next(Natural.Of(idx2));
-    Data data2 = it2.GetCurrent();
-
-    it1.SetCurrent(data2);
-    it2.SetCurrent(data1);
+    Data data1 = GetAt(Natural.Of(idx1));
+    Data data2 = GetAt(Natural.Of(idx2));
+    SetAt(data2, Natural.Of(idx1));
+    SetAt(data1, Natural.Of(idx2));
   }
+
 
   /* ************************************************************************ */
   /* Override specific member functions from Sequence                         */
@@ -74,4 +69,5 @@ public interface MutableSequence<Data> extends Sequence<Data>, MutableIterableCo
   // ...
   @Override
   MutableSequence<Data> SubSequence(Natural start, Natural end);
+
 }

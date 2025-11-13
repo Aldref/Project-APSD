@@ -7,14 +7,16 @@ import apsd.interfaces.traits.Predicate;
 public interface ForwardIterator<Data> extends Iterator<Data> { 
 
   // Next
-  void Next();
+  default void Next(){
+    if (IsValid()){
+      DataNNext();
+    }
+  }
 
   default void Next(Natural n){
-    if (n != null){
-      for (Long i = 0; i< n.ToLong(); i++){
-        if (!IsValid()) break;
-        Next();
-      }
+    if (n == null) return;
+    for (long i = 0; i< n.ToLong() && IsValid(); i++){
+      Next();
     }
   }
   

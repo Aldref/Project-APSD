@@ -7,7 +7,7 @@ package apsd.interfaces.containers.base;
 public interface MutableIterableContainer<Data> extends InsertableContainer<Data>{ 
 
   // ...
-  ForwardMutableIterator<Data> ForwardMutableIterator();
+  FMutIter<Data> FIterator();
 
-  BackwardMutableIterator<Data> BackwardMutableIterator();
+  BMutIter<Data> BIterator();
 }

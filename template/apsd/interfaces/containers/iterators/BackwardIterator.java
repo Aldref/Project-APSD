@@ -7,7 +7,11 @@ import apsd.interfaces.traits.Predicate;
 public interface BackwardIterator<Data> extends Iterator<Data>{ 
 
   // Prev
-  void Prev();
+  default void Prev(){
+    if (IsValid()){
+      DataNPrev();
+    }
+  }
 
   default void Prev(Natural n){
     if (n != null){
