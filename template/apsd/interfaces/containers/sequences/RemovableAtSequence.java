@@ -1,16 +1,14 @@
 package apsd.interfaces.containers.sequences;
 
-// import apsd.classes.utilities.Natural;
+import apsd.classes.utilities.Natural;
 
 /** Interface: Sequence con supporto alla rimozione di un dato tramite posizione. */
 public interface RemovableAtSequence<Data> extends Sequence<Data> { 
 
   // RemoveAt
   default void RemoveAt(Natural num){
-    long idx = ExcIfOutOfBound(num);
-    ForwardIterator<Data> it = ForwardIterator();
-    it.Next(Natural.Of(idx));          
-    it.AtNRemove();                
+    ExcIfOutOfBound(num);
+    AtNRemove(num);                
   }
 
   // AtNRemove

@@ -6,7 +6,7 @@ import apsd.classes.utilities.Natural;
 public interface ResizableContainer extends ReallocableContainer{ // Must extend ReallocableContainer
 
   double THRESHOLD_FACTOR = 2.0; // Must be strictly greater than 1.
- 
+
   // Expand
   default void Expand(){
     Expand(Natural.ONE);
@@ -20,6 +20,7 @@ public interface ResizableContainer extends ReallocableContainer{ // Must extend
   };
 
   void Reduce(Natural n);
+
   /* ************************************************************************ */
   /* Override specific member functions from Container                        */
   /* ************************************************************************ */

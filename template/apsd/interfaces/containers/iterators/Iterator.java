@@ -11,5 +11,5 @@ public interface Iterator<Data> {
 
   // GetCurrent
   Data GetCurrent();
-
+  
 }

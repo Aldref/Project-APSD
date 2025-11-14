@@ -12,13 +12,14 @@ public interface Queue<Data> extends ClearableContainer<Data>, InsertableContain
 
   // HeadNDequeue
   default Data HeadNDequeue(){
+    if (IsEmpty()) return null;
     Data headElement = Head();
     Dequeue();
     return headElement;
   }
   
   // Enqueue
-  Void Enqueue(Data element);
+  Void Enqueue(Data data);
 
   /* ************************************************************************ */
   /* Override specific member functions from ClearableContainer               */
@@ -38,8 +39,8 @@ public interface Queue<Data> extends ClearableContainer<Data>, InsertableContain
 
   // ...
   @Override
-  default Boolean Insert(Data element){ 
-    Enqueue(element);
+  default Boolean Insert(Data data){ 
+    Enqueue(data);
     return true;
     
   }

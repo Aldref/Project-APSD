@@ -74,19 +74,19 @@ public interface Vector<Data> extends ReallocableContainer<Data>, MutableSequenc
   }
 
   // SubVector
-  default Vector<Data> SubVector(Natural from, Natural to){
-    long idxfrom = ExcIfOutOfBound(from);
-    long idxto = ExcIfOutOfBound(to);
-    if (idxfrom > idxto) throw new IndexOutOfBoundsException("From index greater than to index: from " + idxfrom + ", to " + idxto + "!");
-    //creare il subvector
-    subvec.Realloc(Natural.Of(idxto - idxfrom + 1));
-    for (long i = 0; i < idxto; i++) {
-        Data element = GetAt(Natural.Of(idxfrom + i));
-        subvec.SetAt(element, Natural.Of(i));
-    }
-    return subvec;
-  }
-
+  // default Vector<Data> SubVector(Natural from, Natural to){
+  //   long idxfrom = ExcIfOutOfBound(from);
+  //   long idxto = ExcIfOutOfBound(to);
+  //   if (idxfrom > idxto) throw new IndexOutOfBoundsException("From index greater than to index: from " + idxfrom + ", to " + idxto + "!");
+  //   //creare il subvector
+  //   subvec.Realloc(Natural.Of(idxto - idxfrom + 1));
+  //   for (long i = 0; i < idxto; i++) {
+  //       Data element = GetAt(Natural.Of(idxfrom + i));
+  //       subvec.SetAt(element, Natural.Of(i));
+  //   }
+  //   return subvec;
+  // }
+  Vector<Data> SubVector(Natural from, Natural to);
   /* ************************************************************************ */
   /* Override specific member functions from Container                        */
   /* ************************************************************************ */

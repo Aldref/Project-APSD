@@ -47,11 +47,10 @@ public interface Set<Data> extends Collection<Data> {
   @Override
   default boolean IsEqual(IterableContainer<Data> container) {
     if (container == null || !Size().equals(container.Size())) return false;
-    return !TraverseForward(dat ->{
+    return !TraverseForward(dat -> {
       if (!container.Contains(dat)) return true;
       return false;
-    })
+    });
   }
-
 
 }

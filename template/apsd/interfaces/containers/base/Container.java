@@ -10,7 +10,8 @@ public interface Container {
 
   //is empty
   default boolean IsEmpty(){
-    return Size().IsZero();
+    Natural s = Size();
+    return s == null || s.IsZero();
   }
 
 }

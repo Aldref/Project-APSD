@@ -14,16 +14,16 @@ public interface ReallocableContainer extends ClearableContainer, Reallocable {
 
   // Grow
   default void Grow(){
-    this.Realloc(Natural.Of((long)(Capacity().ToLong() * GROW_FACTOR)));
+    Realloc(Natural.Of((long)(Capacity().ToLong() * GROW_FACTOR)));
   };
 
   default void Grow(Natural n){
-    this.Realloc(Natural.Of((long)(Capacity().ToLong() + n.ToLong() * GROW_FACTOR)));
+    Realloc(Natural.Of((long)(Capacity().ToLong() + n.ToLong() * GROW_FACTOR)));
   };
 
   // Shrink
   default void Shrink(){
-    this.Realloc(Natural.Of((long)(Capacity().ToLong() / SHRINK_FACTOR)));
+    Realloc(Natural.Of((long)(Capacity().ToLong() / SHRINK_FACTOR)));
   };
 
   /* ************************************************************************ */
@@ -41,6 +41,6 @@ public interface ReallocableContainer extends ClearableContainer, Reallocable {
 
   @Override
   default void Clear(){
-    this.Realloc(Natural.ZERO);
+    Realloc(Natural.ZERO);
   }
 }

@@ -1,21 +1,20 @@
 package apsd.interfaces.containers.sequences;
 
-// import apsd.classes.utilities.Natural;
+import apsd.classes.utilities.Natural;
 
 /** Interface: Sequence con supporto all'inserimento di un dato tramite posizione. */
 public interface InsertableAtSequence<Data> extends Sequence<Data> { 
 
   // InsertAt
-  void InsertAt(Data element, Natural num);
+  void InsertAt(Data data, Natural num);
 
   // InsertFirst
-  default void InsertFirst(Data element){
-    InsertAt(element, Natural.ZERO);
+  default void InsertFirst(Data data){
+    InsertAt(data, Natural.ZERO);
   }
   // InsertLast
-  default void InsertLast(Data element){
-    long size = Size().ToLong();
-    InsertAt(element, Natural.Of(size));
+  default void InsertLast(Data data){
+    InsertAt(data, size());
   }
 
 }

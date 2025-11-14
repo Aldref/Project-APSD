@@ -19,20 +19,20 @@ public interface Stack<Data> extends ClearableContainer<Data>, InsertableContain
   }
   
   // SwapTop
-  default Void SwapTop(Data num){
+  default Void SwapTop(Data data){
     Pop();
-    Push(num);
+    Push(data);
   }
 
   //TopNSwap
-  default Data TopNSwap(Data num){
+  default Data TopNSwap(Data data){
     Data topElement = Top();
-    SwapTop(num);
+    SwapTop(data);
     return topElement;
   }
 
   // Push
-  Void Push(Data num);
+  Void Push(Data data);
 
   /* ************************************************************************ */
   /* Override specific member functions from ClearableContainer               */
@@ -52,8 +52,8 @@ public interface Stack<Data> extends ClearableContainer<Data>, InsertableContain
 
   // ...
   @Override
-  default Boolean Insert(Data element){
-    Push(element);
+  default Boolean Insert(Data data){
+    Push(data);
     return true;
   }
 

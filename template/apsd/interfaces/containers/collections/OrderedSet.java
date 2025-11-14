@@ -1,29 +1,149 @@
 package apsd.interfaces.containers.collections;
 
-public interface OrderedSet<Data> { // Must extend Set
+import apsd.interfaces.containers.iterators.ForwardIterator;
+
+public interface OrderedSet<Data extends Comparable<Data>> extends Set<Data> { 
 
   // Min
+  default Data min(){
+    if (IsEmpty()) return null;
+    ForwardIterator<Data> itr = FIterator();
+    if (!itr.IsValid()) return null;
+    Data min = itr.GetCurrent();
+    itr.Next();
+    while(itr.IsValid()){
+      Data cur = itr.GetCurrent();
+      if (cur != null && min != null){
+        if (cur.compareTo(min) < 0){
+          min = cur;
+        }
+      }
+      itr.Next();
+    }
+    return min;
+  }
 
   // RemoveMin
+  default void RemoveMin(){
+    Data min = min();
+    if (min != null){
+      Remove(min);
+    }
+  }
 
   // MinNRemove
+  default Data MinNRemove(){
+    Data min = min();
+    if (min != null){
+      Remove(min);
+    }
+    return min;
+  }
 
   // Max
+  default Data max(){
+    if (IsEmpty()) return null;
+    ForwardIterator<Data> itr = FIterator();
+    if (!itr.IsValid()) return null;
+    Data max = itr.GetCurrent();
+    itr.Next();
+    while(itr.IsValid()){
+      Data cur = itr.GetCurrent();
+      if (cur != null && max != null){
+        if (cur.compareTo(max) > 0){
+          max = cur;
+        }
+      }
+      itr.Next();
+    }
+    return max;
+  }
 
   // RemoveMax
+  default void RemoveMax(){
+    Data max = max();
+    if (max != null){
+      Remove(max);
+    }
+  }
 
   // MaxNRemove
+  default Data MaxNRemove(){
+    Data max = max();
+    if (max != null){
+      Remove(max);
+    }
+    return max;
+  }
 
   // Predecessor
+  default Data predecessor(Data element) {
+    if (IsEmpty()) return null;
+    ForwardIterator<Data> itr = FIterator();
+    if (!itr.IsValid() || element == null) return null;
+    Data prev = null;
+    while (itr.IsValid()){
+      Data cur = itr.GetCurrent();
+      if (cur != null && cur.equals(element)){
+        return prev;
+      }
+      prev = cur;
+      itr.Next();
+    }
+  }
+    
 
   // RemovePredecessor
+  default void RemovePredecessor(Data element) {
+    Data pred = predecessor(element);
+    if (pred != null){
+      Remove(pred);
+    }
+  }
 
   // PredecessorNRemove
+  default Data PredecessorNRemove(Data element) {
+    Data pred = predecessor(element);
+    if (pred != null){
+      Remove(pred);
+    }
+    return pred;
+  }
 
   // Successor
+  default Data successor(Data element) {
+    if (IsEmpty()) return null;
+    ForwardIterator<Data> itr = FIterator();
+    if (!itr.IsValid() || element == null) return null;
+    while (itr.IsValid()){
+      Data cur = itr.GetCurrent();
+      if (cur != null && cur.equals(element)){
+        itr.Next();
+        if (itr.IsValid()){
+          return itr.GetCurrent();
+        } else {
+          return null;
+        }
+      }
+      itr.Next();
+    }
+    return null;
+  }
 
   // RemoveSuccessor
+  default void RemoveSuccessor(Data element) {
+    Data succ = successor(element);
+    if (succ != null){
+      Remove(succ);
+    }
+  }
 
   // SuccessorNRemove
-
+  default Data SuccessorNRemove(Data element) {
+    Data succ = successor(element);
+    if (succ != null){
+      Remove(succ);
+    }
+    return succ;
+  }
 }

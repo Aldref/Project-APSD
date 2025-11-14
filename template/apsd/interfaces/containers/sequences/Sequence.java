@@ -29,10 +29,10 @@ public interface Sequence<Data> extends IterableContainer<Data> {
   }
 
   // Search
-  default Natural Search(Data element) {
+  default Natural Search(Data data) {
     Box<Natural> index = Box.Of(Natural.ZERO);
     boolean found = TraverseForward(data -> {
-      if (data == null && element == null || data != null && data.equals(element)) {
+      if (data == null && data == null || data != null && data.equals(data)) {
         return true;
       } else {
         index.Set(Natural.Of(index.Get().ToLong() + 1));

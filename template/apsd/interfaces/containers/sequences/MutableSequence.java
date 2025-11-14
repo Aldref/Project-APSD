@@ -8,45 +8,45 @@ import apsd.interfaces.containers.iterators.MutableForwardIterator;
 public interface MutableSequence<Data> extends Sequence<Data>, MutableIterableContainer<Data> {
 
   // SetAt
-  default void SetAt(Data element, Natural num){
+  default void SetAt(Data data, Natural num){
     long idx = ExcIfOutOfBound(num);
     MutableForwardIterator<Data> it = FIterator();
     it.Next(Natural.Of(idx));          
-    it.SetCurrent(element);                
+    it.SetCurrent(data);                
   }
 
   // GetNSetAt
-  default Data GetNSetAt(Data element, Natural num){
+  default Data GetNSetAt(Data data, Natural num){
     long idx = ExcIfOutOfBound(num);
     MutableForwardIterator<Data> it = FIterator();
     it.Next(Natural.Of(idx));          
     Data oldData = it.GetCurrent();  
-    it.SetCurrent(element);                
+    it.SetCurrent(data);                
     return oldData;
   }
 
   // SetFirst
-  default void SetFirst(Data element) {
-    SetAt(Natural.ZERO, element);
+  default void SetFirst(Data data) {
+    SetAt(Natural.ZERO, data);
   }
 
   // GetNSetFirst
-  default Data GetNSetFirst(Data element) {
-    return GetNSetAt(Natural.ZERO, element);
+  default Data GetNSetFirst(Data data) {
+    return GetNSetAt(Natural.ZERO, data);
   }
 
   // SetLast
-  default void SetLast(Data element) {
+  default void SetLast(Data data) {
     long size = Size().ToLong();
     if (size == 0) throw new IndexOutOfBoundsException("Sequence is empty");
-    SetAt(Natural.Of(size - 1), element);
+    SetAt(Natural.Of(size - 1), data);
   }
 
   // GetNSetLast
-  default Data GetNSetLast(Data element) {
+  default Data GetNSetLast(Data data) {
     long size = Size().ToLong();
     if (size == 0) throw new IndexOutOfBoundsException("Sequence is empty");
-    return GetNSetAt(Natural.Of(size - 1), element);
+    return GetNSetAt(Natural.Of(size - 1), data);
   }
 
   // Swap
