@@ -59,14 +59,15 @@ public interface SortedChain<Data> extends OrderedChain<Data>, SortedSequence<Da
 
   // Intersection
   default void Intersection(SortedChain<Data> chn) {
-    Natural i = Natural.ZERO, j = Natural.ZERO;
+    Natural i = Natural.ZERO;
+    Natural j = Natural.ZERO;
     while (i.compareTo(Size()) < 0 && j.compareTo(chn.Size()) < 0) {
       int cmp = GetAt(i).compareTo(chn.GetAt(j));
       if (cmp < 0) {
         RemoveAt(i);
       } else {
         j = j.Increment();
-        if (cmp == 0) { i = i.Increment(); }
+        if (cmp == 0) i = i.Increment();
       }
     }
     while (i.compareTo(Size()) < 0) {

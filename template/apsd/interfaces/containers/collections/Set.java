@@ -26,17 +26,10 @@ public interface Set<Data> extends Collection<Data> {
       Clear();
       return;
     }
-    ForwardIterator<Data> itr = FIterator();
-    while(itr.IsValid()){
-      Data dat = itr.GetCurrent();
-      if(!set.Contains(dat)){
-        Remove(dat);
-        itr.Reset();
-      }
-      else{
-        itr.Next();
-      }
-    }
+    set.TraverseForward(dat->{
+      if (!Contains(dat)) Remove(dat);
+      return false;
+    });
   }
   
   /* ************************************************************************ */

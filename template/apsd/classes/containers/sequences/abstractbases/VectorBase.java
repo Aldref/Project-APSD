@@ -7,18 +7,19 @@ import apsd.interfaces.containers.iterators.MutableBackwardIterator;
 import apsd.interfaces.containers.iterators.MutableForwardIterator;
 import apsd.interfaces.containers.sequences.MutableSequence;
 import apsd.interfaces.containers.sequences.Vector;
+import apsd.classes.containers.sequences.Vector; // forse
 
 /** Object: Abstract vector base implementation. */
 abstract public class VectorBase<Data> implements Vector<Data> {
 
-  protected Data[] arr;
+  Data[] arr;
 
   // VectorBase
-
-  // NewVector
-  protected void NewVector(Data [] array){
-    arr = array;
+  protected VectorBase() {
+    arr = null;
   }
+  // NewVector
+  abstract protected void NewVector(Data [] array);
   
   //ArrayAlloc
   @SuppressWarnings("unchecked")
@@ -136,18 +137,19 @@ abstract public class VectorBase<Data> implements Vector<Data> {
   abstract public void SetAt(Data data, Natural num);
 
   // SubSequence
-  // @Override
-  // public MutableSequence<Data> SubSequence(Natural start, Natural end){
-  //   long startIdx = ExcIfOutOfBound(start);
-  //   long endIdx = ExcIfOutOfBound(end);
-  //   if (startIdx > endIdx) throw new IndexOutOfBoundsException("Start index is greater than end index");
-
-  //   MutableSequence<Data> subSeq = new Vector<Data>();
-  //   for (long i = startIdx; i <= endIdx; i++) {
-  //     subSeq.SetAt(GetAt(Natural.Of(i)));
-  //   }
-  //   return subSeq;
-  // }
+  @Override
+  public MutableSequence<Data> SubSequence(Natural start, Natural end){
+    long startIdx = ExcIfOutOfBound(start);
+    long endIdx = ExcIfOutOfBound(end);
+    if (startIdx > endIdx) throw new IndexOutOfBoundsException("Start index is greater than end index");
+    MutableSequence<Data> subSeq = new Vector<>();
+    long newSize = endIdx - startIdx + 1;
+    subSeq.ArrayAlloc(Natural.Of(newSize));
+    for (long i = startIdx; i <= endIdx; i++) {
+      subSeq.SetAt(GetAt(Natural.Of(i)), Natural.Of(i - startIdx));
+    }
+    return subSeq;
+  }
 
 
 }

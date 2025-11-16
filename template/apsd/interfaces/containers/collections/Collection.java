@@ -35,5 +35,6 @@ public interface Collection<Data> extends ClearableContainer<Data>, InsertableCo
   @Override
   default void Clear() {
     Filter(dat -> false);
+  }
 
 }
