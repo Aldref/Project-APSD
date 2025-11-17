@@ -42,16 +42,110 @@ public class VList<Data> extends VChainBase<Data> implements List<Data> { // Mus
   /* ************************************************************************ */
 
   // ...
-  //FIterator
-  @Override
-  public MutableForwardIterator<Data> FIterator() {
-    return vec.FMutableIterator();
+  //FMutIterator
+  protected class ListFIter implements MutableForwardIterator<Data> {
+
+    private Natural idx = Natural.ZERO;
+
+    @Override
+    public boolean IsValid() {
+      return idx.CompareTo(vec.Size()) < 0;
+    }
+
+    @Override
+    public void Reset() {
+      idx = Natural.ZERO  ;
+    }
+
+    @Override
+    public Data GetCurrent() {
+      if (!IsValid()) {
+        throw new IllegalStateException("Iterator terminated");
+      }
+      return vec.At(idx);            
+    }
+
+    @Override
+    public Data DataNNext() {
+      Data d = GetCurrent();
+      idx = idx.Increment();        
+      return d;
+    }
+
+    @Override
+    public void SetCurrent(Data data) {
+      if (!IsValid()) {
+        throw new IllegalStateException("Iterator terminated");
+      }
+      vec.SetAt(data, idx);
+    }
   }
 
-  //BIterator
+  // BMutIterator
+  protected class ListBIter implements MutableBackwardIterator<Data> {
+
+    private Natural idx;  
+
+    public ListBIter() {
+      if (vec.Size().IsZero()) {
+        idx = Natural.ZERO;        
+      } else {
+        idx = vec.Size().Predecessor(); 
+      }
+    }
+
+    @Override
+    public boolean IsValid() {
+      return !vec.Size().IsZero() && idx.CompareTo(vec.Size()) < 0;
+    }
+
+    @Override
+    public void Reset() {
+      if (vec.Size().IsZero()) {
+        idx = Natural.ZERO;
+      } else {
+        idx = vec.Size().Decrement();
+      }
+    }
+
+    @Override
+    public Data GetCurrent() {
+      if (!IsValid()) {
+        throw new IllegalStateException("Iterator terminated");
+      }
+      return vec.At(idx);
+    }
+
+    @Override
+    public Data DataNPrev() {
+      Data d = GetCurrent();
+      if (idx.IsZero()) {
+        idx = vec.Size();          
+      } else {
+        idx = idx.Decrement();
+      }
+      return d;
+    }
+
+    @Override
+    public void SetCurrent(Data data) {
+      if (!IsValid()) {
+        throw new IllegalStateException("Iterator terminated");
+      }
+      vec.SetAt(data, idx);
+    }
+  }
+
+  // FIterator
+  @Override
+  public MutableForwardIterator<Data> FIterator() {
+    return new ListFIter();
+  }
+
+  // BIterator
   @Override
   public MutableBackwardIterator<Data> BIterator() {
-    return vec.BMutableIterator();
+    return new ListBIter();
   }
   /* ************************************************************************ */
   /* Override specific member functions from MutableSequence                  */

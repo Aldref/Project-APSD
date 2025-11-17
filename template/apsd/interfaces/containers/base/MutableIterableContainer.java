@@ -1,13 +1,13 @@
 package apsd.interfaces.containers.base;
 
-// import apsd.interfaces.containers.iterators.MutableBackwardIterator;
-// import apsd.interfaces.containers.iterators.MutableForwardIterator;
+import apsd.interfaces.containers.iterators.MutableForwardIterator;
+import apsd.interfaces.containers.iterators.MutableBackwardIterator;
 
 /** Interface: IterableContainer con supporto all'iterazione mutabile. */
 public interface MutableIterableContainer<Data> extends InsertableContainer<Data>{ 
 
   // ...
-  FMutIter<Data> FIterator();
+  MutableForwardIterator<Data> FIterator();
 
-  BMutIter<Data> BIterator();
+  MutableBackwardIterator<Data> BIterator();
 }

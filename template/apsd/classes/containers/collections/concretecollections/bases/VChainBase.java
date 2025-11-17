@@ -59,16 +59,11 @@ abstract public class VChainBase<Data> implements Chain<Data> { // Must implemen
   // Remove
   @Override
   public boolean Remove(Data data) {
-    MutableForwardIterator<Data> it = vec.FIterator();
-    while (it.IsValid()) {
-      Data curr = it.GetCurrent();
-      if ((data == null && curr == null) || (data != null && data.equals(curr))) {
-        it.Remove(); // da rivedere
-        return true;;
-      }
-      it.Next();
-    }
-    return false;;
+    if (data == null) return false;
+    Natural pos = vec.Search(data);
+    if (pos == null) return false;
+    vec.ShiftLeft(pos);
+    return true;
   }
 
   /* ************************************************************************ */
@@ -114,12 +109,11 @@ abstract public class VChainBase<Data> implements Chain<Data> { // Must implemen
   @Override
   public Data AtNRemove(Natural index) {
     long idx = ExcIfOutOfBound(index);
-    MutableForwardIterator<Data> it = vec.FIterator();
-    it.Next(Natural.Of(idx));
-    Data data = it.GetCurrent();
-    it.Remove();
+    Data data = vec.GetAt(index);
+    vec.ShiftLeft(index);
     return data;
   }
+  
   /* ************************************************************************ */
   /* Override specific member functions from Collection                       */
   /* ************************************************************************ */

@@ -37,7 +37,6 @@ public class VSortedChain<Data extends Comparable<Data>> extends VChainBase<Data
     }
   }
   // protected VSortedChain(DynVector<Data> vec)
-  @Override
   protected VSortedChain(DynVector<Data> vec) {
     super(vec);
   }

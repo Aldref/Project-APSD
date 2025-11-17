@@ -7,7 +7,6 @@ import apsd.interfaces.containers.iterators.MutableBackwardIterator;
 import apsd.interfaces.containers.iterators.MutableForwardIterator;
 import apsd.interfaces.containers.sequences.MutableSequence;
 import apsd.interfaces.containers.sequences.Vector;
-import apsd.classes.containers.sequences.Vector; // forse
 
 /** Object: Abstract vector base implementation. */
 abstract public class VectorBase<Data> implements Vector<Data> {
