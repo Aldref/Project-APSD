@@ -1,5 +1,6 @@
 package apsd.classes.containers.collections.abstractcollections.bases;
 
+import apsd.classes.containers.collections.concretecollections.VSortedChain;
 import apsd.interfaces.containers.base.IterableContainer;
 import apsd.interfaces.containers.base.TraversableContainer;
 import apsd.interfaces.containers.collections.OrderedSet;
@@ -22,7 +23,7 @@ abstract public class WOrderedSetBase<Data extends Comparable<? super Data>, Chn
   }
 
   public WOrderedSetBase(Chn chn, TraversableContainer<Data> con) {
-    super(chn);
+    super(chn, con);
   }
 
   /* ************************************************************************ */
@@ -55,8 +56,8 @@ abstract public class WOrderedSetBase<Data extends Comparable<? super Data>, Chn
 
   // MinNRmove
   @Override
-  public Data MinNRmove() {
-    return chn.MinNRmove();
+  public Data MinNRemove() {
+    return chn.MinNRemove();
   }
 
   // Max
@@ -73,8 +74,8 @@ abstract public class WOrderedSetBase<Data extends Comparable<? super Data>, Chn
 
   // MaxNRmove
   @Override
-  public Data MaxNRmove() {
-    return chn.MaxNRmove();
+  public Data MaxNRemove() {
+    return chn.MaxNRemove();
   }
 
   // Predecessor

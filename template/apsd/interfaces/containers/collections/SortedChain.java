@@ -3,7 +3,7 @@ package apsd.interfaces.containers.collections;
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.sequences.SortedSequence;
 
-public interface SortedChain<Data> extends OrderedChain<Data>, SortedSequence<Data>{ // Must extend OrderedChain and SortedSequence
+public interface SortedChain<Data extends Comparable<? super Data>> extends OrderedChain<Data>, SortedSequence<Data>{ // Must extend OrderedChain and SortedSequence
 
   // SearchPredecessor
   default Natural SearchPredecessor(Data data) {
@@ -42,6 +42,7 @@ public interface SortedChain<Data> extends OrderedChain<Data>, SortedSequence<Da
     }
     return result;
   }
+  
   /* ************************************************************************ */
   /* Override specific member functions from Sequence                         */
   /* ************************************************************************ */
@@ -82,10 +83,9 @@ public interface SortedChain<Data> extends OrderedChain<Data>, SortedSequence<Da
   // ...
   // min
   @Override
-  default Data min(){
-    ForwardIterator<Data> itr = FIterator();
-    if (!itr.IsValid()) return null;
-    return itr.GetCurrent();
+  default Data Min(){
+    if (IsEmpty()) return null;
+    return GetAt(Natural.ZERO);
   }
 
   // RemoveMin
@@ -107,7 +107,7 @@ public interface SortedChain<Data> extends OrderedChain<Data>, SortedSequence<Da
 
   // max
   @Override
-  default Data max(){
+  default Data Max(){
     if (IsEmpty()) return null;
     return GetAt(Size().Decrement());
   }
@@ -132,10 +132,10 @@ public interface SortedChain<Data> extends OrderedChain<Data>, SortedSequence<Da
 
   //Predecessor
   @Override
-  default Data predecessor(Data data) {
+  default Data Predecessor(Data data) {
     Natural predIdx = SearchPredecessor(data);
     if (predIdx != null){
-      return GetAt(predIdx);;
+      return GetAt(predIdx);
     }
     return null;
   }
@@ -163,7 +163,7 @@ public interface SortedChain<Data> extends OrderedChain<Data>, SortedSequence<Da
 
   // Successor
   @Override
-  default Data successor(Data data) {
+  default Data Successor(Data data) {
     Natural succIdx = SearchSuccessor(data);
     if (succIdx != null){
       return GetAt(succIdx);

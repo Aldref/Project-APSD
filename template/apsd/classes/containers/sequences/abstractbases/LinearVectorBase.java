@@ -52,6 +52,8 @@ abstract public class LinearVectorBase<Data> extends VectorBase<Data> { // Must 
     long idx = ExcIfOutOfBound(index);
     return arr[(int) idx];
   }
+
+  
   /* ************************************************************************ */
   /* Override specific member functions from MutableSequence                  */
   /* ************************************************************************ */

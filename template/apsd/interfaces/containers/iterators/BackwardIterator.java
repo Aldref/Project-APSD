@@ -15,7 +15,7 @@ public interface BackwardIterator<Data> extends Iterator<Data>{
 
   default void Prev(Natural n){
     if (n != null){
-      for (Long i = 0; i< n.ToLong(); i++){
+      for (long i = 0; i< n.ToLong(); i++){
         if (!IsValid()) break;
         Prev();
       }

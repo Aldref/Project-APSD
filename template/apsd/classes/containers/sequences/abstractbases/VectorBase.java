@@ -11,14 +11,16 @@ import apsd.interfaces.containers.sequences.Vector;
 /** Object: Abstract vector base implementation. */
 abstract public class VectorBase<Data> implements Vector<Data> {
 
-  Data[] arr;
+  protected Data[] arr;
 
   // VectorBase
   protected VectorBase() {
     arr = null;
   }
   // NewVector
-  abstract protected void NewVector(Data [] array);
+  abstract protected  void NewVector(Data [] array);
+
+  abstract protected MutableSequence<Data> NewVector(Natural newsize);
   
   //ArrayAlloc
   @SuppressWarnings("unchecked")
@@ -35,7 +37,7 @@ abstract public class VectorBase<Data> implements Vector<Data> {
   // ...
   // Clear
   @Override
-  public void clear(){
+  public void Clear(){
     for (int i = 0; i < arr.length; i++) {
       arr[i] = null;
     }
@@ -60,7 +62,7 @@ abstract public class VectorBase<Data> implements Vector<Data> {
 
   // ForwardIterator
   @Override
-  public MutableForwardIterator<Data> ForwardIterator() {
+  public MutableForwardIterator<Data> FIterator() {
 
     class VecForwardIter implements MutableForwardIterator<Data> {
 
@@ -76,6 +78,22 @@ abstract public class VectorBase<Data> implements Vector<Data> {
       }
 
       @Override
+      public void Reset() {
+        index = 0;
+      }
+
+      @Override
+      public Data GetCurrent() {
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        return GetAt(Natural.Of(index));   
+      }
+
+      @Override
+      public void SetCurrent(Data Data) {
+        SetAt(Data,Natural.Of(index));
+      }
+
+      @Override
       public Data DataNNext() {
         Data d = GetAt(Natural.Of(index));
         index++;
@@ -88,14 +106,14 @@ abstract public class VectorBase<Data> implements Vector<Data> {
 
   // BackwardIterator
   @Override
-  public MutableBackwardIterator<Data> BackwardIterator() {
+  public MutableBackwardIterator<Data> BIterator() {
 
     class VecBackwardIter implements MutableBackwardIterator<Data> {
 
       private long index;
 
       public VecBackwardIter() {
-        index = (size() == 0 ? -1 : size() - 1);
+        index = (Size().ToLong() == 0 ? -1 : Size().ToLong() - 1);
       }
 
       @Override
@@ -104,10 +122,26 @@ abstract public class VectorBase<Data> implements Vector<Data> {
       }
 
       @Override
-      public Data DataNNext() {
-        Data d = GetAt(Natural.Of(index));
+      public void Reset() {
+        index = 0;
+      }
+
+      @Override
+      public Data GetCurrent() {
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        return GetAt(Natural.Of(index));
+      }
+
+      @Override
+      public void SetCurrent(Data Data) {
+        SetAt(Data, Natural.Of(index));
+      }
+
+      @Override
+      public Data DataNPrev() {
+        Data cur = GetCurrent();
         index--;
-        return d;
+        return cur;
       }
     }
 
@@ -125,6 +159,26 @@ abstract public class VectorBase<Data> implements Vector<Data> {
   abstract public Data GetAt(Natural num);
 
 
+  //Da rivedere
+  @Override
+  public Natural Size() {
+    return Natural.Of(arr.length);
+  }
+
+  // non so se serve
+  @Override
+  public boolean Exists(Data data) {
+    MutableForwardIterator<Data> it = FIterator();
+    while (it.IsValid()) {
+      if ((it.GetCurrent() == null && data == null) ||
+          (it.GetCurrent() != null && it.GetCurrent().equals(data))) {
+        return true;
+      }
+      it.DataNNext();
+    }
+    return false;
+  }
+
   /* ************************************************************************ */
   /* Override specific member functions from MutableSequence                  */
   /* ************************************************************************ */
@@ -141,14 +195,20 @@ abstract public class VectorBase<Data> implements Vector<Data> {
     long startIdx = ExcIfOutOfBound(start);
     long endIdx = ExcIfOutOfBound(end);
     if (startIdx > endIdx) throw new IndexOutOfBoundsException("Start index is greater than end index");
-    MutableSequence<Data> subSeq = new Vector<>();
     long newSize = endIdx - startIdx + 1;
-    subSeq.ArrayAlloc(Natural.Of(newSize));
-    for (long i = startIdx; i <= endIdx; i++) {
-      subSeq.SetAt(GetAt(Natural.Of(i)), Natural.Of(i - startIdx));
-    }
+    MutableSequence<Data> subSeq = NewVector(Natural.Of(newSize));
+    for (long i = 0; i < newSize; i++) {
+    Data value = GetAt(Natural.Of(startIdx + i));
+    subSeq.SetAt(value, Natural.Of(i));  
+  }
     return subSeq;
   }
 
-
+  @Override
+  public Vector<Data> SubVector(Natural start, Natural end) {
+    MutableSequence<Data> subSeq = SubSequence(start, end);
+    @SuppressWarnings("unchecked")
+    Vector<Data> res = (Vector<Data>) subSeq;
+    return res;
+  }
 }

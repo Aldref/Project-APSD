@@ -16,13 +16,13 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
 
   // public LLList()
   public LLList() {
-    super();
+    super((TraversableContainer<Data>) null);
   }
 
-  // public LLList(TraversableContainer<Data> con)
   public LLList(TraversableContainer<Data> con) {
     super(con);
   }
+
 
   // protected LLList(long size, LLNode<Data> head, LLNode<Data> tail)
   protected LLList(long size, LLNode<Data> head, LLNode<Data> tail) {
@@ -227,6 +227,23 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
     return subList;
   }
 
+  // FORSE
+  @Override
+  public LLList<Data> SubChain(Natural startindex, Natural endindex) {
+    MutableSequence<Data> subSeq = SubSequence(startindex, endindex);
+    LLList<Data> res = new LLList<>();
+    subSeq.TraverseForward(dat -> {
+      res.InsertLast(dat);
+      return false;
+    });
+    return res;
+  }
+
+  @Override
+public LLList<Data> SubList(Natural from, Natural to) {
+  return SubChain(from, to);
+}
+
   /* ************************************************************************ */
   /* Override specific member functions from InsertableAtSequence             */
   /* ************************************************************************ */
@@ -235,7 +252,10 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
   // InsertAt
   @Override
   public void InsertAt(Data data, Natural index) {
-    long idx = ExcIfOutOfBoundForInsert(index);
+    long idx = index.ToLong();
+    if (idx < 0 || idx > size.ToLong()) {  
+      throw new IndexOutOfBoundsException();
+    }
     if (idx == 0) {
       InsertFirst(data);
     } else if (idx == size.ToLong()) {

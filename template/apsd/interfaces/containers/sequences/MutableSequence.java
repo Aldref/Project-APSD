@@ -27,26 +27,26 @@ public interface MutableSequence<Data> extends Sequence<Data>, MutableIterableCo
 
   // SetFirst
   default void SetFirst(Data data) {
-    SetAt(Natural.ZERO, data);
+    SetAt(data, Natural.ZERO);
   }
 
   // GetNSetFirst
   default Data GetNSetFirst(Data data) {
-    return GetNSetAt(Natural.ZERO, data);
+    return GetNSetAt(data, Natural.ZERO);
   }
 
   // SetLast
   default void SetLast(Data data) {
     long size = Size().ToLong();
     if (size == 0) throw new IndexOutOfBoundsException("Sequence is empty");
-    SetAt(Natural.Of(size - 1), data);
+    SetAt(data, Natural.Of(size - 1));
   }
 
   // GetNSetLast
   default Data GetNSetLast(Data data) {
     long size = Size().ToLong();
     if (size == 0) throw new IndexOutOfBoundsException("Sequence is empty");
-    return GetNSetAt(Natural.Of(size - 1), data);
+    return GetNSetAt(data, Natural.Of(size - 1));
   }
 
   // Swap

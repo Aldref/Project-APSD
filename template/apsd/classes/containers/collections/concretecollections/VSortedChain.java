@@ -6,9 +6,10 @@ import apsd.interfaces.containers.base.TraversableContainer;
 import apsd.interfaces.containers.collections.SortedChain;
 import apsd.interfaces.containers.iterators.MutableForwardIterator;
 import apsd.interfaces.containers.sequences.DynVector;
+import apsd.interfaces.containers.sequences.Sequence; // forse non serve
 
 /** Object: Concrete set implementation via (dynamic circular) vector. */
-public class VSortedChain<Data extends Comparable<Data>> extends VChainBase<Data> implements SortedChain<Data> { // Must extend VChainBase and implements SortedChain
+public class VSortedChain<Data extends Comparable<? super Data>> extends VChainBase<Data> implements SortedChain<Data> { // Must extend VChainBase and implements SortedChain
 
   // public VSortedChain()
   public VSortedChain() {
@@ -88,22 +89,33 @@ public class VSortedChain<Data extends Comparable<Data>> extends VChainBase<Data
     return true;
   }
 
-  // RemoveOccurences
+  // RemoveOccurrences
   @Override
-  public void RemoveOccurences(Data data) {
+  public void RemoveOccurrences(Data data) {
     if (data == null) return;
-    MutableForwardIterator<Data> it = vec.GetForwardIterator();
+    MutableForwardIterator<Data> it = vec.FIterator();
     while (it.IsValid()) {
       Data curr = it.GetCurrent();
       if (curr != null) {
         int cmp = data.compareTo(curr);
         if (cmp == 0) {
-          it.Remove();
+          Remove(it.GetCurrent());
         } else if (cmp < 0) {
           break;
         }
       }
     }
+  }
+
+  @Override
+  public VSortedChain<Data> SubChain(Natural from, Natural to) {
+    Sequence<Data> subSeq = SubSequence(from, to);
+    VSortedChain<Data> res = new VSortedChain<>();
+    subSeq.TraverseForward(dat -> {
+      res.Insert(dat); 
+      return false;
+    });
+    return res;
   }
 
 }

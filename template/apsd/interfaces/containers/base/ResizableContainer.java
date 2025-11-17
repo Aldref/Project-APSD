@@ -3,7 +3,7 @@ package apsd.interfaces.containers.base;
 import apsd.classes.utilities.Natural;
 
 /** Interface: ReallocableContainer che è espandibile e riducibile. */
-public interface ResizableContainer<Data> extends ReallocableContainer<Data>{ // Must extend ReallocableContainer
+public interface ResizableContainer extends ReallocableContainer{ // Must extend ReallocableContainer
 
   double THRESHOLD_FACTOR = 2.0; // Must be strictly greater than 1.
 
@@ -39,10 +39,10 @@ public interface ResizableContainer<Data> extends ReallocableContainer<Data>{ //
   
   @Override
   default void Grow(Natural dim) {
-      if (capacity().ToLong() == Integer.MAX_VALUE) {
+      if (Capacity().ToLong() == Integer.MAX_VALUE) {
         throw new IllegalStateException("Cannot grow beyond Integer.MAX_VALUE");
       }
-      if (Size().ToLong() + dim.ToLong() >= capacity().ToLong()) {
+      if (Size().ToLong() + dim.ToLong() >= Capacity().ToLong()) {
           ReallocableContainer.super.Grow(dim);
       }
   }

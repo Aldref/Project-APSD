@@ -21,7 +21,11 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   protected final Box<LLNode<Data>> tailref = new Box<>();
 
   // LLChainBase
-
+  protected LLChainBase(long size, LLNode<Data> head, LLNode<Data> tail) {
+    this.size.Assign(Natural.Of(size)); 
+    this.headref.Set(head);
+    this.tailref.Set(tail);
+  }
   public LLChainBase(TraversableContainer<Data> con) {
     size.Assign(con.Size());
     final Box<Boolean> first = new Box<>(true);
@@ -45,6 +49,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   /* ************************************************************************ */
 
   // ...
+
 
   /* ************************************************************************ */
   /* Override specific member functions from Container                        */
@@ -211,15 +216,18 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   // SubSequence
   @Override
   public Sequence<Data> SubSequence(Natural startindex, Natural endindex) {
-    if (startindex.ToLong() < 0 || endindex.ToLong() > size.ToLong() || startindex.ToLong() > endindex.ToLong()) {
+    long start = startindex.ToLong();
+    long end   = endindex.ToLong();
+    long sz    = size.ToLong();
+    if (start < 0 || end > sz || start > end) {
       throw new IndexOutOfBoundsException("Invalid start or end index");
     }
     LLNode<Data> subhead = null;
     LLNode<Data> subtail = null;
     LLNode<Data> cur = headref.Get();
     long index = 0;
-    while (cur != null && index < endindex.ToLong()) {
-      if (index >= startindex.ToLong()) {
+    while (cur != null && index < end) {
+      if (index >= start) {
         LLNode<Data> newnode = new LLNode<>(cur.Get());
         if (subhead == null) {
           subhead = newnode;
@@ -229,10 +237,26 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
           subtail = newnode;
         }
       }
-      cur = cur.GetNext();
+      cur = (cur.GetNext() != null ? cur.GetNext().Get() : null);
       index++;
     }
-    return new LLChainBase<>(subhead, subtail, endindex.ToLong() - startindex.ToLong());
+    long newSize = end - start;
+    LLChainBase<Data> subChain = NewChain(newSize, subhead, subtail);
+    return subChain;
+  }
+
+  // non so se serva
+  @Override
+  public boolean Exists(Data data) {
+    ForwardIterator<Data> it = FIterator();
+    while (it.IsValid()) {
+      if ((it.GetCurrent() == null && data == null) ||
+          (it.GetCurrent() != null && it.GetCurrent().equals(data))) {
+        return true;
+      }
+      it.DataNNext();
+    }
+    return false;
   }
   /* ************************************************************************ */
   /* Override specific member functions from RemovableAtSequence              */
@@ -252,7 +276,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
       LLNode<Data> node = cur.Get();
       if (index.ToLong() == 0) {
         removedData.Set(node.Get());
-        cur.Set(node.GetNext());
+        cur.Set(node.GetNext().Get());
         if (tailref.Get() == node) { tailref.Set(prd.Get()); }
         size.Decrement();
         return true;
@@ -295,13 +319,13 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   // ...
   // Filter
   @Override
-  public boolean Filter(Predicate<Data> pred) {
+  public boolean Filter(Predicate<Data> fun) {
     final Box<Boolean> removed = new Box<>(false);
     final Box<LLNode<Data>> prd = new Box<>();
     FRefIterator().ForEachForward(cur -> {
       LLNode<Data> node = cur.Get();
-      if (pred.Test(node.Get())) {
-        cur.Set(node.GetNext());
+      if (fun.Apply(node.Get())) {
+        cur.Set(node.GetNext().Get());
         if (tailref.Get() == node) { tailref.Set(prd.Get()); }
         size.Decrement();
         removed.Set(true);

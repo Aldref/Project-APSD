@@ -47,7 +47,7 @@ public interface IterableContainer<Data> extends TraversableContainer<Data> {
     BackwardIterator<Data> it = BIterator();
     if (it == null || fun == null) return false;
     while(it.IsValid()){
-      if(fun.Apply(it.DataNNext())) { return true; }
+      if(fun.Apply(it.DataNPrev())) { return true; }
     }
     return false;
   }

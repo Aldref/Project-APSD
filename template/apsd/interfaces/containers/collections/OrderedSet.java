@@ -2,10 +2,10 @@ package apsd.interfaces.containers.collections;
 
 import apsd.interfaces.containers.iterators.ForwardIterator;
 
-public interface OrderedSet<Data extends Comparable<Data>> extends Set<Data> { 
+public interface OrderedSet<Data extends Comparable<? super Data>> extends Set<Data> { 
 
   // Min
-  default Data min(){
+  default Data Min(){
     if (IsEmpty()) return null;
     ForwardIterator<Data> itr = FIterator();
     if (!itr.IsValid()) return null;
@@ -25,7 +25,7 @@ public interface OrderedSet<Data extends Comparable<Data>> extends Set<Data> {
 
   // RemoveMin
   default void RemoveMin(){
-    Data min = min();
+    Data min = Min();
     if (min != null){
       Remove(min);
     }
@@ -33,7 +33,7 @@ public interface OrderedSet<Data extends Comparable<Data>> extends Set<Data> {
 
   // MinNRemove
   default Data MinNRemove(){
-    Data min = min();
+    Data min = Min();
     if (min != null){
       Remove(min);
     }
@@ -41,7 +41,7 @@ public interface OrderedSet<Data extends Comparable<Data>> extends Set<Data> {
   }
 
   // Max
-  default Data max(){
+  default Data Max(){
     if (IsEmpty()) return null;
     ForwardIterator<Data> itr = FIterator();
     if (!itr.IsValid()) return null;
@@ -61,7 +61,7 @@ public interface OrderedSet<Data extends Comparable<Data>> extends Set<Data> {
 
   // RemoveMax
   default void RemoveMax(){
-    Data max = max();
+    Data max = Max();
     if (max != null){
       Remove(max);
     }
@@ -69,7 +69,7 @@ public interface OrderedSet<Data extends Comparable<Data>> extends Set<Data> {
 
   // MaxNRemove
   default Data MaxNRemove(){
-    Data max = max();
+    Data max = Max();
     if (max != null){
       Remove(max);
     }
@@ -77,7 +77,7 @@ public interface OrderedSet<Data extends Comparable<Data>> extends Set<Data> {
   }
 
   // Predecessor
-  default Data predecessor(Data element) {
+  default Data Predecessor(Data element) {
     if (IsEmpty()) return null;
     ForwardIterator<Data> itr = FIterator();
     if (!itr.IsValid() || element == null) return null;
@@ -90,12 +90,13 @@ public interface OrderedSet<Data extends Comparable<Data>> extends Set<Data> {
       prev = cur;
       itr.Next();
     }
+    return null;
   }
     
 
   // RemovePredecessor
   default void RemovePredecessor(Data element) {
-    Data pred = predecessor(element);
+    Data pred = Predecessor(element);
     if (pred != null){
       Remove(pred);
     }
@@ -103,7 +104,7 @@ public interface OrderedSet<Data extends Comparable<Data>> extends Set<Data> {
 
   // PredecessorNRemove
   default Data PredecessorNRemove(Data element) {
-    Data pred = predecessor(element);
+    Data pred = Predecessor(element);
     if (pred != null){
       Remove(pred);
     }
@@ -111,7 +112,7 @@ public interface OrderedSet<Data extends Comparable<Data>> extends Set<Data> {
   }
 
   // Successor
-  default Data successor(Data element) {
+  default Data Successor(Data element) {
     if (IsEmpty()) return null;
     ForwardIterator<Data> itr = FIterator();
     if (!itr.IsValid() || element == null) return null;
@@ -132,7 +133,7 @@ public interface OrderedSet<Data extends Comparable<Data>> extends Set<Data> {
 
   // RemoveSuccessor
   default void RemoveSuccessor(Data element) {
-    Data succ = successor(element);
+    Data succ = Successor(element);
     if (succ != null){
       Remove(succ);
     }
@@ -140,7 +141,7 @@ public interface OrderedSet<Data extends Comparable<Data>> extends Set<Data> {
 
   // SuccessorNRemove
   default Data SuccessorNRemove(Data element) {
-    Data succ = successor(element);
+    Data succ = Successor(element);
     if (succ != null){
       Remove(succ);
     }

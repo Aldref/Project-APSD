@@ -4,35 +4,30 @@ import apsd.classes.utilities.Natural;
 import apsd.classes.containers.sequences.abstractbases.LinearVectorBase;
 import apsd.interfaces.containers.base.TraversableContainer;
 import apsd.interfaces.containers.iterators.MutableForwardIterator;
+import apsd.interfaces.containers.sequences.MutableSequence; // penso non serva
 
 /** Object: Concrete (static linear) vector implementation. */
 public class Vector<Data> extends LinearVectorBase<Data> { // Must extend LinearVectorBase
 
   // public Vector()
+  
   public Vector() {
-    ArrayAlloc(Natural.ZERO);
+    super((TraversableContainer<Data>) null);
   }
-
   // public Vector(Natural inisize)
   public Vector(Natural inisize) {
-    ArrayAlloc(inisize);
+    super((TraversableContainer<Data>) null);
+    ArrayAlloc(inisize);       
   }
 
   // public Vector(TraversableContainer<Data> con)
   public Vector(TraversableContainer<Data> con) {
-    Natural conSize = con.Size();
-    ArrayAlloc(conSize);
-    MutableForwardIterator<Data> it = con.FIterator();
-    Natural idx = Natural.ZERO;
-    while (it.IsValid()) {
-      arr[(int) idx.ToLong()] = it.GetCurrent();
-      idx = idx.Increment();
-      it.Next();
-    }
+    super(con);
   }
 
   // protected Vector(Data[] arr)
   protected Vector(Data[] arr) {
+    super((TraversableContainer<Data>) null);
     this.arr = arr;
   }
 
@@ -42,4 +37,8 @@ public class Vector<Data> extends LinearVectorBase<Data> { // Must extend Linear
     this.arr = arr;
   }
 
+  @Override
+  protected MutableSequence<Data> NewVector(Natural newsize) {
+    return new Vector<Data>(newsize);
+  }
 }

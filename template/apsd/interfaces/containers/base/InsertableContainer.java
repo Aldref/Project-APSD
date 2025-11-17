@@ -2,7 +2,7 @@ package apsd.interfaces.containers.base;
 import apsd.classes.utilities.Box;
 
 /** Interface: Container con supporto all'inserimento di un dato. */
-public interface InsertableContainer<Data> extends Container<Data>{ 
+public interface InsertableContainer<Data> extends Container{ 
 
   // Insert
   boolean Insert(Data data);

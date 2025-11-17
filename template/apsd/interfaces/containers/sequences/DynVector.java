@@ -3,7 +3,7 @@ package apsd.interfaces.containers.sequences;
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.ResizableContainer;
 
-public interface DynVector<Data> extends ResizableContainer<Data>, InsertableAtSequence<Data>, RemovableAtSequence<Data>, Vector<Data> {
+public interface DynVector<Data> extends ResizableContainer, InsertableAtSequence<Data>, RemovableAtSequence<Data>, Vector<Data> {
 
   /* ************************************************************************ */
   /* Override specific member functions from InsertableAtSequence             */
@@ -14,7 +14,7 @@ public interface DynVector<Data> extends ResizableContainer<Data>, InsertableAtS
 default void InsertAt(Data element, Natural idx) {
   long index = ExcIfOutOfBound(idx);
   long size = Size().ToLong();
-  if (Size().Equals(Capacity())) Grow();
+  if (Size().equals(Capacity())) Grow();
   if (index == size) {
     SetAt(element, Natural.Of(size));
   } else {

@@ -22,10 +22,7 @@ public class WSet<Data> extends WSetBase<Data, Chain<Data>> { // Must extend WSe
   }
   // public WSet(Chain<Data> chn, TraversableContainer<Data> con)
   public WSet(Chain<Data> chn, TraversableContainer<Data> con) {
-    super(chn);
-    for (Data data : con) {
-      Insert(data);
-    }
+    super(chn, con);
   }
 
   //  ChainAlloc

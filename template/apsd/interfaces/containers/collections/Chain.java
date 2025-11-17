@@ -2,26 +2,28 @@ package apsd.interfaces.containers.collections;
 
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.sequences.RemovableAtSequence;
-
 public interface Chain<Data> extends RemovableAtSequence<Data>, Set<Data>{ // Must extend RemovableAtSequence
 
   // InsertIfAbsent
-  default boolean InsertIfAbsent(Data data){
-    if (IsEmpty()) Insert(data);
-    else{
-      if (!Contains(data)){
-        Insert(data);
-        return true;
-      }
+  default boolean InsertIfAbsent(Data data) {
+    boolean present = TraverseForward(dat ->
+        (dat == null ? data == null : dat.equals(data))
+    );
+    if (!present) {
+      return Insert(data);
     }
     return false;
   }
 
   // RemoveOccurrences
   default void RemoveOccurrences(Data data){
-    while (Contains(data)){
-      Remove(data);
-    }
+    while (TraverseForward(dat -> {
+      if (dat == null ? data == null : dat.equals(data)) {
+        Remove(data);
+        return true;
+      }
+      return false;
+    }));
   }
 
   // SubChain
@@ -33,7 +35,7 @@ public interface Chain<Data> extends RemovableAtSequence<Data>, Set<Data>{ // Mu
   // ...
   @Override
   default Natural Search(Data data){
-    return sequence.super.Search(data);
+    return RemovableAtSequence.super.Search(data);
   }
 
 }

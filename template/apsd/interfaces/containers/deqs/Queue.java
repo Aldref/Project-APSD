@@ -3,7 +3,7 @@ package apsd.interfaces.containers.deqs;
 import apsd.interfaces.containers.base.ClearableContainer;
 import apsd.interfaces.containers.base.InsertableContainer;
 
-public interface Queue<Data> extends ClearableContainer<Data>, InsertableContainer<Data> {
+public interface Queue<Data> extends ClearableContainer, InsertableContainer<Data> {
 
   // Head
   Data Head();

@@ -6,14 +6,14 @@ import apsd.interfaces.containers.base.TraversableContainer;
 import apsd.interfaces.containers.collections.SortedChain;
 
 /** Object: Wrapper ordered set implementation via ordered chain. */
-public class WOrderedSet<Data> extends WOrderedSetBase<Data, VSortedChain<Data>> { // Must extend WOrderedSetBase
+public class WOrderedSet<Data extends Comparable<? super Data>> extends WOrderedSetBase<Data, VSortedChain<Data>> { // Must extend WOrderedSetBase
 
   // public WOrderedSet()
   public WOrderedSet() {
     super();
   }
   // public WOrderedSet(Chain<Data> chn)
-  public WOrderedSet(SortedChain<Data> chn) {
+  public WOrderedSet(VSortedChain<Data> chn) {
     super(chn);
   }
   // public WOrderedSet(TraversableContainer<Data> con)
@@ -21,7 +21,7 @@ public class WOrderedSet<Data> extends WOrderedSetBase<Data, VSortedChain<Data>>
     super(con);
   }
   // public WOrderedSet(Chain<Data> chn, TraversableContainer<Data> con)
-  public WOrderedSet(SortedChain<Data> chn, TraversableContainer<Data> con) {
+  public WOrderedSet(VSortedChain<Data> chn, TraversableContainer<Data> con) {
     super(chn, con);
   }
 

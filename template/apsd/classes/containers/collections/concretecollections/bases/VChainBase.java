@@ -121,7 +121,7 @@ abstract public class VChainBase<Data> implements Chain<Data> { // Must implemen
   // ...
   // filter
   @Override
-  public boolean filter(Predicate<Data> fun) {
+  public boolean Filter(Predicate<Data> fun) {
     long del = 0;
     if (fun != null){
       MutableForwardIterator<Data> it = vec.FIterator();
@@ -138,7 +138,7 @@ abstract public class VChainBase<Data> implements Chain<Data> { // Must implemen
         while (newIt.IsValid()) {
           if (newIt.GetCurrent() != null) {
             Data dato = newIt.GetCurrent();
-            newIt.SetCurret(null);
+            newIt.SetCurrent(null);
             it.SetCurrent(dato);
             it.Next();
             newIt.Next();
