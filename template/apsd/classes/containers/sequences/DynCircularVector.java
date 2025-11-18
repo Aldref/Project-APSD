@@ -25,7 +25,7 @@ public class DynCircularVector<Data> extends DynCircularVectorBase<Data> { // Mu
     Natural idx = Natural.ZERO;
     while (it.IsValid()) {
       arr[(int) idx.ToLong()] = it.GetCurrent();
-      idx = idx.Increment();
+      idx.Increment();
       it.Next();
     }
     size = conSize.ToLong();
