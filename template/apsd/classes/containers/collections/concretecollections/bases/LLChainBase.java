@@ -1,5 +1,6 @@
 package apsd.classes.containers.collections.concretecollections.bases;
 
+import apsd.classes.containers.collections.concretecollections.LLSortedChain;
 import apsd.classes.containers.sequences.Vector;
 import apsd.classes.utilities.Box;
 import apsd.classes.utilities.MutableNatural;
@@ -10,6 +11,7 @@ import apsd.interfaces.containers.iterators.BackwardIterator;
 import apsd.interfaces.containers.iterators.ForwardIterator;
 import apsd.interfaces.containers.iterators.MutableBackwardIterator;
 import apsd.interfaces.containers.iterators.MutableForwardIterator;
+import apsd.interfaces.containers.sequences.MutableSequence;
 import apsd.interfaces.containers.sequences.Sequence;
 import apsd.interfaces.traits.Predicate;
 
@@ -20,12 +22,47 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   protected final Box<LLNode<Data>> headref = new Box<>();
   protected final Box<LLNode<Data>> tailref = new Box<>();
 
+  protected LLNode<Data> HeadNode() {
+    return headref.Get();
+  }
+
+  protected LLNode<Data> TailNode() {
+    return tailref.Get();
+  }
+
   // LLChainBase
+  protected LLChainBase(LLChainBase<Data> chn) {
+    if (chn == null) {
+      size.Zero();
+      headref.Set(null);
+      tailref.Set(null);
+      return;
+    }
+    this.size.Assign(chn.size.ToNatural());
+    LLNode<Data> src = chn.headref.Get();
+    LLNode<Data> newHead = null;
+    LLNode<Data> newTail = null;
+    while (src != null) {
+      LLNode<Data> newNode = new LLNode<>(src.Get());
+      if (newHead == null) {
+        newHead = newNode;
+        newTail = newNode;
+      } else {
+        newTail.SetNext(newNode);
+        newTail = newNode;
+      }
+      src = (src.GetNext() != null ? src.GetNext().Get() : null);
+    }
+    this.headref.Set(newHead);
+    this.tailref.Set(newTail);
+  }
+
   protected LLChainBase(long size, LLNode<Data> head, LLNode<Data> tail) {
     this.size.Assign(Natural.Of(size)); 
     this.headref.Set(head);
     this.tailref.Set(tail);
   }
+
   public LLChainBase(TraversableContainer<Data> con) {
     size.Assign(con.Size());
     final Box<Boolean> first = new Box<>(true);
@@ -243,6 +280,25 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
     long newSize = end - start;
     LLChainBase<Data> subChain = NewChain(newSize, subhead, subtail);
     return subChain;
+  }
+
+  public Chain<Data> SubChain(Natural from, Natural to) {
+    Sequence<Data> subSeq = SubSequence(from, to);
+    LLNode<Data> head = null;
+    LLNode<Data> tail = null;
+    subSeq.TraverseForward(dat -> {
+      LLNode<Data> node = new LLNode<>(dat);
+      if (head == null) {
+        head = node;
+        tail = node;
+      } else {
+        tail.SetNext(node);
+        tail = node;
+      }
+      return false;
+    });
+    long newSize = to.ToLong() - from.ToLong();
+    return NewChain(newSize, head, tail);
   }
 
   // non so se serva

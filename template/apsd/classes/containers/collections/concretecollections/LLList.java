@@ -178,7 +178,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
   // SetAt
   @Override
   public void SetAt(Data data, Natural index) {
-    if (index.CompareTo(size.ToNatural()) >= 0) {
+    if (index.ToLong() >= Size().ToLong() || index.ToLong() < 0) {
       throw new IndexOutOfBoundsException("Index: " + index.ToLong());
     }
     LLNode<Data> node = headref.Get();
@@ -268,8 +268,8 @@ public LLList<Data> SubList(Natural from, Natural to) {
         i++;
       }
       LLNode<Data> newNode = new LLNode<Data>(data);
-      newNode.SetNext(new Ref<LLNode<Data>>(node.GetNext().Get()));
-      node.SetNext(new Ref<LLNode<Data>>(newNode));
+      newNode.SetNext(node.GetNext().Get());
+      node.SetNext(newNode);
       size.Increment();
     }
   }
@@ -278,7 +278,7 @@ public LLList<Data> SubList(Natural from, Natural to) {
   @Override
   public void InsertFirst(Data data) {
     LLNode<Data> newNode = new LLNode<Data>(data);
-    newNode.SetNext(new Ref<LLNode<Data>>(headref.Get()));
+    newNode.SetNext(headref.Get());
     headref.Set(newNode);
     if (tailref.Get() == null) {
       tailref.Set(newNode);
@@ -294,7 +294,7 @@ public LLList<Data> SubList(Natural from, Natural to) {
       headref.Set(newNode);
       tailref.Set(newNode);
     } else {
-      tailref.Get().SetNext(new Ref<LLNode<Data>>(newNode));
+      tailref.Get().SetNext(newNode);
       tailref.Set(newNode);
     }
     size.Increment();
