@@ -67,13 +67,13 @@ public class WQueue<Data> implements Queue<Data> { // Must implement Queue
   // head
   @Override
   public Data Head() {
-    return lst.GetAt(Natural.Zero());
+    return lst.GetAt(Natural.ZERO);
   }
 
   // Dequeue
   @Override
   public void Dequeue() {
-    lst.RemoveAt(Natural.Zero());
+    lst.RemoveAt(Natural.ZERO);
   }
 
   // HeadNDequeue
@@ -90,5 +90,4 @@ public class WQueue<Data> implements Queue<Data> { // Must implement Queue
     lst.InsertLast(element);
   }
 
-  
 }

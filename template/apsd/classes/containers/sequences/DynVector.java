@@ -37,6 +37,11 @@ public class DynVector<Data> extends DynLinearVectorBase<Data> { // Must extend 
     size = arr.length;
   }
 
+  @Override
+  protected DynVector<Data> NewVector(Natural newsize) {
+    return new DynVector<>(newsize);
+  }
+
   // NewVector
   void NewVector(Data[] arr) {
     this.arr = arr;

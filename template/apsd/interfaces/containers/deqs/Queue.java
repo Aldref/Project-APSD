@@ -8,7 +8,7 @@ public interface Queue<Data> extends ClearableContainer, InsertableContainer<Dat
   // Head
   Data Head();
   // Dequeue
-  Void Dequeue();
+  void Dequeue();
 
   // HeadNDequeue
   default Data HeadNDequeue(){
@@ -19,7 +19,7 @@ public interface Queue<Data> extends ClearableContainer, InsertableContainer<Dat
   }
   
   // Enqueue
-  Void Enqueue(Data data);
+  void Enqueue(Data data);
 
   /* ************************************************************************ */
   /* Override specific member functions from ClearableContainer               */
@@ -27,7 +27,7 @@ public interface Queue<Data> extends ClearableContainer, InsertableContainer<Dat
 
   // ...
   @Override
-  default Void Clear(){
+  default void Clear(){
     while (!IsEmpty()){
       Dequeue();
     }
@@ -39,7 +39,7 @@ public interface Queue<Data> extends ClearableContainer, InsertableContainer<Dat
 
   // ...
   @Override
-  default Boolean Insert(Data data){ 
+  default boolean Insert(Data data){ 
     Enqueue(data);
     return true;
     

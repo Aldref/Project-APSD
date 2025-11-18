@@ -9,7 +9,7 @@ public interface Stack<Data> extends ClearableContainer, InsertableContainer<Dat
   Data Top();
 
   // Pop
-  Void Pop();
+  void Pop();
 
   // TopNPop
   default Data TopNPop(){
@@ -19,7 +19,7 @@ public interface Stack<Data> extends ClearableContainer, InsertableContainer<Dat
   }
   
   // SwapTop
-  default Void SwapTop(Data data){
+  default void SwapTop(Data data){
     Pop();
     Push(data);
   }
@@ -32,7 +32,7 @@ public interface Stack<Data> extends ClearableContainer, InsertableContainer<Dat
   }
 
   // Push
-  Void Push(Data data);
+  void Push(Data data);
 
   /* ************************************************************************ */
   /* Override specific member functions from ClearableContainer               */
@@ -40,7 +40,7 @@ public interface Stack<Data> extends ClearableContainer, InsertableContainer<Dat
 
   // ...
   @Override
-  default Void Clear(){
+  default void Clear(){
     while (!IsEmpty()){
       Pop();
     }
@@ -52,7 +52,7 @@ public interface Stack<Data> extends ClearableContainer, InsertableContainer<Dat
 
   // ...
   @Override
-  default Boolean Insert(Data data){
+  default boolean Insert(Data data){
     Push(data);
     return true;
   }

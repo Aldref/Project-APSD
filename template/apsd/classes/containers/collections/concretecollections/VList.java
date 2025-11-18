@@ -49,7 +49,7 @@ public class VList<Data> extends VChainBase<Data> implements List<Data> { // Mus
 
     @Override
     public boolean IsValid() {
-      return idx.CompareTo(vec.Size()) < 0;
+      return !vec.Size().IsZero() && idx.ToLong() < vec.Size().ToLong();
     }
 
     @Override
@@ -62,13 +62,13 @@ public class VList<Data> extends VChainBase<Data> implements List<Data> { // Mus
       if (!IsValid()) {
         throw new IllegalStateException("Iterator terminated");
       }
-      return vec.At(idx);            
+      return vec.GetAt(idx);            
     }
 
     @Override
     public Data DataNNext() {
       Data d = GetCurrent();
-      idx = idx.Increment();        
+      idx.Increment();        
       return d;
     }
 
@@ -88,15 +88,16 @@ public class VList<Data> extends VChainBase<Data> implements List<Data> { // Mus
 
     public ListBIter() {
       if (vec.Size().IsZero()) {
-        idx = Natural.ZERO;        
+        idx = Natural.ZERO;
       } else {
-        idx = vec.Size().Predecessor(); 
+        idx = vec.Size();
+        idx.Decrement();   
       }
     }
 
     @Override
     public boolean IsValid() {
-      return !vec.Size().IsZero() && idx.CompareTo(vec.Size()) < 0;
+      return !vec.Size().IsZero() && idx.ToLong() < vec.Size().ToLong();
     }
 
     @Override
@@ -104,7 +105,8 @@ public class VList<Data> extends VChainBase<Data> implements List<Data> { // Mus
       if (vec.Size().IsZero()) {
         idx = Natural.ZERO;
       } else {
-        idx = vec.Size().Decrement();
+        idx = vec.Size();
+        idx.Decrement();
       }
     }
 
@@ -113,7 +115,7 @@ public class VList<Data> extends VChainBase<Data> implements List<Data> { // Mus
       if (!IsValid()) {
         throw new IllegalStateException("Iterator terminated");
       }
-      return vec.At(idx);
+      return vec.GetAt(idx);
     }
 
     @Override
@@ -122,7 +124,7 @@ public class VList<Data> extends VChainBase<Data> implements List<Data> { // Mus
       if (idx.IsZero()) {
         idx = vec.Size();          
       } else {
-        idx = idx.Decrement();
+        idx.Decrement();
       }
       return d;
     }
@@ -162,7 +164,21 @@ public class VList<Data> extends VChainBase<Data> implements List<Data> { // Mus
   @Override
   public MutableSequence<Data> SubSequence(Natural start, Natural end) {
     DynVector<Data> subVec = vec.SubVector(start, end);
-    return new VList<Data>(subVec);;
+    return new VList<Data>(subVec);
+  }
+
+  // SubChain
+  @Override
+  public VList<Data> SubChain(Natural from, Natural to) {
+    DynVector<Data> subVec = vec.SubVector(from, to);
+    return new VList<Data>(subVec);
+  }
+
+  // SubList
+  @Override
+  public VList<Data> SubList(Natural from, Natural to) {
+    DynVector<Data> subVec = vec.SubVector(from, to);
+    return new VList<Data>(subVec);
   }
   /* ************************************************************************ */
   /* Override specific member functions from InsertableAtSequence             */
@@ -173,5 +189,19 @@ public class VList<Data> extends VChainBase<Data> implements List<Data> { // Mus
   @Override
   public void InsertAt(Data data, Natural num) {
     vec.InsertAt(data, num);
+  }
+
+  // non penso serva
+  @Override
+  public boolean Exists(Data data) {
+    DynVector<Data> v = vec;
+    Natural i = Natural.ZERO;
+    while (i.ToLong() < v.Size().ToLong()) {
+      if (v.GetAt(i).equals(data)) {
+        return true;
+      }
+      i.Increment();
+    }
+    return false;
   }
 }

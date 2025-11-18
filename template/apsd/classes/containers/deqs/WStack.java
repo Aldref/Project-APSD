@@ -66,7 +66,9 @@ public class WStack<Data> implements Stack<Data> { // Must implement Stack
   // Top
   @Override
   public Data Top() {
-    return lst.GetAt(lst.Size().Decremented());
+    Natural idx = lst.Size();
+    idx.Decrement();     
+    return lst.GetAt(idx);
   }
 
   // Pop
@@ -86,7 +88,7 @@ public class WStack<Data> implements Stack<Data> { // Must implement Stack
   // SwapTop
   @Override
   public void SwapTop(Data data) {
-    lst.SetAt(data, lst.Size().Decremented());
+    lst.SetAt(data, lst.Size().Decrement());
   }
 
   // TopNSwap

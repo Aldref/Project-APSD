@@ -11,8 +11,13 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
 
   // DynCircularVectorBase
   protected DynCircularVectorBase(TraversableContainer<Data> con) {
-    super(con);
-    this.size = con.Size().ToLong();
+    super();
+    if (con != null) {
+      con.TraverseForward(d -> {
+        this.InsertLast(d); 
+        return false;
+      });
+    }
   }
   // ArrayAlloc
   @Override
@@ -152,6 +157,24 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
       }
       super.ShiftRight(pos, num);
     }
+  }
+
+  @Override
+  public DynVector<Data> SubVector(Natural start, Natural end) {
+    long from = ExcIfOutOfBound(start);
+    long to   = ExcIfOutOfBound(end);
+    if (from > to) {
+      throw new IndexOutOfBoundsException("Invalid subvector range");
+    }
+
+    long len = to - from;
+    DynVector<Data> res = NewSubVector(Natural.Of(len)); 
+
+    for (long i = 0; i < len; ++i) {
+      Data value = GetAt(Natural.Of(from + i));
+      res.SetAt(value, Natural.Of(i));
+    }
+    return res;
   }
 
 }

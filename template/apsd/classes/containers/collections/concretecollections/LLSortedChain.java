@@ -97,7 +97,6 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
     return null;
   }
 
-
   /* ************************************************************************ */
   /* Override specific member functions from InsertableContainer              */
   /* ************************************************************************ */
@@ -286,17 +285,17 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
   // InsertIfAbsent
   @Override
   public boolean InsertIfAbsent(Data data){
-    if (Contains(data)) {
+    if (Search(data) != null) {
       return false;
     }
     Insert(data);
     return true;
   }
 
-  // RemoveOccurences
+  // RemoveOccurrences
   @Override
-  public void RemoveOccurences(Data data){
-    while (Contains(data)) {
+  public void RemoveOccurrences(Data data){
+    while (Search(data) != null) {
       Remove(data);
     }
   }

@@ -5,6 +5,7 @@ import java.util.Set;
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.TraversableContainer;
 
+
 /** Object: Abstract (static) circular vector base implementation. */
 abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Must extend VectorBase
 
@@ -86,7 +87,7 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
       long iniwrt = idx - 1 + len;
       long wrt = iniwrt;
       for (long rdr = wrt - len; rdr >= 0; rdr--, wrt--){
-        Natural natrdr = Natural.of(rdr);
+        Natural natrdr = Natural.Of(rdr);
         SetAt(GetAt(natrdr), Natural.Of(wrt));
         SetAt(null, natrdr);
       }

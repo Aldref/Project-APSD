@@ -22,14 +22,6 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   protected final Box<LLNode<Data>> headref = new Box<>();
   protected final Box<LLNode<Data>> tailref = new Box<>();
 
-  protected LLNode<Data> HeadNode() {
-    return headref.Get();
-  }
-
-  protected LLNode<Data> TailNode() {
-    return tailref.Get();
-  }
-
   // LLChainBase
   protected LLChainBase(LLChainBase<Data> chn) {
     if (chn == null) {
@@ -86,7 +78,13 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   /* ************************************************************************ */
 
   // ...
+  protected LLNode<Data> HeadNode() {
+    return headref.Get();
+  }
 
+  protected LLNode<Data> TailNode() {
+    return tailref.Get();
+  }
 
   /* ************************************************************************ */
   /* Override specific member functions from Container                        */
@@ -118,21 +116,30 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
 
   // Remove
   @Override
-  public boolean Remove(Data dat) {
-    if (dat == null) return false;
-    final Box<LLNode<Data>> prd = new Box<>();
-    return FRefIterator().ForEachForward(cur -> {
-      LLNode<Data> node = cur.Get();
-      if (node.Get().equals(dat)) {
-        cur.Set(node.GetNext().Get());
-        if (tailref.Get() == node) { tailref.Set(prd.Get()); }
-        size.Decrement();
-        return true;
+    public boolean Remove(Data dat) {
+      if (dat == null) return false;
+      LLNode<Data> prev = null;
+      LLNode<Data> curr = headref.Get();
+      while (curr != null) {
+        if ((curr.Get() == null && dat == null) ||
+            (curr.Get() != null && curr.Get().equals(dat))) {
+          LLNode<Data> next = (curr.GetNext() != null ? curr.GetNext().Get() : null);
+          if (prev == null) {
+            headref.Set(next);
+          } else {
+            prev.SetNext(next);
+          }
+          if (tailref.Get() == curr) {
+            tailref.Set(prev);
+          }
+          size.Decrement();
+          return true;
+        }
+        prev = curr;
+        curr = (curr.GetNext() != null ? curr.GetNext().Get() : null);
       }
-      prd.Set(node);
       return false;
-    });
-  }
+    }
 
   /* ************************************************************************ */
   /* Override specific member functions from IterableContainer                */
@@ -140,95 +147,94 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
 
   // ...
   // FRefIterator
-  protected class ListFRefIterator implements ForwardIterator<Box<LLNode<Data>>> {
-
-    protected long cur = 0;
-    protected Vector<Box<LLNode<Data>>> arr = null;
-
-    public ListFRefIterator() { Reset(); }
-
-    @Override
-    public boolean IsValid() {
-      return (cur >= 0 && cur < Size().ToLong());
-    }
-
-    @Override
-    public void Reset() {
-      cur = 0;
-      if (Size().IsZero()) {
-        arr = null;
-      } else {
-        arr = new Vector<>(Size());
-        long i = 0;
-        for (Box<LLNode<Data>> ref = headref; ref.Get() != null; ref = ref.Get().GetNext()) {
-          arr.SetAt(ref, Natural.Of(i++));
-        }
-      }
-    }
-
-    @Override
-    public Box<LLNode<Data>> GetCurrent() {
-      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-      return arr.GetAt(Natural.Of(cur));
-    }
-
-    @Override
-    public Box<LLNode<Data>> DataNNext() {
-      Box<LLNode<Data>> old = GetCurrent();
-      ++cur;
-      return old;
-    }
-  }
-
-  protected ForwardIterator<Box<LLNode<Data>>> FRefIterator() {
-    return new ListFRefIterator();
-  }
-
+  protected class ListFIterator implements ForwardIterator<Data> {
+      protected LLNode<Data> cur;
   
-  protected class ListBRefIterator implements BackwardIterator<Box<LLNode<Data>>> {
-
-    protected long cur = -1;
-    protected Vector<Box<LLNode<Data>>> arr = null;
-
-    public ListBRefIterator() { Reset(); }
-
-    @Override
-    public boolean IsValid() {
-      return (cur >= 0 && cur < Size().ToLong());
-    }
-
-    @Override
-    public void Reset() {
-      if (Size().IsZero()) {
-        cur = -1;
-        arr  = null;
-      } else {
-        arr = new Vector<>(Size());
-        long i = 0;
-        for (Box<LLNode<Data>> ref = headref; ref.Get() != null; ref = ref.Get().GetNext()) {
-          arr.SetAt(ref, Natural.Of(i++));
-        }
-        cur = Size().ToLong() - 1;
+      public ListFIterator() {
+        cur = headref.Get();
+      }
+  
+      @Override
+      public boolean IsValid() {
+        return cur != null;
+      }
+  
+      @Override
+      public void Reset() {
+        cur = headref.Get();
+      }
+  
+      @Override
+      public Data GetCurrent() {
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        return cur.Get();
+      }
+  
+      @Override
+      public Data DataNNext() {
+        Data old = GetCurrent();
+        cur = (cur.GetNext() != null ? cur.GetNext().Get() : null);
+        return old;
       }
     }
-
+  
     @Override
-    public Box<LLNode<Data>> GetCurrent() {
-      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-      return arr.GetAt(Natural.Of(cur));
+    public ForwardIterator<Data> FIterator() {
+      return new ListFIterator();
     }
-
+  
+    // BIterator
+    protected class ListBIterator implements BackwardIterator<Data> {
+      protected LLNode<Data> cur;
+  
+      public ListBIterator() {
+        cur = headref.Get();
+        if (cur != null) {
+          while (cur.GetNext() != null && cur.GetNext().Get() != null) {
+            cur = cur.GetNext().Get();
+          }
+        }
+      }
+  
+      @Override
+      public boolean IsValid() {
+        return cur != null;
+      }
+  
+      @Override
+      public void Reset() {
+        cur = headref.Get();
+        if (cur != null) {
+          while (cur.GetNext() != null && cur.GetNext().Get() != null) {
+            cur = cur.GetNext().Get();
+          }
+        }
+      }
+  
+      @Override
+      public Data GetCurrent() {
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        return cur.Get();
+      }
+  
+      @Override
+      public Data DataNPrev() {
+        Data old = GetCurrent();
+        LLNode<Data> node = headref.Get();
+        LLNode<Data> prev = null;
+        while (node != null && node != cur) {
+          prev = node;
+          node = (node.GetNext() != null ? node.GetNext().Get() : null);
+        }
+        cur = prev;
+        return old;
+      }
+    }
+  
     @Override
-    public Box<LLNode<Data>> DataNPrev() {
-      Box<LLNode<Data>> old = GetCurrent();
-      --cur;
-      return old;
+    public BackwardIterator<Data> BIterator() {
+      return new ListBIterator();
     }
-  }
-
-  protected BackwardIterator<Box<LLNode<Data>>> BRefIterator() {
-    return new ListBRefIterator();
-  }
 
   
   /* ************************************************************************ */
@@ -284,21 +290,22 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
 
   public Chain<Data> SubChain(Natural from, Natural to) {
     Sequence<Data> subSeq = SubSequence(from, to);
-    LLNode<Data> head = null;
-    LLNode<Data> tail = null;
+    final Box<LLNode<Data>> headBox = new Box<>(null);
+    final Box<LLNode<Data>> tailBox = new Box<>(null);
     subSeq.TraverseForward(dat -> {
       LLNode<Data> node = new LLNode<>(dat);
-      if (head == null) {
-        head = node;
-        tail = node;
+      if (headBox.Get() == null) {
+        headBox.Set(node);
+        tailBox.Set(node);
       } else {
-        tail.SetNext(node);
-        tail = node;
+        tailBox.Get().SetNext(node);
+        tailBox.Set(node);
       }
       return false;
     });
+
     long newSize = to.ToLong() - from.ToLong();
-    return NewChain(newSize, head, tail);
+    return NewChain(newSize, headBox.Get(), tailBox.Get());
   }
 
   // non so se serva
@@ -323,25 +330,33 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   //AtNRemove
   @Override
   public Data AtNRemove(Natural index) {
-    if (index.ToLong() < 0 || index.ToLong() >= size.ToLong()) {
+    long idx = index.ToLong();
+    if (idx < 0 || idx >= size.ToLong()) {
       throw new IndexOutOfBoundsException("Invalid index");
     }
-    final Box<Data> removedData = new Box<>();
-    final Box<LLNode<Data>> prd = new Box<>();
-    FRefIterator().ForEachForward(cur -> {
-      LLNode<Data> node = cur.Get();
-      if (index.ToLong() == 0) {
-        removedData.Set(node.Get());
-        cur.Set(node.GetNext().Get());
-        if (tailref.Get() == node) { tailref.Set(prd.Get()); }
-        size.Decrement();
-        return true;
-      }
-      prd.Set(node);
-      index.Decrement();
-      return false;
-    });
-    return removedData.Get();
+    LLNode<Data> prev = null;
+    LLNode<Data> curr = headref.Get();
+    long i = 0;
+    while (curr != null && i < idx) {
+      prev = curr;
+      curr = (curr.GetNext() != null ? curr.GetNext().Get() : null);
+      i++;
+    }
+    if (curr == null) {
+      throw new IllegalStateException("Index out of range during removal");
+    }
+    Data removed = curr.Get();
+    LLNode<Data> next = (curr.GetNext() != null ? curr.GetNext().Get() : null);
+    if (prev == null) {
+      headref.Set(next);
+    } else {
+      prev.SetNext(next);
+    }
+    if (tailref.Get() == curr) {
+      tailref.Set(prev);
+    }
+    size.Decrement();
+    return removed;
   }
 
   // RemoveFirst
@@ -376,20 +391,27 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   // Filter
   @Override
   public boolean Filter(Predicate<Data> fun) {
-    final Box<Boolean> removed = new Box<>(false);
-    final Box<LLNode<Data>> prd = new Box<>();
-    FRefIterator().ForEachForward(cur -> {
-      LLNode<Data> node = cur.Get();
-      if (fun.Apply(node.Get())) {
-        cur.Set(node.GetNext().Get());
-        if (tailref.Get() == node) { tailref.Set(prd.Get()); }
+    boolean removedAny = false;
+    LLNode<Data> prev = null;
+    LLNode<Data> curr = headref.Get();
+    while (curr != null) {
+      LLNode<Data> next = (curr.GetNext() != null ? curr.GetNext().Get() : null);
+      if (fun.Apply(curr.Get())) {
+        if (prev == null) {
+          headref.Set(next);
+        } else {
+          prev.SetNext(next);
+        }
+        if (tailref.Get() == curr) {
+          tailref.Set(prev);
+        }
         size.Decrement();
-        removed.Set(true);
-        return false;
+        removedAny = true;
+      } else {
+        prev = curr;
       }
-      prd.Set(node);
-      return false;
-    });
-    return removed.Get();
+      curr = next;
+    }
+    return removedAny;
   }
 }
