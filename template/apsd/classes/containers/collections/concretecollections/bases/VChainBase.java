@@ -96,8 +96,20 @@ abstract public class VChainBase<Data> implements Chain<Data> { // Must implemen
 
   // SubSequence
   @Override
-  public Sequence<Data> SubSequence(Natural start, Natural length) {
-    return vec.SubVector(start, length);
+  public Sequence<Data> SubSequence(Natural start, Natural end) {
+    long from = start.ToLong();
+    long to   = end.ToLong();
+    if (from > to || to >= vec.Size().ToLong()) {
+      throw new IndexOutOfBoundsException();
+    }
+    DynVector<Data> subVec =new DynCircularVector<Data>(Natural.Of(to - from + 1));
+    long j = 0;
+    for (long i = from; i <= to; ++i) {
+      subVec.SetAt(
+          vec.GetAt(Natural.Of(i)),Natural.Of(j));
+      ++j;
+    }
+    return subVec;
   }
 
   /* ************************************************************************ */

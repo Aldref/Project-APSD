@@ -159,22 +159,4 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
     }
   }
 
-  @Override
-  public DynVector<Data> SubVector(Natural start, Natural end) {
-    long from = ExcIfOutOfBound(start);
-    long to   = ExcIfOutOfBound(end);
-    if (from > to) {
-      throw new IndexOutOfBoundsException("Invalid subvector range");
-    }
-
-    long len = to - from;
-    DynVector<Data> res = NewSubVector(Natural.Of(len)); 
-
-    for (long i = 0; i < len; ++i) {
-      Data value = GetAt(Natural.Of(from + i));
-      res.SetAt(value, Natural.Of(i));
-    }
-    return res;
-  }
-
 }

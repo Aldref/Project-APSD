@@ -160,25 +160,24 @@ public class VList<Data> extends VChainBase<Data> implements List<Data> { // Mus
     vec.SetAt(data, num);
   }
 
-  // SubSequence
+  //SubSequence
   @Override
   public MutableSequence<Data> SubSequence(Natural start, Natural end) {
-    DynVector<Data> subVec = vec.SubVector(start, end);
-    return new VList<Data>(subVec);
+    return (MutableSequence<Data>) super.SubSequence(start, end);
   }
 
   // SubChain
   @Override
   public VList<Data> SubChain(Natural from, Natural to) {
-    DynVector<Data> subVec = vec.SubVector(from, to);
-    return new VList<Data>(subVec);
+    MutableSequence<Data> seq = SubSequence(from, to);
+    return new VList<Data>((DynVector<Data>) seq);
   }
 
   // SubList
   @Override
   public VList<Data> SubList(Natural from, Natural to) {
-    DynVector<Data> subVec = vec.SubVector(from, to);
-    return new VList<Data>(subVec);
+    MutableSequence<Data> seq = SubSequence(from, to);
+    return new VList<Data>((DynVector<Data>) seq);
   }
   /* ************************************************************************ */
   /* Override specific member functions from InsertableAtSequence             */

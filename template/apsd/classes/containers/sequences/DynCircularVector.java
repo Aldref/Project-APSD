@@ -9,30 +9,23 @@ public class DynCircularVector<Data> extends DynCircularVectorBase<Data> { // Mu
 
   // public DynCircularVector()
   public DynCircularVector() {
-    ArrayAlloc(Natural.ZERO);
+      super(null);
   }
 
   // public DynCircularVector(Natural inisize)
   public DynCircularVector(Natural inisize) {
+    super(null);
     ArrayAlloc(inisize);
   }
 
   // public DynCircularVector(TraversableContainer<Data> con)
   public DynCircularVector(TraversableContainer<Data> con) {
-    Natural conSize = con.Size();
-    ArrayAlloc(conSize);
-    MutableForwardIterator<Data> it = con.FIterator();
-    Natural idx = Natural.ZERO;
-    while (it.IsValid()) {
-      arr[(int) idx.ToLong()] = it.GetCurrent();
-      idx.Increment();
-      it.Next();
-    }
-    size = conSize.ToLong();
+    super(con);  
   }
 
   // protected DynCircularVector(Data[] arr)
   protected DynCircularVector(Data[] arr) {
+    super(null);
     this.arr = arr;
     this.size = arr.length;
   }
@@ -43,5 +36,19 @@ public class DynCircularVector<Data> extends DynCircularVectorBase<Data> { // Mu
     this.arr = arr;
     this.size = arr.length;
   }
-  
+
+  @Override
+  protected DynCircularVector<Data> NewVector(Natural newsize) {
+    DynCircularVector<Data> vec = new DynCircularVector<>();
+    vec.ArrayAlloc(newsize);
+    return vec;
+  }
+
+  // @Override
+  // protected DynCircularVector<Data> NewSubVector(Natural newsize) {
+  //   DynCircularVector<Data> vec = new DynCircularVector<>();
+  //   vec.ArrayAlloc(newsize);
+  //   return vec;
+  // }
+
 }

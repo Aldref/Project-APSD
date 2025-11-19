@@ -94,8 +94,8 @@ default void InsertAt(Data element, Natural idx) {
     }
   }
 
-  @Override
-  DynVector<Data> SubVector(Natural start, Natural end);
+  // @Override
+  // DynVector<Data> SubVector(Natural start, Natural end);
 
   /* ************************************************************************ */
   /* Override specific member functions from Container                        */

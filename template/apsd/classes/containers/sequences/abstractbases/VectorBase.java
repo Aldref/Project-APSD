@@ -20,7 +20,7 @@ abstract public class VectorBase<Data> implements Vector<Data> {
   // NewVector
   abstract protected  void NewVector(Data [] array);
 
-  abstract protected MutableSequence<Data> NewVector(Natural newsize);
+  abstract protected Vector<Data> NewVector(Natural newsize);
   
   //ArrayAlloc
   @SuppressWarnings("unchecked")
@@ -196,7 +196,8 @@ abstract public class VectorBase<Data> implements Vector<Data> {
     long endIdx = ExcIfOutOfBound(end);
     if (startIdx > endIdx) throw new IndexOutOfBoundsException("Start index is greater than end index");
     long newSize = endIdx - startIdx + 1;
-    MutableSequence<Data> subSeq = NewVector(Natural.Of(newSize));
+    Vector<Data> subVec = NewVector(Natural.Of(newSize));
+    MutableSequence<Data> subSeq = (MutableSequence<Data>) subVec;
     for (long i = 0; i < newSize; i++) {
     Data value = GetAt(Natural.Of(startIdx + i));
     subSeq.SetAt(value, Natural.Of(i));  

@@ -5,7 +5,6 @@ import java.lang.reflect.Array;
 import apsd.classes.containers.sequences.abstractbases.CircularVectorBase;
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.TraversableContainer;
-import apsd.interfaces.containers.sequences.MutableSequence; // DA RIVEDERE
 
 /** Object: Concrete (static) circular vector implementation. */
 public class CircularVector<Data> extends CircularVectorBase<Data> { // Must extend CircularVectorBase
@@ -24,8 +23,10 @@ public class CircularVector<Data> extends CircularVectorBase<Data> { // Must ext
   public CircularVector(TraversableContainer<Data> con) {
     this();
     if (con != null) {
+      final long[] idx = new long[] { 0L };
       con.TraverseForward(d -> {
-        this.InsertLast(d); 
+        SetAt(d, Natural.Of(idx[0]));
+        idx[0]++;
         return false;
       });
     }
@@ -42,12 +43,9 @@ public class CircularVector<Data> extends CircularVectorBase<Data> { // Must ext
     this.arr = arr;
   }
 
-  
-  // DA RIVEDERE
   @Override
-  protected MutableSequence<Data> NewVector(Natural newsize) {
-    CircularVector<Data> vec = new CircularVector<>();
-    vec.ArrayAlloc(newsize);   
+  protected Vector<Data> NewVector(Natural newsize) {
+    Vector<Data> vec = new Vector<>(newsize);
     return vec;
   }
 }

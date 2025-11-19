@@ -4,7 +4,6 @@ import apsd.classes.utilities.Natural;
 import apsd.classes.containers.sequences.abstractbases.LinearVectorBase;
 import apsd.interfaces.containers.base.TraversableContainer;
 import apsd.interfaces.containers.iterators.MutableForwardIterator;
-import apsd.interfaces.containers.sequences.MutableSequence; // penso non serva
 
 /** Object: Concrete (static linear) vector implementation. */
 public class Vector<Data> extends LinearVectorBase<Data> { // Must extend LinearVectorBase
@@ -38,7 +37,7 @@ public class Vector<Data> extends LinearVectorBase<Data> { // Must extend Linear
   }
 
   @Override
-  protected MutableSequence<Data> NewVector(Natural newsize) {
+  protected Vector<Data> NewVector(Natural newsize) {
     return new Vector<Data>(newsize);
   }
 }

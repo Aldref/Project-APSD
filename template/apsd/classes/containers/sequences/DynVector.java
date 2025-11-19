@@ -9,30 +9,24 @@ public class DynVector<Data> extends DynLinearVectorBase<Data> { // Must extend 
 
   // public DynVector()
   public DynVector() {
-    ArrayAlloc(Natural.ONE); 
+    super(null);
+    ArrayAlloc(Natural.ZERO); 
   }
 
   // public DynVector(Natural inisize)
   public DynVector(Natural inisize) {
+    super(null);
     ArrayAlloc(inisize);
   }
 
   // public DynVector(TraversableContainer<Data> con)
   public DynVector(TraversableContainer<Data> con) {
-    Natural conSize = con.Size();
-    ArrayAlloc(conSize);
-    MutableForwardIterator<Data> it = con.FIterator();
-    Natural idx = Natural.ZERO;
-    while (it.IsValid()) {
-      arr[(int) idx.ToLong()] = it.GetCurrent();
-      idx = idx.Increment();
-      it.Next();
-    }
-    size = conSize.ToLong();
+    super(con);
   }
 
   // protected DynVector(Data[] arr)
   protected DynVector(Data[] arr) {
+    super(null);
     this.arr = arr;
     size = arr.length;
   }
@@ -43,7 +37,8 @@ public class DynVector<Data> extends DynLinearVectorBase<Data> { // Must extend 
   }
 
   // NewVector
-  void NewVector(Data[] arr) {
+  @Override
+  protected void NewVector(Data[] arr) {
     this.arr = arr;
     size = arr.length;
   }

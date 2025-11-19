@@ -15,6 +15,19 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
   protected CircularVectorBase() {
     super();
   }
+
+  protected CircularVectorBase(TraversableContainer<Data> con) {
+  this(); 
+  if (con != null) {
+    final long[] idx = new long[] { 0L };
+    con.TraverseForward(d -> {
+      SetAt(d, Natural.Of(idx[0]));
+      idx[0]++;
+      return false;
+    });
+  }
+}
+
   // ArrayAlloc
   @Override
   protected void ArrayAlloc(Natural newsize) {
