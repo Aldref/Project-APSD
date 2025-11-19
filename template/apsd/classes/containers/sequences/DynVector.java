@@ -10,7 +10,7 @@ public class DynVector<Data> extends DynLinearVectorBase<Data> { // Must extend 
   // public DynVector()
   public DynVector() {
     super(null);
-    ArrayAlloc(Natural.ZERO); 
+    ArrayAlloc(Natural.ONE); 
   }
 
   // public DynVector(Natural inisize)

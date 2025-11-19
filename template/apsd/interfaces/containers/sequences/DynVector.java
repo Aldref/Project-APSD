@@ -11,17 +11,20 @@ public interface DynVector<Data> extends ResizableContainer, InsertableAtSequenc
 
   // ...
   @Override
-default void InsertAt(Data element, Natural idx) {
-  long index = ExcIfOutOfBound(idx);
-  long size = Size().ToLong();
-  if (Size().equals(Capacity())) Grow();
-  if (index == size) {
-    SetAt(element, Natural.Of(size));
-  } else {
-    ShiftRight(Natural.Of(index), Natural.ONE);
+  default void InsertAt(Data element, Natural idx) {
+    if (idx == null) throw new NullPointerException("Index cannot be null");
+    long index = idx.ToLong();
+    long size  = Size().ToLong();
+    if (index < 0 || index > size) throw new IndexOutOfBoundsException("Index out of bounds for insert: " + index + "; Size: " + size + "!");
+    if (Size().equals(Capacity())) {
+      Grow(); 
+      size = Size().ToLong();
+    }
+    Expand(Natural.ONE);       
+    long newSize = Size().ToLong();     
+    if (index < newSize - 1) ShiftRight(Natural.Of(index), Natural.ONE);
     SetAt(element, Natural.Of(index));
   }
-}
 
   /* ************************************************************************ */
   /* Override specific member functions from RemovableAtSequence              */

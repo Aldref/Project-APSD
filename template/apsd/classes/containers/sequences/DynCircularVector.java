@@ -1,5 +1,7 @@
 package apsd.classes.containers.sequences;
 
+import java.lang.reflect.Array;
+
 import apsd.classes.containers.sequences.abstractbases.DynCircularVectorBase;
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.TraversableContainer;
@@ -9,7 +11,8 @@ public class DynCircularVector<Data> extends DynCircularVectorBase<Data> { // Mu
 
   // public DynCircularVector()
   public DynCircularVector() {
-      super(null);
+    super(null);
+    ArrayAlloc(Natural.ONE);  
   }
 
   // public DynCircularVector(Natural inisize)

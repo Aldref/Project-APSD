@@ -262,9 +262,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
     long start = startindex.ToLong();
     long end   = endindex.ToLong();
     long sz    = size.ToLong();
-    if (start < 0 || end > sz || start > end) {
-      throw new IndexOutOfBoundsException("Invalid start or end index");
-    }
+    if (start < 0 || end > sz || start > end) throw new IndexOutOfBoundsException("Invalid start or end index");
     LLNode<Data> subhead = null;
     LLNode<Data> subtail = null;
     LLNode<Data> cur = headref.Get();

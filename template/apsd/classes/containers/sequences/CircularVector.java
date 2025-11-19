@@ -11,7 +11,7 @@ public class CircularVector<Data> extends CircularVectorBase<Data> { // Must ext
 
   // public CircularVector()
   public CircularVector() {
-    ArrayAlloc(Natural.ZERO);
+    ArrayAlloc(Natural.ONE);
   }
 
   // public CircularVector(Natural inisize)

@@ -119,6 +119,8 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
 
   @Override
   public boolean Insert(Data data) {
+    if (data == null) return false;
+    if (Search(data) != null) return false;
     LLNode<Data> head = HeadNode();
     LLNode<Data> tail = TailNode();
     LLNode<Data> newNode = new LLNode<>(data);
@@ -136,14 +138,12 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
       size.Increment();
       return true;
     }
-    LLNode<Data> pred = PredFind(data);      
+    LLNode<Data> pred = PredFind(data);
     Box<LLNode<Data>> nextBox = pred.GetNext();
     LLNode<Data> next = (nextBox != null) ? nextBox.Get() : null;
     newNode.SetNext(next);
     pred.SetNext(newNode);
-    if (pred == tail) {   
-      tailref.Set(newNode);
-    }
+    if (pred == tail) tailref.Set(newNode);
     size.Increment();
     return true;
   }

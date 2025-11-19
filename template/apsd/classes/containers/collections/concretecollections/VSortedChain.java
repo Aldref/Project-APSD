@@ -20,7 +20,7 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
     super();
     if (chn != null) {
       chn.TraverseForward(dat -> {
-        Insert(dat);
+        InsertIfAbsent(dat);
         return false;
       });
     }
@@ -28,7 +28,7 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
   }
 
   // public VSortedChain(TraversableContainer<Data> con)
-  protected VSortedChain(TraversableContainer<Data> con) {
+  public VSortedChain(TraversableContainer<Data> con) {
     super();
     if (con != null) {
       con.TraverseForward(dat -> {
@@ -54,18 +54,7 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
   // Insert
   @Override
   public boolean Insert(Data data) {
-    if (data == null) return false;
-    long size = Size().ToLong(); 
-    long pos = 0;
-    while (pos < size) {
-      Data curr = vec.GetAt(Natural.Of(pos));
-      if (curr != null && data.compareTo(curr) <= 0) {
-        break;
-      }
-      pos++;
-    }
-    vec.InsertAt(data, Natural.Of(pos)); 
-    return true;
+    return InsertIfAbsent(data);
   }
   /* ************************************************************************ */
   /* Override specific member functions from Chain                            */
@@ -76,16 +65,23 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
   @Override
   public boolean InsertIfAbsent(Data data) {
     if (data == null) return false;
-    long size = Size().ToLong(); 
-    long pos = 0;
+    long size = Size().ToLong();
+    long pos  = 0;
     while (pos < size) {
       Data curr = vec.GetAt(Natural.Of(pos));
-      if (curr != null && data.compareTo(curr) <= 0) {
-        break;        
+      if (curr == null) {
+        break; 
+      }
+      int cmp = data.compareTo(curr);
+      if (cmp == 0) {
+        return false;
+      }
+      if (cmp < 0) {
+        break;
       }
       pos++;
     }
-    vec.InsertAt(data, Natural.Of(pos)); 
+    vec.InsertAt(data, Natural.Of(pos));
     return true;
   }
 
@@ -96,15 +92,20 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
     MutableForwardIterator<Data> it = vec.FIterator();
     while (it.IsValid()) {
       Data curr = it.GetCurrent();
-      if (curr != null) {
-        int cmp = data.compareTo(curr);
-        if (cmp == 0) {
-          Remove(it.GetCurrent());
-        } else if (cmp < 0) {
-          break;
-        }
+      if (curr == null) {
+        it.Next();
+        continue;
+      }
+      int cmp = data.compareTo(curr);
+      if (cmp == 0) {
+        Remove(curr);
+      } else if (cmp < 0) {
+        break;
+      } else {
+        it.Next();
       }
     }
+    
   }
 
   @Override

@@ -51,6 +51,9 @@ abstract public class VectorBase<Data> implements Vector<Data> {
   // Capacity
   @Override
   public Natural Capacity() {
+    if (arr == null) {
+      return Natural.ZERO;
+    }
     return Natural.Of(arr.length);
   }
 

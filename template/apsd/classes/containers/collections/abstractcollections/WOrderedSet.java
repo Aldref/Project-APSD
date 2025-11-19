@@ -25,6 +25,13 @@ public class WOrderedSet<Data extends Comparable<? super Data>> extends WOrdered
     super(chn, con);
   }
 
+  public WOrderedSet(SortedChain<Data> chn, TraversableContainer<Data> con) {
+    super(new VSortedChain<Data>(), con);
+    if (chn != null) {
+      chn.TraverseForward(d -> { Insert(d); return false; });
+    }
+  }
+
   // ...
   // ChainAlloc
   @Override
