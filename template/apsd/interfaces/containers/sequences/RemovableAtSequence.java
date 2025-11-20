@@ -30,6 +30,7 @@ public interface RemovableAtSequence<Data> extends Sequence<Data> {
     if (size == 0) throw new IndexOutOfBoundsException("Sequence is empty");
     RemoveAt(Natural.Of(size - 1));
   }
+  
   // LastNRemove
   default Data LastNRemove(){
     long size = Size().ToLong();

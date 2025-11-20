@@ -50,13 +50,14 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
     long len = num.ToLong();
     len = (len <= size - idx) ? len : size - idx;
     if (len > 0) {
-      Long inirdr = size - 1;
-      Long rdr = inirdr;
-      for (Long wrt = rdr + len; rdr >= idx; rdr--, wrt--) {
-        Natural natrdr = Natural.Of(rdr);
-        SetAt(GetAt(natrdr), Natural.Of(wrt));
-        SetAt(null, natrdr);
-
+      long inirdr = size - 1;
+      long rdr = inirdr;
+      for (long wrt = rdr + len; rdr >= idx; rdr--, wrt--) {
+        if (wrt < Capacity().ToLong()) {
+          Natural natrdr = Natural.Of(rdr);
+          SetAt(GetAt(natrdr), Natural.Of(wrt));
+          SetAt(null, natrdr);
+        }
       }
     }
   }
@@ -72,19 +73,6 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
     ShiftRight(Natural.Of(Size().ToLong()-2), Natural.ONE);
   }
 
-  // SubVector
-  // default Vector<Data> SubVector(Natural from, Natural to){
-  //   long idxfrom = ExcIfOutOfBound(from);
-  //   long idxto = ExcIfOutOfBound(to);
-  //   if (idxfrom > idxto) throw new IndexOutOfBoundsException("From index greater than to index: from " + idxfrom + ", to " + idxto + "!");
-  //   //creare il subvector
-  //   subvec.Realloc(Natural.Of(idxto - idxfrom + 1));
-  //   for (long i = 0; i < idxto; i++) {
-  //       Data element = GetAt(Natural.Of(idxfrom + i));
-  //       subvec.SetAt(element, Natural.Of(i));
-  //   }
-  //   return subvec;
-  // }
   Vector<Data> SubVector(Natural from, Natural to);
   /* ************************************************************************ */
   /* Override specific member functions from Container                        */

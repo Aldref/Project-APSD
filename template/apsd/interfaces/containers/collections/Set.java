@@ -28,9 +28,8 @@ public interface Set<Data> extends Collection<Data> {
     }
     TraverseForward(dat -> {
         Box<Boolean> present = new Box<>(false);
-        set.TraverseForward(x -> {
-            boolean eq = (x == null ? dat == null : x.equals(dat));
-            if (eq) {
+        set.TraverseForward(dat2 -> {
+            if (dat.equals(dat2)) {
                 present.Set(true);
                 return true; 
             }
@@ -49,14 +48,14 @@ public interface Set<Data> extends Collection<Data> {
   /* ************************************************************************ */
 
   // ...
+  // IsEqual
   @Override
   default boolean IsEqual(IterableContainer<Data> container) {
     if (container == null || !Size().equals(container.Size())) return false;
     boolean allFound = !TraverseForward(dat -> {
         Box<Boolean> found = new Box<>(false);
-        container.TraverseForward(x -> {
-          boolean eq = (x == null ? dat == null : x.equals(dat));
-          if (eq) {
+        container.TraverseForward(dat2 -> {
+          if (dat.equals(dat2)) {
             found.Set(true);
             return true;  
           }

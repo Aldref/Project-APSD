@@ -1,5 +1,6 @@
 package apsd.classes.containers.sequences.abstractbases;
 
+import java.lang.reflect.Array;
 import java.util.Set;
 
 import apsd.classes.utilities.Natural;
@@ -19,6 +20,7 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
   protected CircularVectorBase(TraversableContainer<Data> con) {
   this(); 
   if (con != null) {
+    ArrayAlloc(con.Size());
     final long[] idx = new long[] { 0L };
     con.TraverseForward(d -> {
       SetAt(d, Natural.Of(idx[0]));
@@ -138,6 +140,5 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
         super.ShiftRight(pos, num);
     }
   }
-
 
 }

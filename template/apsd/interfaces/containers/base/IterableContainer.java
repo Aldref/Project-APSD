@@ -16,11 +16,9 @@ public interface IterableContainer<Data> extends TraversableContainer<Data> {
   // IsEqual
   default boolean IsEqual(IterableContainer<Data> num){
     if(num == null || !Size().equals(num.Size())) return false;
-
     ForwardIterator<Data> it1 = FIterator();
     ForwardIterator<Data> it2 = num.FIterator();
     while(it1.IsValid() && it2.IsValid()){
-      //confronto per evitare il nullpointerexception
       Data d1 = it1.DataNNext();
       Data d2 = it2.DataNNext();
       if(d1 == null && d2 != null || d1 != null && !d1.equals(d2)) return false;
@@ -37,7 +35,7 @@ public interface IterableContainer<Data> extends TraversableContainer<Data> {
     ForwardIterator<Data> it = FIterator();
     if (it == null || fun == null) return false;
     while(it.IsValid()){
-      if(fun.Apply(it.DataNNext())) { return true; }
+      if(fun.Apply(it.DataNNext())) return true; 
     }
     return false;
   }
@@ -47,7 +45,7 @@ public interface IterableContainer<Data> extends TraversableContainer<Data> {
     BackwardIterator<Data> it = BIterator();
     if (it == null || fun == null) return false;
     while(it.IsValid()){
-      if(fun.Apply(it.DataNPrev())) { return true; }
+      if(fun.Apply(it.DataNPrev())) return true; 
     }
     return false;
   }

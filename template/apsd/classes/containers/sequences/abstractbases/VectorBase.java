@@ -20,7 +20,7 @@ abstract public class VectorBase<Data> implements Vector<Data> {
   // NewVector
   abstract protected  void NewVector(Data [] array);
 
-  abstract protected Vector<Data> NewVector(Natural newsize);
+  abstract protected Vector<Data> NewVector(Natural newsize); // forse da togliere
   
   //ArrayAlloc
   @SuppressWarnings("unchecked")
@@ -38,8 +38,10 @@ abstract public class VectorBase<Data> implements Vector<Data> {
   // Clear
   @Override
   public void Clear(){
-    for (int i = 0; i < arr.length; i++) {
-      arr[i] = null;
+    if (arr != null){
+      for (int i = 0; i < arr.length; i++) {
+        arr[i] = null;
+    }
     }
   }
 
@@ -126,7 +128,7 @@ abstract public class VectorBase<Data> implements Vector<Data> {
 
       @Override
       public void Reset() {
-        index = 0;
+        index = Size().ToLong() - 1;
       }
 
       @Override
@@ -160,27 +162,6 @@ abstract public class VectorBase<Data> implements Vector<Data> {
   // GetAt
   @Override
   abstract public Data GetAt(Natural num);
-
-
-  //Da rivedere
-  @Override
-  public Natural Size() {
-    return Natural.Of(arr.length);
-  }
-
-  // non so se serve
-  @Override
-  public boolean Exists(Data data) {
-    MutableForwardIterator<Data> it = FIterator();
-    while (it.IsValid()) {
-      if ((it.GetCurrent() == null && data == null) ||
-          (it.GetCurrent() != null && it.GetCurrent().equals(data))) {
-        return true;
-      }
-      it.DataNNext();
-    }
-    return false;
-  }
 
   /* ************************************************************************ */
   /* Override specific member functions from MutableSequence                  */

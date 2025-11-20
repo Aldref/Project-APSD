@@ -16,6 +16,7 @@ public class CircularVector<Data> extends CircularVectorBase<Data> { // Must ext
 
   // public CircularVector(Natural inisize)
   public CircularVector(Natural inisize) {
+    this();
     ArrayAlloc(inisize);
   }
 
@@ -23,6 +24,7 @@ public class CircularVector<Data> extends CircularVectorBase<Data> { // Must ext
   public CircularVector(TraversableContainer<Data> con) {
     this();
     if (con != null) {
+      ArrayAlloc(con.Size());
       final long[] idx = new long[] { 0L };
       con.TraverseForward(d -> {
         SetAt(d, Natural.Of(idx[0]));

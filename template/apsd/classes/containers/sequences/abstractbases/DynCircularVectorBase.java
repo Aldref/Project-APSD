@@ -108,6 +108,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
     long idx = ExcIfOutOfBound(pos);
     long size = Size().ToLong();
     long len = num.ToLong();
+    if (len < 0) return;
     len = (len <= size - idx) ? len : size - idx;
     if (idx < size - (idx + len)) {
       long iniwrt = idx - 1 + len;
@@ -136,6 +137,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
     long idx = ExcIfOutOfBound(pos);
     long size = Size().ToLong();
     long len = num.ToLong();
+    if (len < 0) return;
     len = (len <= size - idx) ? len : size - idx;
     if (size - (idx + len) < idx) {
       long iniwrt = idx + len;

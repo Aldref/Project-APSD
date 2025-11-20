@@ -18,7 +18,6 @@ public interface List<Data> extends MutableSequence<Data>, InsertableAtSequence<
   // ...
   @Override
   default boolean Insert(Data data) {
-    if (data == null) return false;
     InsertLast(data);
     return true;
   }

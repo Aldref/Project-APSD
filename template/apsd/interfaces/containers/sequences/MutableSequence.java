@@ -54,7 +54,6 @@ public interface MutableSequence<Data> extends Sequence<Data>, MutableIterableCo
     long idx1 = ExcIfOutOfBound(num1);
     long idx2 = ExcIfOutOfBound(num2);
     if (idx1 == idx2) return; 
-
     Data data1 = GetAt(Natural.Of(idx1));
     Data data2 = GetAt(Natural.Of(idx2));
     SetAt(data2, Natural.Of(idx1));

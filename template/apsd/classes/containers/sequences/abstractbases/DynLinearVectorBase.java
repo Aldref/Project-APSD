@@ -30,22 +30,6 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
     size = 0L;
   }
 
-  @Override
-  public DynVector<Data> SubVector(Natural start, Natural end) {
-    long from = start.ToLong();
-    long to   = end.ToLong();
-    if (from > to || to > size) {
-      throw new IndexOutOfBoundsException("Invalid subvector range");
-    }
-    long len = to - from;
-    DynVector<Data> res = NewVector(Natural.Of(len));
-    for (long i = 0; i < len; ++i) {
-      Data value = GetAt(Natural.Of(from + i));
-      res.SetAt(value, Natural.Of(i));
-    }
-    return res;
-  }
-
   /* ************************************************************************ */
   /* Override specific member functions from Container                        */
   /* ************************************************************************ */

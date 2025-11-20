@@ -47,11 +47,5 @@ public class DynCircularVector<Data> extends DynCircularVectorBase<Data> { // Mu
     return vec;
   }
 
-  // @Override
-  // protected DynCircularVector<Data> NewSubVector(Natural newsize) {
-  //   DynCircularVector<Data> vec = new DynCircularVector<>();
-  //   vec.ArrayAlloc(newsize);
-  //   return vec;
-  // }
 
 }

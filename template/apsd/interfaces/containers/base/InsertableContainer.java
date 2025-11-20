@@ -12,10 +12,7 @@ public interface InsertableContainer<Data> extends Container{
       if (container.IsEmpty()) return false;
       final Box<Boolean> result = new Box<>(true);
       container.TraverseForward(dat ->{
-        if (!Insert(dat)){
-          result.Set(false);
-          return true;
-        }
+        result.Set(result.Get() && Insert(dat));
         return false;
       });
       return result.Get();
@@ -26,13 +23,8 @@ public interface InsertableContainer<Data> extends Container{
       if (container.IsEmpty()) return false;
       final Box<Boolean> result = new Box<>(false);
       container.TraverseForward(dat ->{
-        if (Insert(dat)){
-          result.Set(true);
-          return false;
-        }
-        else{
-          return true;
-        }
+        result.Set(Insert(dat) || result.Get());
+        return false;
       });
       return result.Get();
   }

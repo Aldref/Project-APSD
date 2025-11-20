@@ -13,22 +13,25 @@ public interface Stack<Data> extends ClearableContainer, InsertableContainer<Dat
 
   // TopNPop
   default Data TopNPop(){
-    Data topElement = Top();
+    if (IsEmpty()) return null;
+    Data top = Top();
     Pop();
-    return topElement;
+    return top;
   }
   
   // SwapTop
   default void SwapTop(Data data){
+    if (IsEmpty()) return;
     Pop();
     Push(data);
   }
 
   //TopNSwap
   default Data TopNSwap(Data data){
-    Data topElement = Top();
+    if (IsEmpty()) return null;
+    Data top = Top();
     SwapTop(data);
-    return topElement;
+    return top;
   }
 
   // Push

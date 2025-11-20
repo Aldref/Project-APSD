@@ -42,6 +42,5 @@ public interface Queue<Data> extends ClearableContainer, InsertableContainer<Dat
   default boolean Insert(Data data){ 
     Enqueue(data);
     return true;
-    
   }
 }

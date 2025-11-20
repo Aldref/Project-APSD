@@ -16,14 +16,10 @@ public interface DynVector<Data> extends ResizableContainer, InsertableAtSequenc
     long index = idx.ToLong();
     long size  = Size().ToLong();
     if (index < 0 || index > size) throw new IndexOutOfBoundsException("Index out of bounds for insert: " + index + "; Size: " + size + "!");
-    if (Size().equals(Capacity())) {
-      Grow(); 
-      size = Size().ToLong();
-    }
-    Expand(Natural.ONE);       
-    long newSize = Size().ToLong();     
-    if (index < newSize - 1) ShiftRight(Natural.Of(index), Natural.ONE);
+    if (Size().equals(Capacity())) Grow(); 
+    ShiftRight(Natural.Of(index), Natural.ONE);      
     SetAt(element, Natural.Of(index));
+    Expand(Natural.ONE);
   }
 
   /* ************************************************************************ */
@@ -36,13 +32,9 @@ public interface DynVector<Data> extends ResizableContainer, InsertableAtSequenc
     long index = ExcIfOutOfBound(idx);
     Data removedElement = GetAt(Natural.Of(index));
     long size = Size().ToLong();
-    if (index >= size) throw new IndexOutOfBoundsException("Index out of bounds: " + index);
-    if (index == size - 1) {
-      SetAt(null, Natural.Of(size - 1));
-      Reduce();
-      return removedElement;
+    if (index < size - 1) {
+      ShiftLeft(idx, Natural.ONE); 
     }
-    ShiftLeft(Natural.Of(index), Natural.ONE);
     SetAt(null, Natural.Of(size - 1));
     Reduce();
     return removedElement;
@@ -55,50 +47,40 @@ public interface DynVector<Data> extends ResizableContainer, InsertableAtSequenc
 
   // ...
   @Override
-  default void ShiftLeft(Natural pos, Natural num){
-    long idx = ExcIfOutOfBound(pos);
-    long size = Size().ToLong();
-    long len = num.ToLong();
-    len = (len <= size - idx) ? len : size - idx;
-    //forse shrink qui
-    if (len > 0) {
-      long iniwrt = idx;
-      long wrt = iniwrt;
-      for (long rdr = wrt + len; rdr < size; rdr++, wrt++) {
-        Natural natrdr = Natural.Of(rdr);
-        SetAt(GetAt(natrdr), Natural.Of(wrt));
-        SetAt(null, natrdr);
+  default void ShiftLeft(Natural pos, Natural num) {
+      long idx = ExcIfOutOfBound(pos);
+      long size = Size().ToLong();
+      long len = num.ToLong();
+      if (idx + len > size) len = size - idx;
+      for (long i = idx; i + len < size; i++) {
+          SetAt(GetAt(Natural.Of(i + len)), Natural.Of(i));
       }
-      for (; wrt - iniwrt < len; wrt++) {
-        SetAt(null, Natural.Of(wrt));
+      for (long i = size - len; i < size; i++) {
+          SetAt(null, Natural.Of(i));
       }
-      Reduce();
-    }
   }
+
 
   @Override
-  default void ShiftRight(Natural pos, Natural num){
-    long idx = ExcIfOutOfBound(pos);
-    long size = Size().ToLong();
-    long len = num.ToLong();
-    if (len > size - idx) {
-      Grow(Natural.Of(len));
-      size = Size().ToLong();
-    }
-    if (len > 0) {
-      Long inirdr = size - 1;
-      Long rdr = inirdr;
-      for (Long wrt = rdr + len; rdr >= idx; rdr--, wrt--) {
-        Natural natrdr = Natural.Of(rdr);
-        SetAt(GetAt(natrdr), Natural.Of(wrt));
-        SetAt(null, natrdr);
-
+  default void ShiftRight(Natural pos, Natural num) {
+      long idx = ExcIfOutOfBound(pos);
+      long len = num.ToLong();
+      long size = Size().ToLong();
+      long cap  = Capacity().ToLong();
+      while (size + len > cap) {
+          Grow();
+          cap = Capacity().ToLong();
       }
-    }
+      for (long i = size - 1; i >= idx; i--) {
+          Data value = GetAt(Natural.Of(i));
+          SetAt(value, Natural.Of(i + len));
+          SetAt(null, Natural.Of(i));
+      }
   }
 
-  // @Override
-  // DynVector<Data> SubVector(Natural start, Natural end);
+
+  @Override
+  DynVector<Data> SubVector(Natural start, Natural end);
 
   /* ************************************************************************ */
   /* Override specific member functions from Container                        */

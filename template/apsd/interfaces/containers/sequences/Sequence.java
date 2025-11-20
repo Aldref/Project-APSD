@@ -32,7 +32,7 @@ public interface Sequence<Data> extends IterableContainer<Data> {
   default Natural Search(Data data) {
     Box<Natural> index = new Box<>(Natural.ZERO);
     boolean found = TraverseForward(dat -> {
-      if (dat == null && data == null || dat != null && dat.equals(data)) {
+      if (data == null ? dat == null : data.equals(dat)) {
         return true;
       } else {
         index.Set(Natural.Of(index.Get().ToLong() + 1));
