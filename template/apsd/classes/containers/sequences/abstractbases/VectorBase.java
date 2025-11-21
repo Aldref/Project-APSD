@@ -79,7 +79,7 @@ abstract public class VectorBase<Data> implements Vector<Data> {
 
       @Override
       public boolean IsValid() {
-        return index < Size().ToLong();
+        return arr != null && index < arr.length;
       }
 
       @Override
@@ -118,17 +118,17 @@ abstract public class VectorBase<Data> implements Vector<Data> {
       private long index;
 
       public VecBackwardIter() {
-        index = (Size().ToLong() == 0 ? -1 : Size().ToLong() - 1);
+        index = (arr == null ? -1 : arr.length - 1);
       }
 
       @Override
       public boolean IsValid() {
-        return index >= 0;
+        return arr != null && index >= 0;
       }
 
       @Override
       public void Reset() {
-        index = Size().ToLong() - 1;
+        index = (arr == null ? -1 : arr.length - 1);
       }
 
       @Override

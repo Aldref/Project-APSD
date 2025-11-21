@@ -23,36 +23,12 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   protected final Box<LLNode<Data>> tailref = new Box<>();
 
   // LLChainBase
-  protected LLChainBase(LLChainBase<Data> chn) {
-    if (chn == null) {
-      size.Zero();
-      headref.Set(null);
-      tailref.Set(null);
-      return;
-    }
-    this.size.Assign(chn.size.ToNatural());
-    LLNode<Data> src = chn.headref.Get();
-    LLNode<Data> newHead = null;
-    LLNode<Data> newTail = null;
-    while (src != null) {
-      LLNode<Data> newNode = new LLNode<>(src.Get());
-      if (newHead == null) {
-        newHead = newNode;
-        newTail = newNode;
-      } else {
-        newTail.SetNext(newNode);
-        newTail = newNode;
-      }
-      src = (src.GetNext() != null ? src.GetNext().Get() : null);
-    }
-    this.headref.Set(newHead);
-    this.tailref.Set(newTail);
-  }
+  public LLChainBase() { }
 
   protected LLChainBase(long size, LLNode<Data> head, LLNode<Data> tail) {
     this.size.Assign(Natural.Of(size)); 
-    this.headref.Set(head);
-    this.tailref.Set(tail);
+    headref.Set(head);
+    tailref.Set(tail);
   }
 
   public LLChainBase(TraversableContainer<Data> con) {

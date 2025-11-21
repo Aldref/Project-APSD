@@ -161,4 +161,9 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
     }
   }
 
+  @Override
+  public DynVector<Data> SubVector(Natural start, Natural end) {
+    return (DynVector<Data>) super.SubVector(start, end);
+  }
+
 }

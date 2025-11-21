@@ -2,6 +2,7 @@ package apsd.interfaces.containers.sequences;
 
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.ReallocableContainer;
+import apsd.interfaces.containers.iterators.ForwardIterator;
 public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data> {
 
   // ShiftLeft
@@ -80,5 +81,13 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
 
   // ...
   @Override
-  Natural Size();
+  default Natural Size() {
+    long count = 0L;
+    ForwardIterator<Data> it = FIterator();
+    while (it.IsValid()) {
+      count++;
+      it.DataNNext();
+    }
+    return Natural.Of(count);
+  }
 }
