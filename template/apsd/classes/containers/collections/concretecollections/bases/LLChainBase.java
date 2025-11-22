@@ -32,19 +32,21 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   }
 
   public LLChainBase(TraversableContainer<Data> con) {
-    size.Assign(con.Size());
-    final Box<Boolean> first = new Box<>(true);
-    con.TraverseForward(dat -> {
-      LLNode<Data> node = new LLNode<>(dat);
-      if (first.Get()) {
-        headref.Set(node);
-        first.Set(false);
-      } else {
-        tailref.Get().SetNext(node);
-      }
-      tailref.Set(node);
-      return false;
-    });
+    if (con != null) {
+      size.Assign(con.Size());
+      final Box<Boolean> first = new Box<>(true);
+      con.TraverseForward(dat -> {
+        LLNode<Data> node = new LLNode<>(dat);
+        if (first.Get()) {
+          headref.Set(node);
+          first.Set(false);
+        } else {
+          tailref.Get().SetNext(node);
+        }
+        tailref.Set(node);
+        return false;
+      });
+    }
   }
 
   // NewChain
@@ -145,9 +147,16 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
         if (!IsValid()) throw new IllegalStateException("Iterator terminated");
         return cur.Get();
       }
-  
+      
+      @Override
+      public void Next() {
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        cur = (cur.GetNext() != null ? cur.GetNext().Get() : null);
+      }
+
       @Override
       public Data DataNNext() {
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
         Data old = GetCurrent();
         cur = (cur.GetNext() != null ? cur.GetNext().Get() : null);
         return old;
@@ -192,9 +201,16 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
         if (!IsValid()) throw new IllegalStateException("Iterator terminated");
         return cur.Get();
       }
-  
+      
+      @Override
+      public void Prev() {
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        cur = (cur.GetNext() != null ? cur.GetNext().Get() : null);
+      }
+
       @Override
       public Data DataNPrev() {
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
         Data old = GetCurrent();
         LLNode<Data> node = headref.Get();
         LLNode<Data> prev = null;

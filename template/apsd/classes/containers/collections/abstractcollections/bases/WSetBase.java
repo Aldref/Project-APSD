@@ -23,16 +23,20 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
   }
   public WSetBase(TraversableContainer<Data> con) {
     ChainAlloc();
-    con.TraverseForward(dat ->{
-      chn.InsertIfAbsent(dat); return false;
-    });
+    if (con != null) {
+      con.TraverseForward(dat -> {
+        chn.InsertIfAbsent(dat); return false;
+      });
+    }
   }
 
   public WSetBase(Chn chn, TraversableContainer<Data> con) {
     this.chn = chn;
-    con.TraverseForward(dat ->{
-      chn.InsertIfAbsent(dat); return false;
-    });
+    if (con != null) {
+      con.TraverseForward(dat ->{
+        chn.InsertIfAbsent(dat); return false;
+      });
+    }
   }
   // ChainAlloc
   abstract protected void ChainAlloc();
@@ -66,7 +70,6 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
   // Insert
   @Override
   public boolean Insert(Data data) {
-    System.out.println("[DBG] WSetBase.Insert data=" + data);
     return chn.InsertIfAbsent(data);
   }
 

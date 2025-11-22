@@ -65,7 +65,6 @@ abstract public class VectorBase<Data> implements Vector<Data> {
 
   // ...
 
-  // ForwardIterator
   @Override
   public MutableForwardIterator<Data> FIterator() {
 
@@ -90,17 +89,19 @@ abstract public class VectorBase<Data> implements Vector<Data> {
       @Override
       public Data GetCurrent() {
         if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-        return GetAt(Natural.Of(index));   
+        return arr[(int) index];
       }
 
       @Override
-      public void SetCurrent(Data Data) {
-        SetAt(Data,Natural.Of(index));
+      public void SetCurrent(Data data) {
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        arr[(int) index] = data;
       }
 
       @Override
       public Data DataNNext() {
-        Data d = GetAt(Natural.Of(index));
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        Data d = arr[(int) index];
         index++;
         return d;
       }
@@ -134,17 +135,19 @@ abstract public class VectorBase<Data> implements Vector<Data> {
       @Override
       public Data GetCurrent() {
         if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-        return GetAt(Natural.Of(index));
+        return arr[(int) index];
       }
 
       @Override
-      public void SetCurrent(Data Data) {
-        SetAt(Data, Natural.Of(index));
+      public void SetCurrent(Data data) {
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        arr[(int) index] = data;
       }
 
       @Override
       public Data DataNPrev() {
-        Data cur = GetCurrent();
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        Data cur = arr[(int) index];
         index--;
         return cur;
       }

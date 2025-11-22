@@ -29,7 +29,7 @@ public interface Set<Data> extends Collection<Data> {
     TraverseForward(dat -> {
         Box<Boolean> present = new Box<>(false);
         set.TraverseForward(dat2 -> {
-            if (dat.equals(dat2)) {
+            if (dat == null ? dat2 == null : dat.equals(dat2)) {
                 present.Set(true);
                 return true; 
             }
@@ -40,7 +40,7 @@ public interface Set<Data> extends Collection<Data> {
         }
         return false; 
     });
-}
+  }
 
   
   /* ************************************************************************ */
@@ -55,7 +55,7 @@ public interface Set<Data> extends Collection<Data> {
     boolean allFound = !TraverseForward(dat -> {
         Box<Boolean> found = new Box<>(false);
         container.TraverseForward(dat2 -> {
-          if (dat.equals(dat2)) {
+          if (dat == null ? dat2 == null : dat.equals(dat2)) {
             found.Set(true);
             return true;  
           }

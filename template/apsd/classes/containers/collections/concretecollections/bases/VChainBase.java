@@ -134,32 +134,22 @@ abstract public class VChainBase<Data> implements Chain<Data> { // Must implemen
   // filter
   @Override
   public boolean Filter(Predicate<Data> fun) {
-    long del = 0;
-    if (fun != null){
-      MutableForwardIterator<Data> it = vec.FIterator();
-      while (it.IsValid()) {
-        if (!fun.Apply(it.GetCurrent())) {
-          del++;
-          it.SetCurrent(null);
-        } 
-        it.Next();
-      }
-      if (del > 0) {
-        it.Reset();
-        MutableForwardIterator<Data> newIt = vec.FIterator();
-        while (newIt.IsValid()) {
-          if (newIt.GetCurrent() != null) {
-            Data dato = newIt.GetCurrent();
-            newIt.SetCurrent(null);
-            it.SetCurrent(dato);
-            it.Next();
-            newIt.Next();
-          } 
-          }
-          vec.Reduce(Natural.Of(del));
+    System.out.println("Entrato in VChainBase.Filter");
+    long oldSize = vec.Size().ToLong();
+    if (fun != null) {
+      long i = 0;
+      long newSize = oldSize;
+      while (i < newSize) {
+        Data dat = vec.GetAt(Natural.Of(i));
+        if (!fun.Apply(dat)) {
+          vec.ShiftLeft(Natural.Of(i));
+          newSize--;
+        } else {
+          i++;
         }
+      }
     }
-    return (del > 0);
+    return vec.Size().ToLong() < oldSize;
   }
 
 
