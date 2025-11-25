@@ -47,6 +47,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
   public void Clear(){
     super.Clear();
     size = 0L;
+    start = 0L;
   }
 
   /* ************************************************************************ */
@@ -57,20 +58,24 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
   // Realloc
   @Override
   public void Realloc(Natural newsize) {
-    if (newsize == null) throw new IllegalArgumentException("New size cannot be null!");
-    long sizeLong = newsize.ToLong();
-    if (sizeLong >= Integer.MAX_VALUE) throw new ArithmeticException("Overflow: size cannot exceed Integer.MAX_VALUE!"); 
-    Data[] oldArr = arr;
-    ArrayAlloc(newsize);
-    if (oldArr != null){
-      int copyLen = (oldArr.length < arr.length) ? oldArr.length : arr.length; 
-      for (int i = 0; i < copyLen; i++) {
-        arr[i] = oldArr[i];
+      if (newsize == null) throw new IllegalArgumentException("New size cannot be null!");
+      long newCap = newsize.ToLong();
+      if (newCap >= Integer.MAX_VALUE) throw new ArithmeticException("Overflow: size cannot exceed Integer.MAX_VALUE!");
+      Data[] oldArr = arr;
+      long oldSize = size;
+      arr = (Data[]) new Object[(int) newCap];
+      if (oldArr != null && oldSize > 0) {
+          long copyLen = Math.min(oldSize, newCap);
+          for (int i = 0; i < copyLen; i++) {
+              arr[i] = oldArr[(int) ((start + i) % oldArr.length)];
+          }
+          size = copyLen;
+      } else {
+          size = 0;
       }
-    }
-    if (size > sizeLong) size = sizeLong;
-
+      start = 0;
   }
+
 
   /* ****** ****************************************************************** */
   /* Override specific member functions from ResizableContainer               */
@@ -105,61 +110,51 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
   // ShiftLeft
   @Override
   public void ShiftLeft(Natural pos, Natural num){
-    long idx = ExcIfOutOfBound(pos);
-    long size = Size().ToLong();
+    long idx = ExcIfOutOfBound(pos);   
     long len = num.ToLong();
-    if (len < 0) return;
-    len = (len <= size - idx) ? len : size - idx;
-    if (idx < size - (idx + len)) {
-      long iniwrt = idx - 1 + len;
-      long wrt = iniwrt;
-      for (long rdr = wrt - len; rdr >= 0; rdr--, wrt--){
-          Natural natrdr = Natural.Of(rdr);
-          SetAt(GetAt(natrdr), Natural.Of(wrt));
-          SetAt(null, natrdr);
-      }
-      for (; wrt - iniwrt < len; wrt++)
-          SetAt(null, Natural.Of(wrt));
-      start = (start + len) % arr.length;
+    long sizeLong = size;
+    if (len <= 0) return;
+    if (len > sizeLong - idx) {
+      len = sizeLong - idx;
     }
-    else {
-      long neededMaxIndex = (size - 1) + len;
-      while (neededMaxIndex >= Capacity().ToLong()) {
-          Grow();
-      }
-      super.ShiftLeft(pos, num);
+    for (long i = idx; i < sizeLong - len; i++) {
+      SetAt(GetAt(Natural.Of(i + len)), Natural.Of(i));
     }
+    for (long i = sizeLong - len; i < sizeLong; i++) {
+      SetAt(null, Natural.Of(i));
+    }
+    size -= len;
   }
 
   // ShiftRight
   @Override
   public void ShiftRight(Natural pos, Natural num){
-    long idx = ExcIfOutOfBound(pos);
-    long size = Size().ToLong();
+    if (pos == null) throw new NullPointerException("Position cannot be null!");
+    long idx = pos.ToLong();
     long len = num.ToLong();
-    if (len < 0) return;
-    len = (len <= size - idx) ? len : size - idx;
-    if (size - (idx + len) < idx) {
-      long iniwrt = idx + len;
-      long wrt = iniwrt;
-      long rdr = idx - 1;
-      for (; rdr >= 0; rdr--, wrt--){
-          Natural natrdr = Natural.Of(rdr);
-          SetAt(GetAt(natrdr), Natural.Of(wrt));
-          SetAt(null, natrdr);
-      }
-      for (; wrt > iniwrt; wrt--)
-          SetAt(null, Natural.Of(wrt));
-      start = (start - len + arr.length) % arr.length;
+    long sizeLong = size;
+    if (idx < 0 || idx > sizeLong) throw new IndexOutOfBoundsException("Index out of bounds: " + idx + "; Size: " + sizeLong);
+    if (len <= 0) return;
+    while (sizeLong + len > arr.length) {
+      Grow();
+      sizeLong = size;
     }
-    else {
-      long neededMaxIndex = (size - 1) + len;
-      while (neededMaxIndex >= Capacity().ToLong()) {
-          Grow();
+    if (idx == sizeLong) {
+      for (long i = 0; i < len; i++) {
+        SetAt(null, Natural.Of(sizeLong + i));
       }
-      super.ShiftRight(pos, num);
+      size += len;
+      return;
     }
+    for (long i = sizeLong - 1; i >= idx; i--) {
+      SetAt(GetAt(Natural.Of(i)), Natural.Of(i + len));
+    }
+    for (long i = idx; i < idx + len; i++) {
+      SetAt(null, Natural.Of(i));
+    }
+    size += len;
   }
+
 
   @Override
   public DynVector<Data> SubVector(Natural start, Natural end) {

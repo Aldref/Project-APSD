@@ -67,6 +67,7 @@ public class WQueue<Data> implements Queue<Data> { // Must implement Queue
   // head
   @Override
   public Data Head() {
+    if (IsEmpty()) throw new IndexOutOfBoundsException("Index out of bounds: 0; Size: " + Size() + "!");
     return lst.GetAt(Natural.ZERO);
   }
 

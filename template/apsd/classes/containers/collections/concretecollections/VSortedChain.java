@@ -37,6 +37,7 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
       });
     }
   }
+
   // protected VSortedChain(DynVector<Data> vec)
   protected VSortedChain(DynVector<Data> vec) {
     super(vec);
@@ -46,6 +47,7 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
   public VSortedChain<Data> NewChain(DynVector<Data> vec) {
     return new VSortedChain<Data>(vec);
   }
+
   /* ************************************************************************ */
   /* Override specific member functions from InsertableContainer              */
   /* ************************************************************************ */
@@ -56,6 +58,7 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
   public boolean Insert(Data data) {
     return InsertIfAbsent(data);
   }
+
   /* ************************************************************************ */
   /* Override specific member functions from Chain                            */
   /* ************************************************************************ */
@@ -63,27 +66,26 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
   // ...
   // InsertIfAbsent
   @Override
-  public boolean InsertIfAbsent(Data data) {
+public boolean InsertIfAbsent(Data data) {
     if (data == null) return false;
-    long size = Size().ToLong();
-    long pos  = 0;
-    while (pos < size) {
-      Data curr = vec.GetAt(Natural.Of(pos));
-      if (curr == null) {
-        break; 
-      }
-      int cmp = data.compareTo(curr);
-      if (cmp == 0) {
-        return false;
-      }
-      if (cmp < 0) {
-        break;
-      }
-      pos++;
+    long pos = 0;
+    MutableForwardIterator<Data> it = vec.FIterator();
+    while (it.IsValid()) {
+        Data curr = it.GetCurrent();
+        if (curr == null) { 
+            pos++;
+            it.Next();
+            continue;
+        }
+        int cmp = data.compareTo(curr);
+        if (cmp == 0) return false; 
+        if (cmp < 0) break;         
+        pos++;
+        it.Next();
     }
     vec.InsertAt(data, Natural.Of(pos));
     return true;
-  }
+}
 
   // RemoveOccurrences
   @Override

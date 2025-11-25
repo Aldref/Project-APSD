@@ -10,8 +10,8 @@ abstract public class LinearVectorBase<Data> extends VectorBase<Data> { // Must 
   protected LinearVectorBase(TraversableContainer<Data> con) {
     super();
     if (con != null) {
-      long sz = con.Size().ToLong();
-      ArrayAlloc(Natural.Of(sz));
+      long size = con.Size() != null ? con.Size().ToLong() : 0L;
+      ArrayAlloc(Natural.Of(size));
       final long[] idx = {0L};
       con.TraverseForward(dat -> {
         arr[(int) idx[0]] = dat;
@@ -20,6 +20,7 @@ abstract public class LinearVectorBase<Data> extends VectorBase<Data> { // Must 
       });
     }
   }
+
   /* ************************************************************************ */
   /* Override specific member functions from ReallocableContainer             */
   /* ************************************************************************ */

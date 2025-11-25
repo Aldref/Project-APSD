@@ -19,7 +19,6 @@ public interface DynVector<Data> extends ResizableContainer, InsertableAtSequenc
     if (Size().equals(Capacity())) Grow(); 
     ShiftRight(Natural.Of(index), Natural.ONE);      
     SetAt(element, Natural.Of(index));
-    Expand(Natural.ONE);
   }
 
   /* ************************************************************************ */
@@ -48,34 +47,35 @@ public interface DynVector<Data> extends ResizableContainer, InsertableAtSequenc
   // ...
   @Override
   default void ShiftLeft(Natural pos, Natural num) {
-      long idx = ExcIfOutOfBound(pos);
-      long size = Size().ToLong();
-      long len = num.ToLong();
-      if (idx + len > size) len = size - idx;
-      for (long i = idx; i + len < size; i++) {
-          SetAt(GetAt(Natural.Of(i + len)), Natural.Of(i));
-      }
-      for (long i = size - len; i < size; i++) {
-          SetAt(null, Natural.Of(i));
-      }
+    long idx = ExcIfOutOfBound(pos);
+    long size = Size().ToLong();
+    long len = num.ToLong();
+    if (idx + len > size) len = size - idx;
+    for (long i = idx; i + len < size; i++) {
+      SetAt(GetAt(Natural.Of(i + len)), Natural.Of(i));
+    }
+    for (long i = size - len; i < size; i++) {
+      SetAt(null, Natural.Of(i));
+    }
   }
-
 
   @Override
   default void ShiftRight(Natural pos, Natural num) {
-      long idx = ExcIfOutOfBound(pos);
-      long len = num.ToLong();
-      long size = Size().ToLong();
-      long cap  = Capacity().ToLong();
-      while (size + len > cap) {
-          Grow();
-          cap = Capacity().ToLong();
-      }
-      for (long i = size - 1; i >= idx; i--) {
-          Data value = GetAt(Natural.Of(i));
-          SetAt(value, Natural.Of(i + len));
-          SetAt(null, Natural.Of(i));
-      }
+    long idx = pos.ToLong(); 
+    long len = num.ToLong();
+    long size = Size().ToLong();
+    long cap  = Capacity().ToLong();
+    while (size + len > cap) {
+      Grow();
+      cap = Capacity().ToLong();
+    }
+    if (idx < 0 || idx > size) throw new IndexOutOfBoundsException("Index out of bounds for shift right: " + idx + "; Size: " + size + "!");
+    if (len > 0) Expand(Natural.Of(len));
+    for (long i = size - 1; i >= idx; i--) {
+      Data value = GetAt(Natural.Of(i));
+      SetAt(value, Natural.Of(i + len));
+      SetAt(null, Natural.Of(i));
+    }
   }
 
 

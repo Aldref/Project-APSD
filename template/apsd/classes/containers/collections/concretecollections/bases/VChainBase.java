@@ -49,6 +49,7 @@ abstract public class VChainBase<Data> implements Chain<Data> { // Must implemen
   // Clear
   @Override
   public void Clear(){
+
     vec.Clear();
   }
   /* ************************************************************************ */
@@ -59,11 +60,18 @@ abstract public class VChainBase<Data> implements Chain<Data> { // Must implemen
   // Remove
   @Override
   public boolean Remove(Data data) {
-    if (data == null) return false;
-    Natural pos = vec.Search(data);
-    if (pos == null) return false;
-    vec.ShiftLeft(pos);
-    return true;
+    boolean removed = false;
+    long i = 0;
+    while (i < vec.Size().ToLong()) {
+      Data dat = vec.GetAt(Natural.Of(i));
+      if ((dat == null && data == null) || (dat != null && dat.equals(data))) {
+        vec.ShiftLeft(Natural.Of(i));
+        removed = true;
+      } else {
+        i++;
+      }
+    }
+    return removed;
   }
 
   /* ************************************************************************ */
@@ -134,7 +142,6 @@ abstract public class VChainBase<Data> implements Chain<Data> { // Must implemen
   // filter
   @Override
   public boolean Filter(Predicate<Data> fun) {
-    System.out.println("Entrato in VChainBase.Filter");
     long oldSize = vec.Size().ToLong();
     if (fun != null) {
       long i = 0;

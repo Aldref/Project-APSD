@@ -6,10 +6,7 @@ public interface Chain<Data> extends RemovableAtSequence<Data>, Set<Data>{ // Mu
 
   // InsertIfAbsent
   default boolean InsertIfAbsent(Data data) {
-    boolean present = TraverseForward(dat ->
-        (dat == null ? data == null : dat.equals(data))
-    );
-    if (!present) {
+    if (Search(data) == null) {
       return Insert(data);
     }
     return false;

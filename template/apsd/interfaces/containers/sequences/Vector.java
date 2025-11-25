@@ -46,10 +46,10 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
   }
 
   default void ShiftRight(Natural pos, Natural num){
-    long idx = ExcIfOutOfBound(pos);
+    long idx = pos.ToLong();
     long size = Size().ToLong();
     long len = num.ToLong();
-    len = (len <= size - idx) ? len : size - idx;
+    if (idx < 0 || idx > size) throw new IndexOutOfBoundsException("Index out of bounds for shift right: " + idx + "; Size: " + size + "!");
     if (len > 0) {
       long inirdr = size - 1;
       long rdr = inirdr;

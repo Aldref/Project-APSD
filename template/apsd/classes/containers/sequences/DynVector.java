@@ -11,12 +11,14 @@ public class DynVector<Data> extends DynLinearVectorBase<Data> { // Must extend 
   public DynVector() {
     super(null);
     ArrayAlloc(Natural.ONE); 
+    size = 0L;
   }
 
   // public DynVector(Natural inisize)
   public DynVector(Natural inisize) {
     super(null);
     ArrayAlloc(inisize);
+    size = 0L;
   }
 
   // public DynVector(TraversableContainer<Data> con)

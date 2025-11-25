@@ -2,7 +2,6 @@ package apsd.classes.containers.sequences.abstractbases;
 
 import java.lang.reflect.Array;
 import java.util.Set;
-
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.TraversableContainer;
 
@@ -46,19 +45,21 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
   @Override
   public void Realloc(Natural newsize) {
     if (newsize == null) throw new IllegalArgumentException("New size cannot be null!");
-    long size = newsize.ToLong();
-    if (size >= Integer.MAX_VALUE) throw new ArithmeticException("Overflow: size cannot exceed Integer.MAX_VALUE!");
+    long newCap = newsize.ToLong();
+    if (newCap >= Integer.MAX_VALUE) throw new ArithmeticException("Overflow: size cannot exceed Integer.MAX_VALUE!");
     Data[] oldArr = arr;
-    ArrayAlloc(newsize); 
-    if (oldArr != null){
-      int copyLen = (oldArr.length < arr.length) ? oldArr.length : arr.length; 
-      for (int i = 0; i < copyLen; i++) {
-        int oldidx = (int) ((start + i) % oldArr.length);
-        arr[i] = oldArr[oldidx];
+    long oldSize = Size().ToLong();    
+    long oldStart = start;
+    ArrayAlloc(newsize);   
+    if (oldArr != null && oldSize > 0) {
+      for (long i = 0; i < oldSize && i < newCap; i++) {
+        int oldIdx = (int) ((oldStart + i) % oldArr.length);
+        arr[(int) i] = oldArr[oldIdx];
       }
     }
-    start = 0L;
+    start = 0L; 
   }
+
 
   /* ************************************************************************ */
   /* Override specific member functions from Sequence                         */
@@ -93,52 +94,44 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
   // ...
   // ShiftLeft
   @Override
-  public void ShiftLeft(Natural pos, Natural num){
+  public void ShiftLeft(Natural pos, Natural num) {
     long idx = ExcIfOutOfBound(pos);
-    long size = Size().ToLong();
     long len = num.ToLong();
-    len = (len <= size - idx) ? len : size - idx;
-    if (idx < size - (idx + len)) {
-      long iniwrt = idx - 1 + len;
-      long wrt = iniwrt;
-      for (long rdr = wrt - len; rdr >= 0; rdr--, wrt--){
-        Natural natrdr = Natural.Of(rdr);
-        SetAt(GetAt(natrdr), Natural.Of(wrt));
-        SetAt(null, natrdr);
-      }
-      for (; wrt - iniwrt < len; wrt++){
-        SetAt(null, Natural.Of(wrt));
-      }
-      start = (start + len) % arr.length;
-    } else {
-      super.ShiftLeft(pos, num);
+    if (len <= 0) return; 
+    long size = Size().ToLong();
+    if (len > size - idx) {
+      len = size - idx;
     }
+    for (long i = idx; i < size - len; i++) {
+      SetAt(GetAt(Natural.Of(i + len)), Natural.Of(i));
+    }
+    for (long i = size - len; i < size; i++) {
+      SetAt(null, Natural.Of(i));
+    }
+    size -= len;
   }
+
 
   // ShiftRight
   @Override
-  public void ShiftRight(Natural pos, Natural num){
-    long idx = ExcIfOutOfBound(pos);
-    long size = Size().ToLong();
+  public void ShiftRight(Natural pos, Natural num) {
+    long idx = pos.ToLong();
     long len = num.ToLong();
-    len = (len <= size - idx) ? len : size - idx;
-    if (size - (idx + len) < idx) {
-      long iniwrt = idx + len; 
-      long wrt = iniwrt;
-      long rdr = idx - 1;
-      for (; rdr >= 0; rdr--, wrt--){
-        Natural natrdr = Natural.Of(rdr);
-        SetAt(GetAt(natrdr), Natural.Of(wrt));
-        SetAt(null, natrdr);
-      }
-      for (; wrt > iniwrt; wrt--){
-        SetAt(null, Natural.Of(wrt));
-      }
-      start = (start - len + arr.length) % arr.length;
+    long size = Size().ToLong();
+    if (idx < 0 || idx > size) throw new IndexOutOfBoundsException("Index out of bounds: " + idx + "; Size: " + size);
+    if (len <= 0) return; 
+    while (size + len > arr.length) {
+        Grow(); 
+        size = Size().ToLong(); 
     }
-    else {
-        super.ShiftRight(pos, num);
+    for (long i = size - 1; i >= idx; i--) {
+      SetAt(GetAt(Natural.Of(i)), Natural.Of(i + len));
     }
+    for (long i = idx; i < idx + len; i++) {
+      SetAt(null, Natural.Of(i));
+    }
+    size += len;
   }
+
 
 }

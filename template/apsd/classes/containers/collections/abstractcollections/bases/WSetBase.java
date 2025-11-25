@@ -21,6 +21,7 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
   public WSetBase(Chn chn) {
     this.chn = chn;
   }
+
   public WSetBase(TraversableContainer<Data> con) {
     ChainAlloc();
     if (con != null) {
@@ -38,6 +39,7 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
       });
     }
   }
+  
   // ChainAlloc
   abstract protected void ChainAlloc();
   /* ************************************************************************ */
@@ -89,13 +91,13 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
   /* ************************************************************************ */
 
   // ...
-  //FIterator
+  // FIterator
   @Override
   public ForwardIterator<Data> FIterator() {
     return chn.FIterator();
   }
 
-  //BIterator
+  // BIterator
   @Override
   public BackwardIterator<Data> BIterator() {
     return chn.BIterator();

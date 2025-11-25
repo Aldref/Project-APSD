@@ -94,30 +94,32 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
 
   // Remove
   @Override
-    public boolean Remove(Data dat) {
-      if (dat == null) return false;
-      LLNode<Data> prev = null;
-      LLNode<Data> curr = headref.Get();
-      while (curr != null) {
-        if ((curr.Get() == null && dat == null) ||
-            (curr.Get() != null && curr.Get().equals(dat))) {
-          LLNode<Data> next = (curr.GetNext() != null ? curr.GetNext().Get() : null);
-          if (prev == null) {
-            headref.Set(next);
-          } else {
-            prev.SetNext(next);
-          }
-          if (tailref.Get() == curr) {
-            tailref.Set(prev);
-          }
-          size.Decrement();
-          return true;
+  public boolean Remove(Data dat) {
+    boolean removed = false;
+    LLNode<Data> prev = null;
+    LLNode<Data> curr = headref.Get();
+    while (curr != null) {
+      Data curVal = curr.Get();
+      if ((curVal == null && dat == null) || (curVal != null && curVal.equals(dat))) {
+        LLNode<Data> next = (curr.GetNext() != null ? curr.GetNext().Get() : null);
+        if (prev == null) {
+          headref.Set(next);
+        } else {
+          prev.SetNext(next);
         }
-        prev = curr;
-        curr = (curr.GetNext() != null ? curr.GetNext().Get() : null);
+        if (tailref.Get() == curr) {
+          tailref.Set(prev);
+        }
+        size.Decrement();
+        removed = true;
+        curr = next;
+        continue;
       }
-      return false;
+      prev = curr;
+      curr = (curr.GetNext() != null ? curr.GetNext().Get() : null);
     }
+    return removed;
+  }
 
   /* ************************************************************************ */
   /* Override specific member functions from IterableContainer                */

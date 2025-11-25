@@ -63,12 +63,9 @@ public class WStack<Data> implements Stack<Data> { // Must implement Stack
   /* ************************************************************************ */
 
   // ...
-  // Top
   @Override
   public Data Top() {
-    if (IsEmpty()) {
-      return null;
-    }
+    if (IsEmpty()) return null;
     long last = lst.Size().ToLong() - 1;
     return lst.GetAt(Natural.Of(last));
   }
@@ -76,30 +73,25 @@ public class WStack<Data> implements Stack<Data> { // Must implement Stack
   // Pop
   @Override
   public void Pop() {
-    if (IsEmpty()) {
-      return;
-    }
+    if (IsEmpty()) return;
     lst.RemoveLast();
   }
 
   // TopNPop
   @Override
   public Data TopNPop() {
+    if (IsEmpty()) return null;
     Data top = Top();
-    if (!IsEmpty()) {
-      lst.RemoveLast();
-    }
-    return top;  
+    Pop();
+    return top;
   }
 
   // SwapTop
   @Override
   public void SwapTop(Data data) {
-    if (IsEmpty()) {
-      return;
-    }
-    long last = lst.Size().ToLong() - 1;
-    lst.SetAt(data, Natural.Of(last));
+    if (IsEmpty()) return;
+    Pop();
+    Push(data);
   }
 
   // TopNSwap
@@ -113,7 +105,7 @@ public class WStack<Data> implements Stack<Data> { // Must implement Stack
   // Push
   @Override
   public void Push(Data data) {
-    lst.InsertLast(data);
+    lst.Insert(data); // forse insertlast (da rivedere)
   }
 
 }

@@ -39,10 +39,11 @@ abstract public class VectorBase<Data> implements Vector<Data> {
   @Override
   public void Clear(){
     if (arr != null){
-      for (int i = 0; i < arr.length; i++) {
+      for (int i = 0; i < this.Size().ToLong(); i++) {
         arr[i] = null;
+      }
     }
-    }
+    arr = null;
   }
 
   /* ************************************************************************ */
@@ -70,15 +71,16 @@ abstract public class VectorBase<Data> implements Vector<Data> {
 
     class VecForwardIter implements MutableForwardIterator<Data> {
 
-      private long index;
+      private long index = 0;
+      private final long size;
 
       public VecForwardIter() {
-        index = 0;
+        this.size = arr != null ? arr.length : 0;
       }
 
       @Override
       public boolean IsValid() {
-        return arr != null && index < arr.length;
+        return arr != null && index < size;
       }
 
       @Override
@@ -119,7 +121,7 @@ abstract public class VectorBase<Data> implements Vector<Data> {
       private long index;
 
       public VecBackwardIter() {
-        index = (arr == null ? -1 : arr.length - 1);
+        index = (arr == null ? -1 :  Size().ToLong() - 1);
       }
 
       @Override
@@ -129,7 +131,7 @@ abstract public class VectorBase<Data> implements Vector<Data> {
 
       @Override
       public void Reset() {
-        index = (arr == null ? -1 : arr.length - 1);
+        index = (arr == null ? -1 :  Size().ToLong() - 1);
       }
 
       @Override
@@ -186,9 +188,9 @@ abstract public class VectorBase<Data> implements Vector<Data> {
     Vector<Data> subVec = NewVector(Natural.Of(newSize));
     MutableSequence<Data> subSeq = (MutableSequence<Data>) subVec;
     for (long i = 0; i < newSize; i++) {
-    Data value = GetAt(Natural.Of(startIdx + i));
-    subSeq.SetAt(value, Natural.Of(i));  
-  }
+      Data value = GetAt(Natural.Of(startIdx + i));
+      subSeq.SetAt(value, Natural.Of(i));  
+    }
     return subSeq;
   }
 

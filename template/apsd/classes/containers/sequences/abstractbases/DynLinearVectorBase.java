@@ -12,7 +12,7 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
   // DynLinearVectorBase
   protected DynLinearVectorBase(TraversableContainer<Data> con) {
     super(con);
-    this.size = con.Size().ToLong();
+    this.size = (con == null ? 0L : con.Size().ToLong());
   }
 
   @Override

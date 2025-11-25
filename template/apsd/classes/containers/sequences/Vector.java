@@ -13,6 +13,7 @@ public class Vector<Data> extends LinearVectorBase<Data> { // Must extend Linear
   public Vector() {
     super((TraversableContainer<Data>) null);
   }
+
   // public Vector(Natural inisize)
   public Vector(Natural inisize) {
     super((TraversableContainer<Data>) null);

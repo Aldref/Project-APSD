@@ -196,9 +196,7 @@ public class VList<Data> extends VChainBase<Data> implements List<Data> { // Mus
     DynVector<Data> v = vec;
     Natural i = Natural.ZERO;
     while (i.ToLong() < v.Size().ToLong()) {
-      if (v.GetAt(i).equals(data)) {
-        return true;
-      }
+      if (v.GetAt(i) == null ? data == null : v.GetAt(i).equals(data)) return true;
       i.Increment();
     }
     return false;
