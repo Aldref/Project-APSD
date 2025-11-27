@@ -51,6 +51,7 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
   // Search
   @Override
   default Natural Search(Data data){
+    System.out.println("SortedChain Search called");
     return SortedSequence.super.Search(data);
   }
 

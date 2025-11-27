@@ -60,9 +60,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
 
     @Override
     public Data GetCurrent() {
-      if (!IsValid()) {
-        throw new IllegalStateException("Iterator terminated");
-      }
+      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
       return curRef.Get().Get();
     }
 
@@ -76,9 +74,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
 
     @Override
     public void SetCurrent(Data data) {
-      if (!IsValid()) {
-        throw new IllegalStateException("Iterator terminated");
-      }
+      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
       curRef.Get().Set(data);
     }
   }
@@ -125,9 +121,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
 
     @Override
     public Data GetCurrent() {
-      if (!IsValid()) {
-        throw new IllegalStateException("Iterator terminated");
-      }
+      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
       return curr.Get();
     }
 
@@ -197,14 +191,14 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
   // SetFirst
   @Override
   public void SetFirst(Data data) {
-    if (headref.Get() == null) throw new IllegalStateException("Container is empty");
+    if (headref.Get() == null) throw new IndexOutOfBoundsException("Container is empty");
     headref.Get().Set(data);
   }
 
   // SetLast
   @Override
   public void SetLast(Data data) {
-    if (tailref.Get() == null) throw new IllegalStateException("Container is empty");
+    if (tailref.Get() == null) throw new IndexOutOfBoundsException("Container is empty");
     tailref.Get().Set(data);
   }
 
@@ -266,6 +260,7 @@ public LLList<Data> SubList(Natural from, Natural to) {
       while (i < idx - 1 && node != null) {
         node = node.GetNext().Get();
         i++;
+
       }
       LLNode<Data> newNode = new LLNode<Data>(data);
       newNode.SetNext(node.GetNext().Get());

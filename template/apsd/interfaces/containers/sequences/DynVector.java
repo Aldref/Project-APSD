@@ -12,14 +12,17 @@ public interface DynVector<Data> extends ResizableContainer, InsertableAtSequenc
   // ...
   @Override
   default void InsertAt(Data element, Natural idx) {
+    if (element == null) throw new IllegalArgumentException("Element cannot be null");
     if (idx == null) throw new NullPointerException("Index cannot be null");
     long index = idx.ToLong();
     long size  = Size().ToLong();
+    long cap   = Capacity().ToLong();
     if (index < 0 || index > size) throw new IndexOutOfBoundsException("Index out of bounds for insert: " + index + "; Size: " + size + "!");
-    if (Size().equals(Capacity())) Grow(); 
-    ShiftRight(Natural.Of(index), Natural.ONE);      
+    if (size + 1 > cap) Grow();
+    ShiftRight(Natural.Of(index), Natural.ONE);
     SetAt(element, Natural.Of(index));
   }
+
 
   /* ************************************************************************ */
   /* Override specific member functions from RemovableAtSequence              */
@@ -80,7 +83,9 @@ public interface DynVector<Data> extends ResizableContainer, InsertableAtSequenc
 
 
   @Override
-  DynVector<Data> SubVector(Natural start, Natural end);
+  default Vector<Data> SubVector(Natural start, Natural end){
+    return (DynVector<Data>) SubSequence(start, end);
+  }
 
   /* ************************************************************************ */
   /* Override specific member functions from Container                        */

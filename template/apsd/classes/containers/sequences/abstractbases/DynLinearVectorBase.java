@@ -30,10 +30,10 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
     size = 0L;
   }
 
-  @Override
-  public DynVector<Data> SubVector(Natural start, Natural end) {
-    return (DynVector<Data>) super.SubVector(start, end);
-  }
+  // @Override
+  // public DynVector<Data> SubVector(Natural start, Natural end) {
+  //   return (DynVector<Data>) super.SubVector(start, end);
+  // }
 
   /* ************************************************************************ */
   /* Override specific member functions from Container                        */

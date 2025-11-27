@@ -24,7 +24,12 @@ public interface Chain<Data> extends RemovableAtSequence<Data>, Set<Data>{ // Mu
   }
 
   // SubChain
-  Chain<Data> SubChain(Natural start, Natural end);
+  default Chain<Data> SubChain(Natural start, Natural end){
+    long startIdx = ExcIfOutOfBound(start);
+    long endIdx = ExcIfOutOfBound(end);
+    if (startIdx > endIdx || endIdx >= Size().ToLong()) return null;
+    return (Chain<Data>) SubSequence(start, end);
+  }
   /* ************************************************************************ */
   /* Override specific member functions from Sequence                         */
   /* ************************************************************************ */

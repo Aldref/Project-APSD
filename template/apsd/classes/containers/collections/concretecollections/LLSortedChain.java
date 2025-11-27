@@ -40,15 +40,13 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
   // ...
   // PredFind
   protected LLNode<Data> PredFind(Data data) {
-    LLNode<Data> head = HeadNode();
-    LLNode<Data> tail = TailNode();
-    if (head == null) return null;
-    LLNode<Data> curr = head;
+    LLNode<Data> curr = HeadNode();
+    if (curr == null) return null;
     while (true) {
       Box<LLNode<Data>> nextBox = curr.GetNext();
       if (nextBox == null) break;
       LLNode<Data> next = nextBox.Get();
-      if (next == null || next == tail) break;
+      if (next == null) break;
       @SuppressWarnings("unchecked")
       Comparable<Data> cmp = (Comparable<Data>) next.Get();
       if (cmp.compareTo(data) >= 0) break;
@@ -120,7 +118,7 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
   @Override
   public boolean Insert(Data data) {
     if (data == null) return false;
-    if (Search(data) != null) return false;
+    // if (Search(data) != null) return false;
     LLNode<Data> head = HeadNode();
     LLNode<Data> tail = TailNode();
     LLNode<Data> newNode = new LLNode<>(data);
@@ -174,18 +172,19 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
   // Search
   @Override
   public Natural Search(Data data) {
-    Natural index = Natural.ZERO;
+    long idx = 0;
     ForwardIterator<Data> it = FIterator();
     while (it.IsValid()) {
       Data cur = it.GetCurrent();
-      int cmp = cur.compareTo(data);
-      if (cmp == 0) return index;
-      if (cmp > 0) break; 
-      index.Increment();
+      int cmp = ((Comparable<Data>)cur).compareTo(data);
+      if (cmp == 0) return Natural.Of(idx);
+      if (cmp > 0) break;
+      idx++;
       it.DataNNext();
     }
     return null;
   }
+
   /* ************************************************************************ */
   /* Override specific member functions from OrderedSet                       */
   /* ************************************************************************ */

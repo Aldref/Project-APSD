@@ -121,8 +121,8 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
     if (idx < 0 || idx > size) throw new IndexOutOfBoundsException("Index out of bounds: " + idx + "; Size: " + size);
     if (len <= 0) return; 
     while (size + len > arr.length) {
-        Grow(); 
-        size = Size().ToLong(); 
+      Grow(); 
+      size = Size().ToLong(); 
     }
     for (long i = size - 1; i >= idx; i--) {
       SetAt(GetAt(Natural.Of(i)), Natural.Of(i + len));

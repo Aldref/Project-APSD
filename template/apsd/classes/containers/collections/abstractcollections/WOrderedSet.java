@@ -25,6 +25,7 @@ public class WOrderedSet<Data extends Comparable<? super Data>> extends WOrdered
     super(chn, con);
   }
 
+  // da rivedere
   public WOrderedSet(SortedChain<Data> chn, TraversableContainer<Data> con) {
     super(new VSortedChain<Data>(), con);
     if (chn != null) {

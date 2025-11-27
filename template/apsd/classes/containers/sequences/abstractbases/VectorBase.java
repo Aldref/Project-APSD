@@ -17,6 +17,7 @@ abstract public class VectorBase<Data> implements Vector<Data> {
   protected VectorBase() {
     arr = null;
   }
+  
   // NewVector
   abstract protected  void NewVector(Data [] array);
 
@@ -119,44 +120,47 @@ abstract public class VectorBase<Data> implements Vector<Data> {
     class VecBackwardIter implements MutableBackwardIterator<Data> {
 
       private long index;
+      private final long size; 
 
       public VecBackwardIter() {
-        index = (arr == null ? -1 :  Size().ToLong() - 1);
+          this.size = arr != null ? arr.length : 0; 
+          this.index = size - 1;
       }
 
       @Override
       public boolean IsValid() {
-        return arr != null && index >= 0;
+          return arr != null && index >= 0;
       }
 
       @Override
       public void Reset() {
-        index = (arr == null ? -1 :  Size().ToLong() - 1);
+          index = size - 1;
       }
 
       @Override
       public Data GetCurrent() {
-        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-        return arr[(int) index];
+          if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+          return arr[(int) index];
       }
 
       @Override
       public void SetCurrent(Data data) {
-        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-        arr[(int) index] = data;
+          if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+          arr[(int) index] = data;
       }
 
       @Override
       public Data DataNPrev() {
-        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-        Data cur = arr[(int) index];
-        index--;
-        return cur;
+          if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+          Data cur = arr[(int) index];
+          index--;
+          return cur;
       }
     }
 
     return new VecBackwardIter();
   }
+
 
 
   /* ************************************************************************ */

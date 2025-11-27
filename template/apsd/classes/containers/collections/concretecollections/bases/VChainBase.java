@@ -49,7 +49,6 @@ abstract public class VChainBase<Data> implements Chain<Data> { // Must implemen
   // Clear
   @Override
   public void Clear(){
-
     vec.Clear();
   }
   /* ************************************************************************ */
@@ -59,19 +58,12 @@ abstract public class VChainBase<Data> implements Chain<Data> { // Must implemen
   // ...
   // Remove
   @Override
-  public boolean Remove(Data data) {
-    boolean removed = false;
-    long i = 0;
-    while (i < vec.Size().ToLong()) {
-      Data dat = vec.GetAt(Natural.Of(i));
-      if ((dat == null && data == null) || (dat != null && dat.equals(data))) {
-        vec.ShiftLeft(Natural.Of(i));
-        removed = true;
-      } else {
-        i++;
-      }
-    }
-    return removed;
+  public boolean Remove(Data dat) {
+    if (dat == null) return false;
+    Natural pos = vec.Search(dat);
+    if (pos == null) return false;
+    vec.ShiftLeft(pos);
+    return true;
   }
 
   /* ************************************************************************ */
@@ -107,14 +99,12 @@ abstract public class VChainBase<Data> implements Chain<Data> { // Must implemen
   public Sequence<Data> SubSequence(Natural start, Natural end) {
     long from = start.ToLong();
     long to   = end.ToLong();
-    if (from > to || to >= vec.Size().ToLong()) {
-      throw new IndexOutOfBoundsException();
-    }
+    if (from > to || to >= vec.Size().ToLong()) throw new IndexOutOfBoundsException();
     DynVector<Data> subVec =new DynCircularVector<Data>(Natural.Of(to - from + 1));
     long j = 0;
     for (long i = from; i <= to; ++i) {
       subVec.SetAt(
-          vec.GetAt(Natural.Of(i)),Natural.Of(j));
+      vec.GetAt(Natural.Of(i)),Natural.Of(j));
       ++j;
     }
     return subVec;
@@ -158,7 +148,5 @@ abstract public class VChainBase<Data> implements Chain<Data> { // Must implemen
     }
     return vec.Size().ToLong() < oldSize;
   }
-
-
 
 }

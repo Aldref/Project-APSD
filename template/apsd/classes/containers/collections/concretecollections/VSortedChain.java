@@ -110,15 +110,15 @@ public boolean InsertIfAbsent(Data data) {
     
   }
 
-  @Override
-  public VSortedChain<Data> SubChain(Natural from, Natural to) {
-    Sequence<Data> subSeq = SubSequence(from, to);
-    VSortedChain<Data> res = new VSortedChain<>();
-    subSeq.TraverseForward(dat -> {
-      res.Insert(dat); 
-      return false;
-    });
-    return res;
-  }
+  // @Override
+  // public VSortedChain<Data> SubChain(Natural from, Natural to) {
+  //   Sequence<Data> subSeq = SubSequence(from, to);
+  //   VSortedChain<Data> res = new VSortedChain<>();
+  //   subSeq.TraverseForward(dat -> {
+  //     res.Insert(dat); 
+  //     return false;
+  //   });
+  //   return res;
+  // }
 
 }

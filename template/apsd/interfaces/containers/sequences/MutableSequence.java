@@ -27,6 +27,7 @@ public interface MutableSequence<Data> extends Sequence<Data>, MutableIterableCo
 
   // SetFirst
   default void SetFirst(Data data) {
+    if (Size().ToLong() == 0) throw new IndexOutOfBoundsException("Sequence is empty");
     SetAt(data, Natural.ZERO);
   }
 

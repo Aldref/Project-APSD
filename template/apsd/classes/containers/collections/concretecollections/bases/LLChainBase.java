@@ -239,14 +239,14 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   //GetFirst
   @Override
   public Data GetFirst() {
-    if (headref.Get() == null) throw new IllegalStateException("Container is empty");
+    if (headref.Get() == null) throw new IndexOutOfBoundsException("Container is empty");
     return headref.Get().Get();
   }
 
   //GetLast
   @Override
   public Data GetLast() {
-    if (tailref.Get() == null) throw new IllegalStateException("Container is empty");
+    if (tailref.Get() == null) throw new IndexOutOfBoundsException("Container is empty");
     return tailref.Get().Get();
   }
 
@@ -335,7 +335,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
       i++;
     }
     if (curr == null) {
-      throw new IllegalStateException("Index out of range during removal");
+      throw new IndexOutOfBoundsException("Index out of range during removal");
     }
     Data removed = curr.Get();
     LLNode<Data> next = (curr.GetNext() != null ? curr.GetNext().Get() : null);
@@ -354,24 +354,28 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   // RemoveFirst
   @Override
   public void RemoveFirst() {
+    if (size.ToLong() == 0) return;
     AtNRemove(new Natural(0));
   }
 
   // RemoveLast
   @Override
   public void RemoveLast() {
+    if (size.ToLong() == 0) return;
     AtNRemove(new Natural(size.ToLong() - 1));
   }
 
   // FirstNRemove
   @Override
   public Data FirstNRemove() {
+    if (size.ToLong() == 0) return null;
     return AtNRemove(new Natural(0));
   }
 
   // LastNRemove
   @Override
   public Data LastNRemove() {
+    if (size.ToLong() == 0) return null;
     return AtNRemove(new Natural(size.ToLong() - 1));
   }
 

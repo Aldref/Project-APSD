@@ -19,6 +19,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
       });
     }
   }
+  
   // ArrayAlloc
   @Override
   protected void ArrayAlloc(Natural newsize) {
@@ -58,22 +59,22 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
   // Realloc
   @Override
   public void Realloc(Natural newsize) {
-      if (newsize == null) throw new IllegalArgumentException("New size cannot be null!");
-      long newCap = newsize.ToLong();
-      if (newCap >= Integer.MAX_VALUE) throw new ArithmeticException("Overflow: size cannot exceed Integer.MAX_VALUE!");
-      Data[] oldArr = arr;
-      long oldSize = size;
-      arr = (Data[]) new Object[(int) newCap];
-      if (oldArr != null && oldSize > 0) {
-          long copyLen = Math.min(oldSize, newCap);
-          for (int i = 0; i < copyLen; i++) {
-              arr[i] = oldArr[(int) ((start + i) % oldArr.length)];
-          }
-          size = copyLen;
-      } else {
-          size = 0;
-      }
-      start = 0;
+    if (newsize == null) throw new IllegalArgumentException("New size cannot be null!");
+    long newCap = newsize.ToLong();
+    if (newCap >= Integer.MAX_VALUE) throw new ArithmeticException("Overflow: size cannot exceed Integer.MAX_VALUE!");
+    Data[] oldArr = arr;
+    long oldSize = size;
+    arr = (Data[]) new Object[(int) newCap];
+    if (oldArr != null && oldSize > 0) {
+        long copyLen = Math.min(oldSize, newCap);
+        for (int i = 0; i < copyLen; i++) {
+            arr[i] = oldArr[(int) ((start + i) % oldArr.length)];
+        }
+        size = copyLen;
+    } else {
+        size = 0;
+    }
+    start = 0;
   }
 
 
@@ -155,10 +156,5 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
     size += len;
   }
 
-
-  @Override
-  public DynVector<Data> SubVector(Natural start, Natural end) {
-    return (DynVector<Data>) super.SubVector(start, end);
-  }
 
 }

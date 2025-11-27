@@ -67,19 +67,21 @@ public class WQueue<Data> implements Queue<Data> { // Must implement Queue
   // head
   @Override
   public Data Head() {
-    if (IsEmpty()) throw new IndexOutOfBoundsException("Index out of bounds: 0; Size: " + Size() + "!");
+    if (Size().ToLong() == 0) throw new IndexOutOfBoundsException("Cannot get head from an empty queue");
     return lst.GetAt(Natural.ZERO);
   }
 
   // Dequeue
   @Override
   public void Dequeue() {
+    if (Size().ToLong() == 0) throw new IndexOutOfBoundsException("Cannot dequeue from an empty queue");
     lst.RemoveAt(Natural.ZERO);
   }
 
   // HeadNDequeue
   @Override
   public Data HeadNDequeue() {
+    if (Size().ToLong() == 0) throw new IndexOutOfBoundsException("Cannot head and dequeue from an empty queue");
     Data headElement = Head();
     Dequeue();
     return headElement;
@@ -88,6 +90,7 @@ public class WQueue<Data> implements Queue<Data> { // Must implement Queue
   // Enqueue
   @Override
   public void Enqueue(Data element) {
+    if (element == null) throw new IllegalArgumentException("Element cannot be null");
     lst.InsertLast(element);
   }
 

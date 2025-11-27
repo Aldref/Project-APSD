@@ -124,11 +124,4 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
     chn.Intersection(other);
   }
 
-  // Exists (penso si debba togliere)
-  @Override
-  public boolean Exists(Data data) {
-    return chn.TraverseForward(dat ->
-        (dat == null ? data == null : dat.equals(data))
-    );
-  }
 }
