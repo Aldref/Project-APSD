@@ -88,12 +88,6 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
   // ...
   @Override
   default Natural Size() {
-    long count = 0L;
-    ForwardIterator<Data> it = FIterator();
-    while (it.IsValid()) {
-      count++;
-      it.DataNNext();
-    }
-    return Natural.Of(count);
+    return ReallocableContainer.super.Size();
   }
 }

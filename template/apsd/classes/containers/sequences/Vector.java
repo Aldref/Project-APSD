@@ -33,12 +33,8 @@ public class Vector<Data> extends LinearVectorBase<Data> { // Must extend Linear
 
   // NewVector
   @Override
-  protected void NewVector(Data[] arr) {
-    this.arr = arr;
+  protected Vector<Data> NewVector(Data[] arr) {
+    return new Vector<>(arr);
   }
 
-  @Override
-  protected Vector<Data> NewVector(Natural newsize) {
-    return new Vector<Data>(newsize);
-  }
 }

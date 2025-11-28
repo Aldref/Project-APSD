@@ -41,13 +41,8 @@ public class CircularVector<Data> extends CircularVectorBase<Data> { // Must ext
 
   // NewVector
   @Override
-  protected void NewVector(Data[] arr) {
-    this.arr = arr;
+  protected CircularVector<Data> NewVector(Data[] arr) {
+    return new CircularVector<>(arr);
   }
 
-  @Override
-  protected Vector<Data> NewVector(Natural newsize) {
-    Vector<Data> vec = new Vector<>(newsize);
-    return vec;
-  }
 }

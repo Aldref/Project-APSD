@@ -12,7 +12,7 @@ public interface DynVector<Data> extends ResizableContainer, InsertableAtSequenc
   // ...
   @Override
   default void InsertAt(Data element, Natural idx) {
-    if (element == null) throw new IllegalArgumentException("Element cannot be null");
+    if (element == null) throw new NullPointerException("Element cannot be null");
     if (idx == null) throw new NullPointerException("Index cannot be null");
     long index = idx.ToLong();
     long size  = Size().ToLong();

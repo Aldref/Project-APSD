@@ -17,11 +17,28 @@ abstract public class VectorBase<Data> implements Vector<Data> {
   protected VectorBase() {
     arr = null;
   }
-  
-  // NewVector
-  abstract protected  void NewVector(Data [] array);
 
-  abstract protected Vector<Data> NewVector(Natural newsize); // forse da togliere
+  public VectorBase(TraversableContainer<Data> con){
+    if (con == null) throw new NullPointerException("Container cannot be null!");
+    ArrayAlloc(con.Size());
+    final MutableNatural idx = new MutableNatural();
+    con.TraverseForward(dat -> {
+      SetAt(dat, idx.GetNIncrement()); 
+      return false;
+    });
+  }
+  
+  public VectorBase(Natural inisize){
+    if (inisize == null) throw new NullPointerException("Initial size cannot be null!");
+    ArrayAlloc(inisize);
+  }
+
+  protected VectorBase(Data[] array){
+    arr = array;
+  }
+
+  // NewVector
+  abstract protected VectorBase<Data> NewVector(Data [] array);
   
   //ArrayAlloc
   @SuppressWarnings("unchecked")
@@ -66,27 +83,22 @@ abstract public class VectorBase<Data> implements Vector<Data> {
   /* ************************************************************************ */
 
   // ...
-
+  // FIterator
   @Override
   public MutableForwardIterator<Data> FIterator() {
 
     class VecForwardIter implements MutableForwardIterator<Data> {
 
-      private long index = 0;
-      private final long size;
-
-      public VecForwardIter() {
-        this.size = arr != null ? arr.length : 0;
-      }
+      private long index = 0L;
 
       @Override
       public boolean IsValid() {
-        return arr != null && index < size;
+        return arr != null && index >= 0 && index < Size().ToLong();
       }
 
       @Override
       public void Reset() {
-        index = 0;
+        index = 0L;
       }
 
       @Override
@@ -102,11 +114,17 @@ abstract public class VectorBase<Data> implements Vector<Data> {
       }
 
       @Override
+      public void Next() {
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        index++;
+      }
+
+      @Override
       public Data DataNNext() {
         if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-        Data d = arr[(int) index];
+        Data data = arr[(int) index];
         index++;
-        return d;
+        return data;
       }
     }
 
@@ -119,48 +137,47 @@ abstract public class VectorBase<Data> implements Vector<Data> {
 
     class VecBackwardIter implements MutableBackwardIterator<Data> {
 
-      private long index;
-      private final long size; 
-
-      public VecBackwardIter() {
-          this.size = arr != null ? arr.length : 0; 
-          this.index = size - 1;
-      }
+      private long index = Size().ToLong() - 1; 
 
       @Override
       public boolean IsValid() {
-          return arr != null && index >= 0;
+        return arr != null && index >= 0 && index < Size().ToLong();
       }
 
       @Override
       public void Reset() {
-          index = size - 1;
+        index = Size().ToLong() - 1;
       }
 
       @Override
       public Data GetCurrent() {
-          if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-          return arr[(int) index];
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        return arr[(int) index];
       }
 
       @Override
       public void SetCurrent(Data data) {
-          if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-          arr[(int) index] = data;
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        arr[(int) index] = data;
+      }
+
+      @Override
+      public void Prev() {
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        index--;
       }
 
       @Override
       public Data DataNPrev() {
-          if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-          Data cur = arr[(int) index];
-          index--;
-          return cur;
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        Data cur = arr[(int) index];
+        index--;
+        return cur;
       }
     }
 
     return new VecBackwardIter();
   }
-
 
 
   /* ************************************************************************ */
@@ -189,7 +206,8 @@ abstract public class VectorBase<Data> implements Vector<Data> {
     long endIdx = ExcIfOutOfBound(end);
     if (startIdx > endIdx) throw new IndexOutOfBoundsException("Start index is greater than end index");
     long newSize = endIdx - startIdx + 1;
-    Vector<Data> subVec = NewVector(Natural.Of(newSize));
+    Data[] array = (Data[]) new Object[(int) newSize];
+    VectorBase<Data> subVec = NewVector(array);
     MutableSequence<Data> subSeq = (MutableSequence<Data>) subVec;
     for (long i = 0; i < newSize; i++) {
       Data value = GetAt(Natural.Of(startIdx + i));

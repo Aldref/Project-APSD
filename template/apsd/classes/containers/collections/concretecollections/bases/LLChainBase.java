@@ -143,7 +143,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
       public void Reset() {
         cur = headref.Get();
       }
-  
+
       @Override
       public Data GetCurrent() {
         if (!IsValid()) throw new IllegalStateException("Iterator terminated");
@@ -197,7 +197,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
           }
         }
       }
-  
+      
       @Override
       public Data GetCurrent() {
         if (!IsValid()) throw new IllegalStateException("Iterator terminated");

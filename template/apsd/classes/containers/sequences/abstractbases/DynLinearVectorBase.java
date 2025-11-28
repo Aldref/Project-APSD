@@ -15,26 +15,13 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
     this.size = (con == null ? 0L : con.Size().ToLong());
   }
 
-  @Override
-  protected void NewVector(Data[] arr) {
-    this.arr = arr;
-  }
-
-  @Override
-  protected abstract DynVector<Data> NewVector(Natural newsize);
-
   // ArrayAlloc
   @Override
   protected void ArrayAlloc(Natural newcapacity) {
     super.ArrayAlloc(newcapacity);
     size = 0L;
   }
-
-  // @Override
-  // public DynVector<Data> SubVector(Natural start, Natural end) {
-  //   return (DynVector<Data>) super.SubVector(start, end);
-  // }
-
+  
   /* ************************************************************************ */
   /* Override specific member functions from Container                        */
   /* ************************************************************************ */
