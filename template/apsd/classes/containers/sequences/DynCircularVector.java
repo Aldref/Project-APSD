@@ -12,7 +12,7 @@ public class DynCircularVector<Data> extends DynCircularVectorBase<Data> { // Mu
   // public DynCircularVector()
   public DynCircularVector() {
     super(null);
-    ArrayAlloc(Natural.ONE);  
+    ArrayAlloc(Natural.ZERO);  // modificato da ONE a ZERO
   }
 
   // public DynCircularVector(Natural inisize)

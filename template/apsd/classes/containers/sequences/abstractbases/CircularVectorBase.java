@@ -68,6 +68,7 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
     long realIdx = (start + idx) % arr.length;
     arr[(int) realIdx] = data;
   }
+  
 
   /* ************************************************************************ */
   /* Specific member functions of Vector                                      */

@@ -43,55 +43,52 @@ public class VList<Data> extends VChainBase<Data> implements List<Data> { // Mus
 
   // ...
   //FMutIterator
-  protected class ListFIter implements MutableForwardIterator<Data> {
+  // FMutIterator
+protected class ListFIter implements MutableForwardIterator<Data> {
 
-    private Natural idx = Natural.ZERO;
+  private Natural idx = Natural.Of(0); // non usare Natural.ZERO
 
-    @Override
-    public boolean IsValid() {
-      return !vec.Size().IsZero() && idx.ToLong() < vec.Size().ToLong();
-    }
-
-    @Override
-    public void Reset() {
-      idx = Natural.ZERO  ;
-    }
-
-    @Override
-    public Data GetCurrent() {
-      if (!IsValid()) {
-        throw new IllegalStateException("Iterator terminated");
-      }
-      return vec.GetAt(idx);            
-    }
-
-    @Override
-    public Data DataNNext() {
-      Data d = GetCurrent();
-      idx.Increment();        
-      return d;
-    }
-
-    @Override
-    public void SetCurrent(Data data) {
-      if (!IsValid()) {
-        throw new IllegalStateException("Iterator terminated");
-      }
-      vec.SetAt(data, idx);
-    }
+  @Override
+  public boolean IsValid() {
+    return !vec.Size().IsZero() && idx.ToLong() < vec.Size().ToLong();
   }
+
+  @Override
+  public void Reset() {
+    idx = Natural.Of(0);
+  }
+
+  @Override
+  public Data GetCurrent() {
+    if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+    return vec.GetAt(idx);
+  }
+
+  @Override
+  public Data DataNNext() {
+    Data d = GetCurrent();
+    idx = Natural.Of(idx.ToLong() + 1);
+    return d;
+  }
+
+  @Override
+  public void SetCurrent(Data data) {
+    if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+    vec.SetAt(data, idx);
+  }
+}
+
 
   // BMutIterator
   protected class ListBIter implements MutableBackwardIterator<Data> {
 
-    private Natural idx;  
+    private Natural idx;
 
     public ListBIter() {
       if (vec.Size().IsZero()) {
-        idx = Natural.ZERO;
+        idx = Natural.Of(0);
       } else {
-        idx = vec.Size();
-        idx.Decrement();   
+        idx = Natural.Of(vec.Size().ToLong() - 1);
       }
     }
 
@@ -103,40 +100,37 @@ public class VList<Data> extends VChainBase<Data> implements List<Data> { // Mus
     @Override
     public void Reset() {
       if (vec.Size().IsZero()) {
-        idx = Natural.ZERO;
+        idx = Natural.Of(0);
       } else {
-        idx = vec.Size();
-        idx.Decrement();
+        idx = Natural.Of(vec.Size().ToLong() - 1);
       }
     }
 
     @Override
     public Data GetCurrent() {
-      if (!IsValid()) {
-        throw new IllegalStateException("Iterator terminated");
-      }
+      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
       return vec.GetAt(idx);
     }
 
     @Override
     public Data DataNPrev() {
       Data d = GetCurrent();
-      if (idx.IsZero()) {
-        idx = vec.Size();          
+      if (idx.ToLong() == 0) {
+        idx = Natural.Of(vec.Size().ToLong()); 
+        idx = Natural.Of(idx.ToLong() - 1);
       } else {
-        idx.Decrement();
+        idx = Natural.Of(idx.ToLong() - 1);
       }
       return d;
     }
 
     @Override
     public void SetCurrent(Data data) {
-      if (!IsValid()) {
-        throw new IllegalStateException("Iterator terminated");
-      }
+      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
       vec.SetAt(data, idx);
     }
   }
+
 
   // FIterator
   @Override

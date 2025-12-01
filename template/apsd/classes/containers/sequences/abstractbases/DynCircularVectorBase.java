@@ -1,5 +1,7 @@
 package apsd.classes.containers.sequences.abstractbases;
 
+import java.util.Set;
+
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.TraversableContainer;
 import apsd.interfaces.containers.sequences.DynVector;
@@ -86,12 +88,18 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
   // Expand
   @Override
   public void Expand(Natural num) {
-    Natural newSize = Natural.Of(size + num.ToLong());
-    if (newSize.ToLong() > Capacity().ToLong()) {
-      Grow(Natural.Of(newSize.ToLong() - Capacity().ToLong()));
+    if (num == null) throw new NullPointerException("num cannot be null");
+    long len = num.ToLong();
+    if (len <= 0) return;
+    long newsize = size + len;
+    if (newsize > Capacity().ToLong()) {
+      Grow(Natural.Of(newsize - Capacity().ToLong()));
     }
-    size = newSize.ToLong();
+    size = newsize;
   }
+
+
+
 
   // Reduce
   @Override
@@ -131,24 +139,25 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
   // ShiftRight
   @Override
   public void ShiftRight(Natural pos, Natural num) {
-    if (pos == null) throw new NullPointerException("Position cannot be null!");
-    long idx = pos.ToLong();
+    if (pos == null || num == null) throw new NullPointerException();
     long len = num.ToLong();
-    long sizeLong = size;
-    if (idx < 0 || idx > sizeLong) throw new IndexOutOfBoundsException("Index out of bounds: " + idx + "; Size: " + sizeLong);
     if (len <= 0) return;
-    if (sizeLong + len > arr.length) {
-      Expand(Natural.Of(len));
-      sizeLong = size;
+    long sz = size;
+    long idx = pos.ToLong();
+    if (idx < 0 || idx > sz) throw new IndexOutOfBoundsException("Index out of bounds: " + idx + "; Size: " + sz);
+    if (size + len > Capacity().ToLong()) {
+      Expand(Natural.Of(len)); 
+    } else {
+      size += len; 
     }
-    for (long i = sizeLong - 1; i >= idx; i--) {
+    long oldSize = sz;
+    long cap = Capacity().ToLong();
+    for (long i = oldSize - 1; i >= idx; i--) {
       SetAt(GetAt(Natural.Of(i)), Natural.Of(i + len));
     }
     for (long i = idx; i < idx + len; i++) {
       SetAt(null, Natural.Of(i));
     }
-    size += len;
   }
-
 
 }

@@ -66,13 +66,14 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
   // ...
   // InsertIfAbsent
   @Override
-public boolean InsertIfAbsent(Data data) {
+  public boolean InsertIfAbsent(Data data) {
     if (data == null) return false;
     if (vec.Size().ToLong() == 0) {
       vec.Expand(Natural.ONE);
       vec.SetAt(data, Natural.ZERO);
       return true;
     }
+    System.out.println("Inserting data: " + data);
     Natural pred = SearchPredecessor(data);
     Natural pos;
     if (pred == null) {
@@ -83,9 +84,13 @@ public boolean InsertIfAbsent(Data data) {
       if (cmp == 0) return false; 
       pos = pred.Increment(); 
     }
+    if (pos.ToLong() < vec.Size().ToLong()) {
+      Data atPos = vec.GetAt(pos);
+      if (atPos.compareTo(data) == 0) return false;
+    }
     vec.InsertAt(data, pos);
     return true;
-}
+  }
 
 
 
