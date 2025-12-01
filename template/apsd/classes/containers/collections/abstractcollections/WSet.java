@@ -10,7 +10,7 @@ public class WSet<Data> extends WSetBase<Data, Chain<Data>> { // Must extend WSe
 
   // public WSet()
   public WSet() {
-    super(new VList<Data>());
+    super();
   }
   // public WSet(Chain<Data> chn)
   public WSet(Chain<Data> chn) {

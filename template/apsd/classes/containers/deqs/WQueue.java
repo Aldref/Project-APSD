@@ -30,8 +30,8 @@ public class WQueue<Data> implements Queue<Data> { // Must implement Queue
   public WQueue(List<Data> lst, TraversableContainer<Data> con) {
     this.lst = lst;
     if (con != null) {
-      con.TraverseForward(d -> {
-        this.lst.InsertLast(d);
+      con.TraverseForward(dat -> {
+        lst.InsertIfAbsent(dat);
         return false;          
       });
     }
@@ -67,21 +67,21 @@ public class WQueue<Data> implements Queue<Data> { // Must implement Queue
   // head
   @Override
   public Data Head() {
-    if (Size().ToLong() == 0) throw new IndexOutOfBoundsException("Cannot get head from an empty queue");
+    if (Size().ToLong() == 0) return null;
     return lst.GetAt(Natural.ZERO);
   }
 
   // Dequeue
   @Override
   public void Dequeue() {
-    if (Size().ToLong() == 0) throw new IndexOutOfBoundsException("Cannot dequeue from an empty queue");
+    if (Size().ToLong() == 0) return;
     lst.RemoveAt(Natural.ZERO);
   }
 
   // HeadNDequeue
   @Override
   public Data HeadNDequeue() {
-    if (Size().ToLong() == 0) throw new IndexOutOfBoundsException("Cannot head and dequeue from an empty queue");
+    if (Size().ToLong() == 0) return null;
     Data headElement = Head();
     Dequeue();
     return headElement;

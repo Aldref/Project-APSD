@@ -17,21 +17,14 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
   }
 
   protected CircularVectorBase(TraversableContainer<Data> con) {
-  this(); 
-  if (con != null) {
-    ArrayAlloc(con.Size());
-    final long[] idx = new long[] { 0L };
-    con.TraverseForward(d -> {
-      SetAt(d, Natural.Of(idx[0]));
-      idx[0]++;
-      return false;
-    });
+    super(con);
   }
-}
 
   // ArrayAlloc
   @Override
   protected void ArrayAlloc(Natural newsize) {
+    if (newsize == null) throw new NullPointerException("Size cannot be null!");
+    if (newsize.ToLong() < 0) throw new IllegalArgumentException("Size must be positive!");
     super.ArrayAlloc(newsize);
     start = 0L;
   }
@@ -42,22 +35,11 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
 
   // ...
   // Realloc
-  @Override
+  @Override 
   public void Realloc(Natural newsize) {
-    if (newsize == null) throw new IllegalArgumentException("New size cannot be null!");
-    long newCap = newsize.ToLong();
-    if (newCap >= Integer.MAX_VALUE) throw new ArithmeticException("Overflow: size cannot exceed Integer.MAX_VALUE!");
-    Data[] oldArr = arr;
-    long oldSize = Size().ToLong();    
-    long oldStart = start;
-    ArrayAlloc(newsize);   
-    if (oldArr != null && oldSize > 0) {
-      for (long i = 0; i < oldSize && i < newCap; i++) {
-        int oldIdx = (int) ((oldStart + i) % oldArr.length);
-        arr[(int) i] = oldArr[oldIdx];
-      }
-    }
-    start = 0L; 
+    if (newsize.ToLong() < 0) throw new IllegalArgumentException("Size must be positive!");
+    ArrayAlloc(newsize);
+    start = 0L;
   }
 
 
@@ -97,40 +79,58 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
   public void ShiftLeft(Natural pos, Natural num) {
     long idx = ExcIfOutOfBound(pos);
     long len = num.ToLong();
-    if (len <= 0) return; 
     long size = Size().ToLong();
-    if (len > size - idx) {
-      len = size - idx;
+    len = (len <= size - idx) ? len : size - idx;
+    if (idx < size - (idx + len)){
+      long iniwrt = idx - 1 + len;
+      long wrt = iniwrt;
+      for (long rdr = wrt - len; rdr >= idx; rdr--, wrt--) {
+        Natural natrdr = Natural.Of(rdr);
+        SetAt(GetAt(natrdr), Natural.Of(wrt));
+        SetAt(null, natrdr);
+      }
+      for (; wrt - iniwrt < len; wrt++) {
+        SetAt(null, Natural.Of(wrt));
+      }
+      start = (start + len) % arr.length;
+    } else{
+      super.ShiftLeft(pos, num);
     }
-    for (long i = idx; i < size - len; i++) {
-      SetAt(GetAt(Natural.Of(i + len)), Natural.Of(i));
-    }
-    for (long i = size - len; i < size; i++) {
-      SetAt(null, Natural.Of(i));
-    }
-    size -= len;
-  }
 
+  }
 
   // ShiftRight
   @Override
-  public void ShiftRight(Natural pos, Natural num) {
+  public void ShiftRight(Natural pos, Natural num) { 
     long idx = pos.ToLong();
     long len = num.ToLong();
     long size = Size().ToLong();
     if (idx < 0 || idx > size) throw new IndexOutOfBoundsException("Index out of bounds: " + idx + "; Size: " + size);
-    if (len <= 0) return; 
-    while (size + len > arr.length) {
-      Grow(); 
-      size = Size().ToLong(); 
+    if (len <= 0) return;
+    if (idx == size) {
+      for (long i = 0; i < len; i++) {
+        SetAt(null, Natural.Of(size + i));
+      }
+      start = (start - len + arr.length) % arr.length;
+      return;
     }
-    for (long i = size - 1; i >= idx; i--) {
-      SetAt(GetAt(Natural.Of(i)), Natural.Of(i + len));
+    if (size - idx >= idx){
+      long inirdr = size - 1;
+      long rdr = inirdr;
+      for (long wrt = rdr + len; rdr >= idx; rdr--, wrt--) {
+        if (wrt < Capacity().ToLong()) {
+          Natural natrdr = Natural.Of(rdr);
+          SetAt(GetAt(natrdr), Natural.Of(wrt));
+          SetAt(null, natrdr);
+        }
+      }
+      for (long wrt = idx; wrt < idx + len; wrt++) {
+        SetAt(null, Natural.Of(wrt));
+      }
+      start = (start - len + arr.length) % arr.length;
+    } else{
+      super.ShiftRight(pos, num);
     }
-    for (long i = idx; i < idx + len; i++) {
-      SetAt(null, Natural.Of(i));
-    }
-    size += len;
   }
 
 

@@ -118,7 +118,6 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
   @Override
   public boolean Insert(Data data) {
     if (data == null) return false;
-    // if (Search(data) != null) return false;
     LLNode<Data> head = HeadNode();
     LLNode<Data> tail = TailNode();
     LLNode<Data> newNode = new LLNode<>(data);

@@ -60,6 +60,9 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
           SetAt(null, natrdr);
         }
       }
+      for (long wrt = idx; wrt < idx + len; wrt++) {
+        SetAt(null, Natural.Of(wrt));
+      }
     }
   }
 
@@ -88,6 +91,6 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
   // ...
   @Override
   default Natural Size() {
-    return ReallocableContainer.super.Size();
+    return ReallocableContainer.super.Size(); 
   }
 }

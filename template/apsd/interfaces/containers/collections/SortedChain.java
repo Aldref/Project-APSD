@@ -7,6 +7,7 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
 
   // SearchPredecessor
   default Natural SearchPredecessor(Data data) {
+    if (IsEmpty()) return null;
     Natural left = Natural.ZERO;
     Natural right = Size().Decrement();
     Natural result = null;
@@ -18,14 +19,20 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
         result = mid;
         left = mid.Increment();
       } else {
-        right = mid.Decrement();
+        if (!mid.IsZero()) {
+          right = mid.Decrement();
+        } else {
+          break; 
+        }
       }
     }
     return result;
   }
 
+
   // SearchSuccessor
   default Natural SearchSuccessor(Data data) {
+    if (IsEmpty()) return null;
     Natural left = Natural.ZERO;
     Natural right = Size().Decrement();
     Natural result = null;
@@ -35,13 +42,18 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
       int cmp = midData.compareTo(data);
       if (cmp > 0) {
         result = mid;
-        right = mid.Decrement();
+        if (!mid.IsZero()) {
+          right = mid.Decrement();
+        } else {
+          break; 
+        }
       } else {
         left = mid.Increment();
       }
     }
     return result;
   }
+
   
   /* ************************************************************************ */
   /* Override specific member functions from Sequence                         */
@@ -51,7 +63,6 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
   // Search
   @Override
   default Natural Search(Data data){
-    System.out.println("SortedChain Search called");
     return SortedSequence.super.Search(data);
   }
 

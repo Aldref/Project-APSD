@@ -66,11 +66,11 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
     long oldSize = size;
     arr = (Data[]) new Object[(int) newCap];
     if (oldArr != null && oldSize > 0) {
-        long copyLen = Math.min(oldSize, newCap);
-        for (int i = 0; i < copyLen; i++) {
-            arr[i] = oldArr[(int) ((start + i) % oldArr.length)];
-        }
-        size = copyLen;
+      long copyLen = Math.min(oldSize, newCap);
+      for (int i = 0; i < copyLen; i++) {
+        arr[i] = oldArr[(int) ((start + i) % oldArr.length)];
+      }
+      size = copyLen;
     } else {
         size = 0;
     }
@@ -115,6 +115,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
     long len = num.ToLong();
     long sizeLong = size;
     if (len <= 0) return;
+    if (idx < 0 || idx >= sizeLong) throw new IndexOutOfBoundsException("Index out of bounds: " + idx + "; Size: " + sizeLong);
     if (len > sizeLong - idx) {
       len = sizeLong - idx;
     }
@@ -129,23 +130,16 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
 
   // ShiftRight
   @Override
-  public void ShiftRight(Natural pos, Natural num){
+  public void ShiftRight(Natural pos, Natural num) {
     if (pos == null) throw new NullPointerException("Position cannot be null!");
     long idx = pos.ToLong();
     long len = num.ToLong();
     long sizeLong = size;
     if (idx < 0 || idx > sizeLong) throw new IndexOutOfBoundsException("Index out of bounds: " + idx + "; Size: " + sizeLong);
     if (len <= 0) return;
-    while (sizeLong + len > arr.length) {
-      Grow();
+    if (sizeLong + len > arr.length) {
+      Expand(Natural.Of(len));
       sizeLong = size;
-    }
-    if (idx == sizeLong) {
-      for (long i = 0; i < len; i++) {
-        SetAt(null, Natural.Of(sizeLong + i));
-      }
-      size += len;
-      return;
     }
     for (long i = sizeLong - 1; i >= idx; i--) {
       SetAt(GetAt(Natural.Of(i)), Natural.Of(i + len));

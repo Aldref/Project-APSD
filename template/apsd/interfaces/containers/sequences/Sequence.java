@@ -18,14 +18,14 @@ public interface Sequence<Data> extends IterableContainer<Data> {
 
   // GetFirst
   default Data GetFirst() {
-    if (Size().ToLong() == 0) throw new IndexOutOfBoundsException("Sequence is empty");
+    if (IsEmpty()) throw new IndexOutOfBoundsException("Sequence is empty");
     return GetAt(Natural.ZERO);
   }
 
   // GetLast
   default Data GetLast() {
-    if (Size().ToLong() == 0) throw new IndexOutOfBoundsException("Sequence is empty");
-    return GetAt(Natural.Of(Size().ToLong() - 1));
+    if (IsEmpty()) throw new IndexOutOfBoundsException("Sequence is empty");
+    return GetAt(Size().Decrement());
   }
 
   // Search

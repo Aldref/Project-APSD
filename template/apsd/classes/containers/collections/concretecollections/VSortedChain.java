@@ -68,57 +68,47 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
   @Override
 public boolean InsertIfAbsent(Data data) {
     if (data == null) return false;
-    long pos = 0;
-    MutableForwardIterator<Data> it = vec.FIterator();
-    while (it.IsValid()) {
-        Data curr = it.GetCurrent();
-        if (curr == null) { 
-            pos++;
-            it.Next();
-            continue;
-        }
-        int cmp = data.compareTo(curr);
-        if (cmp == 0) return false; 
-        if (cmp < 0) break;         
-        pos++;
-        it.Next();
+    if (vec.Size().ToLong() == 0) {
+      vec.Expand(Natural.ONE);
+      vec.SetAt(data, Natural.ZERO);
+      return true;
     }
-    vec.InsertAt(data, Natural.Of(pos));
+    Natural pred = SearchPredecessor(data);
+    Natural pos;
+    if (pred == null) {
+      pos = Natural.ZERO;
+    } else {
+      Data predData = GetAt(pred);
+      int cmp = predData.compareTo(data);
+      if (cmp == 0) return false; 
+      pos = pred.Increment(); 
+    }
+    vec.InsertAt(data, pos);
     return true;
 }
+
+
 
   // RemoveOccurrences
   @Override
   public void RemoveOccurrences(Data data) {
     if (data == null) return;
-    MutableForwardIterator<Data> it = vec.FIterator();
-    while (it.IsValid()) {
-      Data curr = it.GetCurrent();
-      if (curr == null) {
-        it.Next();
-        continue;
-      }
-      int cmp = data.compareTo(curr);
+    Natural pred = SearchPredecessor(data);
+    Natural pos;
+    if (pred == null) {
+      pos = Natural.ZERO;
+    } else {
+      pos = pred.Increment();
+    }
+    while (pos.ToLong() < vec.Size().ToLong()) {
+      Data curr = vec.GetAt(pos);
+      int cmp = curr.compareTo(data);
       if (cmp == 0) {
-        Remove(curr);
-      } else if (cmp < 0) {
-        break;
+        vec.RemoveAt(pos); 
       } else {
-        it.Next();
+        break; 
       }
     }
-    
   }
-
-  // @Override
-  // public VSortedChain<Data> SubChain(Natural from, Natural to) {
-  //   Sequence<Data> subSeq = SubSequence(from, to);
-  //   VSortedChain<Data> res = new VSortedChain<>();
-  //   subSeq.TraverseForward(dat -> {
-  //     res.Insert(dat); 
-  //     return false;
-  //   });
-  //   return res;
-  // }
 
 }

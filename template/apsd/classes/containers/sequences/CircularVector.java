@@ -11,7 +11,7 @@ public class CircularVector<Data> extends CircularVectorBase<Data> { // Must ext
 
   // public CircularVector()
   public CircularVector() {
-    ArrayAlloc(Natural.ONE);
+    ArrayAlloc(Natural.ZERO);
   }
 
   // public CircularVector(Natural inisize)
@@ -41,8 +41,8 @@ public class CircularVector<Data> extends CircularVectorBase<Data> { // Must ext
 
   // NewVector
   @Override
-  protected CircularVector<Data> NewVector(Data[] arr) {
-    return new CircularVector<>(arr);
+  protected void NewVector(Data[] arr) {
+    new CircularVector<>(arr);
   }
 
 }

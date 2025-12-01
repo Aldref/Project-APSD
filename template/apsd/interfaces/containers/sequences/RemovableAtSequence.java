@@ -16,26 +16,26 @@ public interface RemovableAtSequence<Data> extends Sequence<Data> {
 
   // RemoveFirst
   default void RemoveFirst(){
+    if (IsEmpty()) return;
     RemoveAt(Natural.ZERO);
   }
   
   // FirstNRemove
   default Data FirstNRemove(){
+    if (IsEmpty()) return null;
     return AtNRemove(Natural.ZERO);
   }
 
   // RemoveLast
   default void RemoveLast(){
-    long size = Size().ToLong();
-    if (size == 0) throw new IndexOutOfBoundsException("Sequence is empty");
-    RemoveAt(Natural.Of(size - 1));
+    if (IsEmpty()) return;
+    RemoveAt(Natural.Of(Size().ToLong() - 1));
   }
   
   // LastNRemove
   default Data LastNRemove(){
-    long size = Size().ToLong();
-    if (size == 0) throw new IndexOutOfBoundsException("Sequence is empty");
-    return AtNRemove(Natural.Of(size - 1));
+    if (IsEmpty()) return null;
+    return AtNRemove(Natural.Of(Size().ToLong() - 1));
   }
 
 }

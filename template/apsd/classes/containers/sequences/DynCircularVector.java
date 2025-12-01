@@ -35,8 +35,8 @@ public class DynCircularVector<Data> extends DynCircularVectorBase<Data> { // Mu
 
   // NewVector
   @Override
-  protected DynCircularVector<Data> NewVector(Data[] arr) {
-    return new DynCircularVector<>(arr);
+  protected void NewVector(Data[] arr) {
+    new DynCircularVector<>(arr);
   }
 
 }

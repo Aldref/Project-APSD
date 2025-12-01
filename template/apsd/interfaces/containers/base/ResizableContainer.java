@@ -39,12 +39,12 @@ public interface ResizableContainer extends ReallocableContainer{ // Must extend
   
   @Override
   default void Grow(Natural dim) {
-      if (Capacity().ToLong() == Integer.MAX_VALUE) {
-        throw new IllegalStateException("Cannot grow beyond Integer.MAX_VALUE");
-      }
-      if (Size().ToLong() + dim.ToLong() >= Capacity().ToLong()) {
-          ReallocableContainer.super.Grow(dim);
-      }
+    if (Capacity().ToLong() == Integer.MAX_VALUE) {
+      throw new IllegalStateException("Cannot grow beyond Integer.MAX_VALUE");
+    }
+    if (Size().ToLong() + dim.ToLong() >= Capacity().ToLong()) {
+      ReallocableContainer.super.Grow(dim);
+    }
   }
 
 }

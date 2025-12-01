@@ -1,5 +1,9 @@
 package apsd.classes.containers.collections.concretecollections.bases;
 
+import java.util.List;
+
+import javax.xml.crypto.Data;
+
 import apsd.classes.containers.collections.concretecollections.LLSortedChain;
 import apsd.classes.containers.sequences.Vector;
 import apsd.classes.utilities.Box;
@@ -56,13 +60,137 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   /* ************************************************************************ */
 
   // ...
+  // ListFRefIterator
+  protected class ListFRefIterator implements MutableForwardIterator<Box<LLNode<Data>>> {
+    
+    protected Box<LLNode<Data>> cur = headref;
+
+    public ListFRefIterator() {}
+
+    public ListFRefIterator(ListFRefIterator start) {
+      cur = start.cur;
+    }
+
+    @Override
+    public boolean IsValid() {
+      return !cur.IsNull();
+    }
+
+    @Override
+    public void Reset() {
+      cur = headref;
+    }
+
+    @Override
+    public void SetCurrent(Box<LLNode<Data>> data) {
+      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+      cur = data;
+    }
+
+    @Override
+    public Box<LLNode<Data>> GetCurrent() {
+      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+      return cur;
+    }
+
+    @Override
+    public void Next() {
+      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+      cur = (cur.Get().GetNext() != null ? cur.Get().GetNext() : null);
+    }
+
+    @Override
+    public Box<LLNode<Data>> DataNNext() {
+      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+      Box<LLNode<Data>> old = cur;
+      cur = (cur.Get().GetNext() != null ? cur.Get().GetNext() : null);
+      return old; 
+    }
+  }
+
+  public MutableForwardIterator<Box<LLNode<Data>>> FRefIterator() {
+    return new ListFRefIterator();
+  }
+
+  // ListBRefIterator
+  protected class ListBRefIterator implements MutableBackwardIterator<Box<LLNode<Data>>>{
+    
+    protected Box<LLNode<Data>> cur = tailref;
+
+    public ListBRefIterator() {}
+
+    public ListBRefIterator(ListBRefIterator start) {
+      cur = start.cur;
+    }
+
+    @Override
+    public boolean IsValid() {
+      return !cur.IsNull();
+    }
+
+    @Override
+    public void Reset() {
+      cur = headref;
+      if (!cur.IsNull()) {
+        while (cur.Get().GetNext() != null && cur.Get().GetNext() != null) {
+          cur = cur.Get().GetNext();
+        }
+      }
+    }
+
+    @Override
+    public void SetCurrent(Box<LLNode<Data>> data) {
+      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+      cur = data;
+    }
+
+    @Override
+    public Box<LLNode<Data>> GetCurrent() {
+      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+      return cur;
+    }
+
+    @Override
+    public void Prev() {
+      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+      Box<LLNode<Data>> node = headref;
+      Box<LLNode<Data>> prev = new Box<>(null);
+      while (!node.IsNull() && node.Get() != cur.Get()) {
+        prev.Set(node.Get());
+        node = (node.Get().GetNext() != null ? node.Get().GetNext() : null);
+      }
+      cur = prev;
+    }
+
+    @Override
+    public Box<LLNode<Data>> DataNPrev() {
+      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+      Box<LLNode<Data>> old = cur;
+      Box<LLNode<Data>> node = headref;
+      Box<LLNode<Data>> prev = new Box<>(null);
+      while (!node.IsNull() && node.Get() != cur.Get()) {
+        prev.Set(node.Get());
+        node = (node.Get().GetNext() != null ? node.Get().GetNext() : null);
+      }
+      cur = prev;
+      return old; 
+    }
+  }
+
+  public MutableBackwardIterator<Box<LLNode<Data>>> BRefIterator() {
+    return new ListBRefIterator();
+  }
+
+  // HeadNode
   protected LLNode<Data> HeadNode() {
     return headref.Get();
   }
 
+  // TailNode
   protected LLNode<Data> TailNode() {
     return tailref.Get();
   }
+
 
   /* ************************************************************************ */
   /* Override specific member functions from Container                        */
@@ -197,7 +325,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
           }
         }
       }
-      
+
       @Override
       public Data GetCurrent() {
         if (!IsValid()) throw new IllegalStateException("Iterator terminated");
@@ -206,8 +334,14 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
       
       @Override
       public void Prev() {
-        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-        cur = (cur.GetNext() != null ? cur.GetNext().Get() : null);
+          if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+          LLNode<Data> node = headref.Get();
+          LLNode<Data> prev = null;
+          while (node != null && node != cur) {
+            prev = node;
+            node = (node.GetNext() != null ? node.GetNext().Get() : null);
+          }
+          cur = prev;
       }
 
       @Override
@@ -239,14 +373,14 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   //GetFirst
   @Override
   public Data GetFirst() {
-    if (headref.Get() == null) throw new IndexOutOfBoundsException("Container is empty");
+    if (headref.IsNull()) throw new IndexOutOfBoundsException("Container is empty");
     return headref.Get().Get();
   }
 
   //GetLast
   @Override
   public Data GetLast() {
-    if (tailref.Get() == null) throw new IndexOutOfBoundsException("Container is empty");
+    if (tailref.IsNull()) throw new IndexOutOfBoundsException("Container is empty");
     return tailref.Get().Get();
   }
 
@@ -280,39 +414,6 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
     return subChain;
   }
 
-  public Chain<Data> SubChain(Natural from, Natural to) {
-    Sequence<Data> subSeq = SubSequence(from, to);
-    final Box<LLNode<Data>> headBox = new Box<>(null);
-    final Box<LLNode<Data>> tailBox = new Box<>(null);
-    subSeq.TraverseForward(dat -> {
-      LLNode<Data> node = new LLNode<>(dat);
-      if (headBox.Get() == null) {
-        headBox.Set(node);
-        tailBox.Set(node);
-      } else {
-        tailBox.Get().SetNext(node);
-        tailBox.Set(node);
-      }
-      return false;
-    });
-
-    long newSize = to.ToLong() - from.ToLong();
-    return NewChain(newSize, headBox.Get(), tailBox.Get());
-  }
-
-  // non so se serva
-  @Override
-  public boolean Exists(Data data) {
-    ForwardIterator<Data> it = FIterator();
-    while (it.IsValid()) {
-      if ((it.GetCurrent() == null && data == null) ||
-          (it.GetCurrent() != null && it.GetCurrent().equals(data))) {
-        return true;
-      }
-      it.DataNNext();
-    }
-    return false;
-  }
   /* ************************************************************************ */
   /* Override specific member functions from RemovableAtSequence              */
   /* ************************************************************************ */

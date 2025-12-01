@@ -38,7 +38,7 @@ abstract public class VectorBase<Data> implements Vector<Data> {
   }
 
   // NewVector
-  abstract protected VectorBase<Data> NewVector(Data [] array);
+  abstract protected void NewVector(Data [] array);
   
   //ArrayAlloc
   @SuppressWarnings("unchecked")
@@ -202,25 +202,11 @@ abstract public class VectorBase<Data> implements Vector<Data> {
   // SubSequence
   @Override
   public MutableSequence<Data> SubSequence(Natural start, Natural end){
-    long startIdx = ExcIfOutOfBound(start);
-    long endIdx = ExcIfOutOfBound(end);
-    if (startIdx > endIdx) throw new IndexOutOfBoundsException("Start index is greater than end index");
-    long newSize = endIdx - startIdx + 1;
-    Data[] array = (Data[]) new Object[(int) newSize];
-    VectorBase<Data> subVec = NewVector(array);
-    MutableSequence<Data> subSeq = (MutableSequence<Data>) subVec;
-    for (long i = 0; i < newSize; i++) {
-      Data value = GetAt(Natural.Of(startIdx + i));
-      subSeq.SetAt(value, Natural.Of(i));  
-    }
-    return subSeq;
+    long StartIdx = (start == null) ? -1 : start.ToLong();
+    long EndIdx   = (end   == null) ? -1 : end.ToLong();
+    if (StartIdx < 0 || EndIdx < 0 || StartIdx > EndIdx || EndIdx > Size().ToLong()) return null;
+    Vector<Data> sub = Vector.super.SubVector(start, end);
+    return (MutableSequence<Data>) sub;
   }
-
-  @Override
-  public Vector<Data> SubVector(Natural start, Natural end) {
-    MutableSequence<Data> subSeq = SubSequence(start, end);
-    @SuppressWarnings("unchecked")
-    Vector<Data> res = (Vector<Data>) subSeq;
-    return res;
-  }
+  
 }

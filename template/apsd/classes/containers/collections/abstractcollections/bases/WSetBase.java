@@ -26,7 +26,8 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
     ChainAlloc();
     if (con != null) {
       con.TraverseForward(dat -> {
-        chn.InsertIfAbsent(dat); return false;
+        chn.InsertIfAbsent(dat); 
+        return false;
       });
     }
   }
