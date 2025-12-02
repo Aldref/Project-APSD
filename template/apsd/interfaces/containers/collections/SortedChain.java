@@ -83,9 +83,6 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
         if (cmp == 0) i = i.Increment();
       }
     }
-    while (i.compareTo(Size()) < 0) {
-      RemoveAt(i);
-    }
   }
 
   /* ************************************************************************ */

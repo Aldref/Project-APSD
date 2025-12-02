@@ -211,9 +211,9 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   // Clear
   @Override
   public void Clear(){
+    size.Zero();
     headref.Set(null);
     tailref.Set(null);
-    size.Zero();
   }
 
   /* ************************************************************************ */
@@ -373,6 +373,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   //GetFirst
   @Override
   public Data GetFirst() {
+    System.out.println("GetFirst called");
     if (headref.IsNull()) throw new IndexOutOfBoundsException("Container is empty");
     return headref.Get().Get();
   }
@@ -493,7 +494,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
     LLNode<Data> curr = headref.Get();
     while (curr != null) {
       LLNode<Data> next = (curr.GetNext() != null ? curr.GetNext().Get() : null);
-      if (fun.Apply(curr.Get())) {
+      if (!fun.Apply(curr.Get())) {
         if (prev == null) {
           headref.Set(next);
         } else {

@@ -1,6 +1,7 @@
 package apsd.interfaces.containers.collections;
 
 import apsd.interfaces.containers.base.IterableContainer;
+import apsd.interfaces.containers.iterators.ForwardIterator;
 import apsd.classes.utilities.Box;
 public interface Set<Data> extends Collection<Data> { 
 
@@ -20,7 +21,7 @@ public interface Set<Data> extends Collection<Data> {
     if(set == null) return;
     set.TraverseForward(dat->{
       if (dat == null) {
-        Remove(null); // risolvere questo metodo per rimuovere tutti i null
+        Remove(null);
       } else {
         while (Exists(dat)) {
           Remove(dat);
@@ -32,24 +33,7 @@ public interface Set<Data> extends Collection<Data> {
 
   // Intersection
   default void Intersection(Set<Data> set){
-    if (set == null) {
-      Clear();
-      return;
-    }
-    TraverseForward(dat -> {
-      Box<Boolean> present = new Box<>(false);
-      set.TraverseForward(dat2 -> {
-        if (dat == null ? dat2 == null : dat.equals(dat2)) {
-          present.Set(true);
-          return true; 
-        }
-        return false;
-      });
-      if (!present.Get()) {
-        Remove(dat); 
-      }
-      return false; 
-    });
+    Filter(dat->set.Exists(dat));
   }
 
   /* ************************************************************************ */

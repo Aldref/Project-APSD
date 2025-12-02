@@ -105,7 +105,7 @@ abstract public class VChainBase<Data> implements Chain<Data> { // Must implemen
     for (long i = from; i <= to; ++i) {
       subVec.SetAt(
       vec.GetAt(Natural.Of(i)),Natural.Of(j));
-      ++j;
+      j++;
     }
     return subVec;
   }
@@ -132,21 +132,31 @@ abstract public class VChainBase<Data> implements Chain<Data> { // Must implemen
   // filter
   @Override
   public boolean Filter(Predicate<Data> fun) {
-    long oldSize = vec.Size().ToLong();
+    long del = 0; 
     if (fun != null) {
-      long i = 0;
-      long newSize = oldSize;
-      while (i < newSize) {
-        Data dat = vec.GetAt(Natural.Of(i));
-        if (!fun.Apply(dat)) {
-          vec.ShiftLeft(Natural.Of(i));
-          newSize--;
-        } else {
-          i++;
+      MutableForwardIterator<Data> wrt = vec.FIterator();
+      for (; wrt.IsValid(); wrt.Next()) {
+        Data currentData = wrt.GetCurrent();
+        if (!fun.Apply(currentData)) {
+          del++;
+          wrt.SetCurrent(null);
         }
       }
+      if (del > 0) {
+        wrt.Reset();
+        MutableForwardIterator<Data> rdr = vec.FIterator();
+        for (; rdr.IsValid(); rdr.Next()) {
+          Data dat = rdr.GetCurrent();
+          if (dat != null) {
+            rdr.SetCurrent(null);
+            wrt.SetCurrent(dat);
+            wrt.Next();
+          }
+        }
+        vec.Reduce(Natural.Of(del));
+      }
     }
-    return vec.Size().ToLong() < oldSize;
+    return (del > 0);
   }
 
 }

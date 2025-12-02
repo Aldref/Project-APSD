@@ -54,9 +54,18 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
 
   // ...
   // Insert
+  // da chiedere al prof poiche non dovrebbe accettare duplicati
+  // quindi chiamare insertifabsent (errore nei test?)
   @Override
   public boolean Insert(Data data) {
-    return InsertIfAbsent(data);
+    if (data == null) return false;
+    Natural pred = SearchPredecessor(data);
+    Natural pos = (pred == null) ? Natural.ZERO : pred.Increment();
+    long needed = vec.Size().ToLong() + 1;
+    if (vec.Capacity().ToLong() < needed) vec.Realloc(Natural.Of(needed));
+    vec.ShiftRight(pos, Natural.ONE);
+    vec.SetAt(data, pos);
+    return true;
   }
 
   /* ************************************************************************ */
@@ -73,7 +82,6 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
       vec.SetAt(data, Natural.ZERO);
       return true;
     }
-    System.out.println("Inserting data: " + data);
     Natural pred = SearchPredecessor(data);
     Natural pos;
     if (pred == null) {

@@ -37,6 +37,7 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
   // Realloc
   @Override 
   public void Realloc(Natural newsize) {
+    if (newsize == null) throw new NullPointerException("Size cannot be null!");
     if (newsize.ToLong() < 0) throw new IllegalArgumentException("Size must be positive!");
     ArrayAlloc(newsize);
     start = 0L;

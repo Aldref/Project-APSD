@@ -50,33 +50,37 @@ public interface DynVector<Data> extends ResizableContainer, InsertableAtSequenc
   // ...
   @Override
   default void ShiftLeft(Natural pos, Natural num) {
-    long idx = ExcIfOutOfBound(pos);
-    long size = Size().ToLong();
+    if (pos == null || num == null) throw new NullPointerException();
+    long idx = pos.ToLong();
     long len = num.ToLong();
+    if (len <= 0) return;
+    long size = Size().ToLong();
+    if (idx < 0 || idx >= size) throw new IndexOutOfBoundsException("Index out of bounds for shift left: " + idx + "; Size: " + size + "!");
     if (idx + len > size) len = size - idx;
-    for (long i = idx; i + len < size; i++) {
-      SetAt(GetAt(Natural.Of(i + len)), Natural.Of(i));
-    }
+    if (len <= 0) return;
+    Vector.super.ShiftLeft(Natural.Of(idx), Natural.Of(len));
     for (long i = size - len; i < size; i++) {
       SetAt(null, Natural.Of(i));
     }
+    Reduce(Natural.Of(len));
   }
 
   @Override
   default void ShiftRight(Natural pos, Natural num) {
-    long idx = pos.ToLong(); 
+    if (pos == null || num == null) throw new NullPointerException();
+    long idx = pos.ToLong();
     long len = num.ToLong();
+    if (len <= 0) return;
     long size = Size().ToLong();
     long cap  = Capacity().ToLong();
-    while (size + len > cap) {
-      Grow();
-      cap = Capacity().ToLong();
-    }
     if (idx < 0 || idx > size) throw new IndexOutOfBoundsException("Index out of bounds for shift right: " + idx + "; Size: " + size + "!");
-    if (len > 0) Expand(Natural.Of(len));
-    for (long i = size - 1; i >= idx; i--) {
-      Data value = GetAt(Natural.Of(i));
-      SetAt(value, Natural.Of(i + len));
+    if (size + len > cap) {
+      Realloc(Natural.Of(size + len)); 
+      if (size + len > Capacity().ToLong()) throw new IllegalStateException("Unable to grow capacity to accommodate shiftRight");
+    }
+    Expand(Natural.Of(len)); 
+    Vector.super.ShiftRight(pos, num);
+    for (long i = idx; i < idx + len; i++) {
       SetAt(null, Natural.Of(i));
     }
   }

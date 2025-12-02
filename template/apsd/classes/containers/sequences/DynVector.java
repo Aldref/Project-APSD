@@ -10,15 +10,13 @@ public class DynVector<Data> extends DynLinearVectorBase<Data> { // Must extend 
   // public DynVector()
   public DynVector() {
     super(null);
-    ArrayAlloc(Natural.ONE); 
-    size = 0L;
+    ArrayAlloc(Natural.ZERO);
   }
 
   // public DynVector(Natural inisize)
   public DynVector(Natural inisize) {
     super(null);
     ArrayAlloc(inisize);
-    size = 0L;
   }
 
   // public DynVector(TraversableContainer<Data> con)
@@ -30,7 +28,6 @@ public class DynVector<Data> extends DynLinearVectorBase<Data> { // Must extend 
   protected DynVector(Data[] arr) {
     super(null);
     this.arr = arr;
-    size = arr.length;
   }
 
   // NewVector

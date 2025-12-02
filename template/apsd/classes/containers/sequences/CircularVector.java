@@ -16,18 +16,18 @@ public class CircularVector<Data> extends CircularVectorBase<Data> { // Must ext
 
   // public CircularVector(Natural inisize)
   public CircularVector(Natural inisize) {
-    this();
+    super();
     ArrayAlloc(inisize);
   }
 
   // public CircularVector(TraversableContainer<Data> con)
   public CircularVector(TraversableContainer<Data> con) {
-    this();
+    super();
     if (con != null) {
       ArrayAlloc(con.Size());
       final long[] idx = new long[] { 0L };
-      con.TraverseForward(d -> {
-        SetAt(d, Natural.Of(idx[0]));
+      con.TraverseForward(dat -> {
+        SetAt(dat, Natural.Of(idx[0]));
         idx[0]++;
         return false;
       });

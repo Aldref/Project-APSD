@@ -77,6 +77,7 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
     ShiftRight(Natural.Of(Size().ToLong()-2), Natural.ONE);
   }
 
+  // SubVector
   default Vector<Data> SubVector(Natural from, Natural to){
     long startIdx = ExcIfOutOfBound(from);
     long endIdx = ExcIfOutOfBound(to);
@@ -89,6 +90,7 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
   /* ************************************************************************ */
 
   // ...
+  // Size
   @Override
   default Natural Size() {
     return ReallocableContainer.super.Size(); 

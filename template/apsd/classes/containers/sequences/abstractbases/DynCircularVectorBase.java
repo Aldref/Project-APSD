@@ -105,9 +105,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
   @Override
   public void Reduce(Natural num) {
     if (num == null) throw new IllegalArgumentException("Number to reduce cannot be null!");
-    if (num.ToLong() > size) {
-      throw new IllegalArgumentException("Cannot reduce more elements than current size!");
-    }
+    if (num.ToLong() > size) throw new IllegalArgumentException("Cannot reduce more elements than current size!");
     size -= num.ToLong();
   }
 
@@ -119,21 +117,23 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
   // ShiftLeft
   @Override
   public void ShiftLeft(Natural pos, Natural num){
-    long idx = ExcIfOutOfBound(pos);   
+    if (pos == null || num == null) throw new NullPointerException();
+    long idx = pos.ToLong();
     long len = num.ToLong();
-    long sizeLong = size;
+    long sz = size;
     if (len <= 0) return;
-    if (idx < 0 || idx >= sizeLong) throw new IndexOutOfBoundsException("Index out of bounds: " + idx + "; Size: " + sizeLong);
-    if (len > sizeLong - idx) {
-      len = sizeLong - idx;
+    if (idx < 0 || idx >= sz) throw new IndexOutOfBoundsException("Index out of bounds: " + idx + "; Size: " + sz);
+    if (len > sz - idx) len = sz - idx;
+    if (len == 0) return;
+    long start = idx + len;
+    long count = sz - start;
+    for (long i = 0; i < count; i++) {
+      SetAt(GetAt(Natural.Of(start + i)), Natural.Of(idx + i));
     }
-    for (long i = idx; i < sizeLong - len; i++) {
-      SetAt(GetAt(Natural.Of(i + len)), Natural.Of(i));
-    }
-    for (long i = sizeLong - len; i < sizeLong; i++) {
+    for (long i = sz - len; i < sz; i++) {
       SetAt(null, Natural.Of(i));
     }
-    size -= len;
+    Reduce(Natural.Of(len));
   }
 
   // ShiftRight
@@ -151,7 +151,6 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
       size += len; 
     }
     long oldSize = sz;
-    long cap = Capacity().ToLong();
     for (long i = oldSize - 1; i >= idx; i--) {
       SetAt(GetAt(Natural.Of(i)), Natural.Of(i + len));
     }

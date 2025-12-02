@@ -23,7 +23,7 @@ abstract public class VectorBase<Data> implements Vector<Data> {
     ArrayAlloc(con.Size());
     final MutableNatural idx = new MutableNatural();
     con.TraverseForward(dat -> {
-      SetAt(dat, idx.GetNIncrement()); 
+      SetAt(dat, idx.GetNIncrement());
       return false;
     });
   }
