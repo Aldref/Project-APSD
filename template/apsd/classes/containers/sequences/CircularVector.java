@@ -22,16 +22,7 @@ public class CircularVector<Data> extends CircularVectorBase<Data> { // Must ext
 
   // public CircularVector(TraversableContainer<Data> con)
   public CircularVector(TraversableContainer<Data> con) {
-    super();
-    if (con != null) {
-      ArrayAlloc(con.Size());
-      final long[] idx = new long[] { 0L };
-      con.TraverseForward(dat -> {
-        SetAt(dat, Natural.Of(idx[0]));
-        idx[0]++;
-        return false;
-      });
-    }
+    super(con);
   }
 
   // protected CircularVector(Data[] arr)

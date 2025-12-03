@@ -249,24 +249,26 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
   @Override
   public void InsertAt(Data data, Natural index) {
     long idx = index.ToLong();
-    if (idx < 0 || idx > size.ToLong()) throw new IndexOutOfBoundsException("Index: " + idx);
+    long sz  = size.ToLong();
+    if (idx < 0 || idx > sz) throw new IndexOutOfBoundsException("Index: " + idx);
     if (idx == 0) {
       InsertFirst(data);
-    } else if (idx == size.ToLong()) {
-      InsertLast(data);
-    } else {
-      LLNode<Data> node = headref.Get();
-      long i = 0;
-      while (i < idx - 1 && node != null) {
-        node = node.GetNext().Get();
-        i++;
-      }
-      LLNode<Data> newNode = new LLNode<Data>(data);
-      newNode.SetNext(node.GetNext().Get());
-      node.SetNext(newNode);
-      size.Increment();
+      return;
     }
+    if (idx == sz) {
+      InsertLast(data);
+      return;
+    }
+    LLNode<Data> prev = headref.Get();
+    for (long i = 0; i < idx - 1; i++) {
+      prev = prev.GetNext().Get();
+    }
+    LLNode<Data> newNode = new LLNode<>(data);
+    newNode.SetNext(prev.GetNext().Get());
+    prev.SetNext(newNode);
+    size.Increment();
   }
+
 
   // InsertFirst
   @Override

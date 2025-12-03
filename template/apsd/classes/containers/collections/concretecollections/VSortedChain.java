@@ -54,8 +54,6 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
 
   // ...
   // Insert
-  // da chiedere al prof poiche non dovrebbe accettare duplicati
-  // quindi chiamare insertifabsent (errore nei test?)
   @Override
   public boolean Insert(Data data) {
     if (data == null) return false;

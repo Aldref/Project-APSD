@@ -82,52 +82,41 @@ protected class ListFIter implements MutableForwardIterator<Data> {
   // BMutIterator
   protected class ListBIter implements MutableBackwardIterator<Data> {
 
-    private Natural idx;
+    private long idx;
 
     public ListBIter() {
-      if (vec.Size().IsZero()) {
-        idx = Natural.Of(0);
-      } else {
-        idx = Natural.Of(vec.Size().ToLong() - 1);
-      }
+      long size = vec.Size().ToLong();
+      idx = (size == 0) ? -1L : size - 1;
     }
 
     @Override
     public boolean IsValid() {
-      return !vec.Size().IsZero() && idx.ToLong() < vec.Size().ToLong();
+      return idx >= 0 && idx < vec.Size().ToLong();
     }
 
     @Override
     public void Reset() {
-      if (vec.Size().IsZero()) {
-        idx = Natural.Of(0);
-      } else {
-        idx = Natural.Of(vec.Size().ToLong() - 1);
-      }
+      long size = vec.Size().ToLong();
+      idx = (size == 0) ? -1L : size - 1;
     }
 
     @Override
     public Data GetCurrent() {
       if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-      return vec.GetAt(idx);
+      return vec.GetAt(Natural.Of(idx));
     }
 
     @Override
     public Data DataNPrev() {
-      Data d = GetCurrent();
-      if (idx.ToLong() == 0) {
-        idx = Natural.Of(vec.Size().ToLong()); 
-        idx = Natural.Of(idx.ToLong() - 1);
-      } else {
-        idx = Natural.Of(idx.ToLong() - 1);
-      }
-      return d;
+      Data data = GetCurrent();
+      idx--;
+      return data;
     }
 
     @Override
     public void SetCurrent(Data data) {
       if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-      vec.SetAt(data, idx);
+      vec.SetAt(data, Natural.Of(idx));
     }
   }
 
@@ -184,15 +173,4 @@ protected class ListFIter implements MutableForwardIterator<Data> {
     vec.InsertAt(data, num);
   }
 
-  // non penso serva
-  @Override
-  public boolean Exists(Data data) {
-    DynVector<Data> v = vec;
-    Natural i = Natural.ZERO;
-    while (i.ToLong() < v.Size().ToLong()) {
-      if (v.GetAt(i) == null ? data == null : v.GetAt(i).equals(data)) return true;
-      i.Increment();
-    }
-    return false;
-  }
 }

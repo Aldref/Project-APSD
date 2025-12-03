@@ -26,4 +26,5 @@ public interface List<Data> extends MutableSequence<Data>, InsertableAtSequence<
     InsertLast(data);
     return true;
   }
+  
 }
