@@ -105,7 +105,7 @@ public class WStack<Data> implements Stack<Data> { // Must implement Stack
   // Push
   @Override
   public void Push(Data data) {
-    lst.Insert(data); // forse insertlast (da rivedere)
+    lst.InsertLast(data); 
   }
 
 }

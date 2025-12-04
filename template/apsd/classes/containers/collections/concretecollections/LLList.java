@@ -40,150 +40,14 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
 
   // ...
   // FIterator
-  protected class ListFIter implements MutableForwardIterator<Data> {
-
-    private Box<LLNode<Data>> curRef;   
-
-    public ListFIter() {
-      curRef = headref;                
-    }
-
-    @Override
-    public boolean IsValid() {
-      return curRef != null && curRef.Get() != null;
-    }
-
-    @Override
-    public void Reset() {
-      curRef = headref;
-    }
-
-    @Override
-    public Data GetCurrent() {
-      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-      return curRef.Get().Get();
-    }
-
-    @Override
-    public void Next() {
-      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-      LLNode<Data> node = curRef.Get();
-      curRef = node.GetNext();        
-    }
-
-    @Override
-    public Data DataNNext() {
-      Data d = GetCurrent();
-      LLNode<Data> node = curRef.Get();
-      curRef = node.GetNext();        
-      return d;
-    }
-
-    @Override
-    public void SetCurrent(Data data) {
-      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-      curRef.Get().Set(data);
-    }
-  }
-
-  // BIterator
-  protected class ListBIter implements MutableBackwardIterator<Data> {
-
-    private LLNode<Data> curr;   
-    private LLNode<Data> prev;  
-
-    public ListBIter() {
-      curr = tailref.Get();
-      prev = null;
-      if (curr != null) {
-        LLNode<Data> tmpPrev = null;
-        LLNode<Data> tmp = headref.Get();
-        while (tmp != null && tmp != curr) {
-          tmpPrev = tmp;
-          tmp = tmp.GetNext().Get();
-        }
-        prev = tmpPrev;
-      }
-    }
-
-    @Override
-    public boolean IsValid() {
-      return curr != null;
-    }
-
-    @Override
-    public void Reset() {
-      curr = tailref.Get();
-      prev = null;
-      if (curr != null) {
-        LLNode<Data> tmpPrev = null;
-        LLNode<Data> tmp = headref.Get();
-        while (tmp != null && tmp != curr) {
-          tmpPrev = tmp;
-          tmp = tmp.GetNext().Get();
-        }
-        prev = tmpPrev;
-      }
-    }
-
-    @Override
-    public Data GetCurrent() {
-      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-      return curr.Get();
-    }
-
-    @Override
-    public void Prev() {
-      if (!IsValid()) throw new IllegalStateException("Iterator terminated");
-      LLNode<Data> newCurr = prev;
-      LLNode<Data> newPrev = null;
-      LLNode<Data> tmp = headref.Get();
-      while (tmp != null && tmp != newCurr) {
-        newPrev = tmp;
-        tmp = tmp.GetNext().Get();
-      }
-      curr = newCurr;
-      prev = newPrev;
-    }
-
-    @Override
-    public Data DataNPrev() {
-      Data d = GetCurrent();
-      if (prev == null) {
-        curr = null;   
-      } else {
-        LLNode<Data> newCurr = prev;
-        LLNode<Data> newPrev = null;
-        LLNode<Data> tmp = headref.Get();
-        while (tmp != null && tmp != newCurr) {
-          newPrev = tmp;
-          tmp = tmp.GetNext().Get();
-        }
-        curr = newCurr;
-        prev = newPrev;
-      }
-      return d;
-    }
-
-    @Override
-    public void SetCurrent(Data data) {
-      if (!IsValid()) {
-        throw new IllegalStateException("Iterator terminated");
-      }
-      curr.Set(data);
-    }
-  }
-
-
   @Override
   public MutableForwardIterator<Data> FIterator() {
-    return new ListFIter();
+    return new ListFIterator();
   }
 
-  
   @Override
   public MutableBackwardIterator<Data> BIterator() {
-    return new ListBIter();
+    return new ListBIterator();
   }
   /* ************************************************************************ */
   /* Override specific member functions from MutableSequence                  */
@@ -201,9 +65,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
       node = node.GetNext().Get();
       i++;
     }
-    if (node == null) {
-      throw new IllegalStateException("Internal list structure corrupted");
-    }
+    if (node == null) throw new IllegalStateException("Internal list structure corrupted");
     node.Set(data);
   }
 
@@ -268,7 +130,6 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
     prev.SetNext(newNode);
     size.Increment();
   }
-
 
   // InsertFirst
   @Override

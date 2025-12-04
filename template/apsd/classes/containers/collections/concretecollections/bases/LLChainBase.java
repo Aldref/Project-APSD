@@ -255,7 +255,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
 
   // ...
   // FRefIterator
-  protected class ListFIterator implements ForwardIterator<Data> {
+  protected class ListFIterator implements MutableForwardIterator<Data> {
       protected LLNode<Data> cur;
   
       public ListFIterator() {
@@ -270,6 +270,12 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
       @Override
       public void Reset() {
         cur = headref.Get();
+      }
+
+      @Override
+      public void SetCurrent(Data data) {
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        cur.Set(data);
       }
 
       @Override
@@ -299,7 +305,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
     }
   
     // BIterator
-    protected class ListBIterator implements BackwardIterator<Data> {
+    protected class ListBIterator implements MutableBackwardIterator<Data> {
       protected LLNode<Data> cur;
   
       public ListBIterator() {
@@ -324,6 +330,12 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
             cur = cur.GetNext().Get();
           }
         }
+      }
+
+      @Override
+      public void SetCurrent(Data data) {
+        if (!IsValid()) throw new IllegalStateException("Iterator terminated");
+        cur.Set(data);
       }
 
       @Override
@@ -373,7 +385,6 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   //GetFirst
   @Override
   public Data GetFirst() {
-    System.out.println("GetFirst called");
     if (headref.IsNull()) throw new IndexOutOfBoundsException("Container is empty");
     return headref.Get().Get();
   }
