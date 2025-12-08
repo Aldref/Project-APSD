@@ -2,7 +2,7 @@ package apsd.interfaces.containers.collections;
 
 import apsd.interfaces.containers.base.IterableContainer;
 import apsd.interfaces.containers.iterators.ForwardIterator;
-import apsd.classes.utilities.Box;
+
 public interface Set<Data> extends Collection<Data> { 
 
   // Union
@@ -43,20 +43,17 @@ public interface Set<Data> extends Collection<Data> {
   // ...
   // IsEqual
   @Override
-  default boolean IsEqual(IterableContainer<Data> container) {
-    if (container == null || !Size().equals(container.Size())) return false;
-    boolean allFound = !TraverseForward(dat -> {
-      Box<Boolean> found = new Box<>(false);
-      container.TraverseForward(dat2 -> {
-        if (dat == null ? dat2 == null : dat.equals(dat2)) {
-          found.Set(true);
-          return true;  
-        }
-        return false;
-      });
-      return !found.Get();
-    });
-    return allFound;
+  default boolean IsEqual(IterableContainer<Data> data){
+    if (data == null) return false;
+      ForwardIterator<Data> it1 = FIterator();
+      ForwardIterator<Data> it2 = data.FIterator();
+    if (it1 == null || it2 == null) return false;
+    while (it1.IsValid() && it2.IsValid()) {
+      Data data1 = it1.DataNNext();
+      Data data2 = it2.DataNNext();
+      if (data1 == null ? data2 != null : !data1.equals(data2)) return false;
+    }
+    return !it1.IsValid() && !it2.IsValid();
   }
 
 }

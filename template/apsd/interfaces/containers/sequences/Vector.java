@@ -2,7 +2,7 @@ package apsd.interfaces.containers.sequences;
 
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.ReallocableContainer;
-import apsd.interfaces.containers.iterators.ForwardIterator;
+
 public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data> {
 
   // ShiftLeft

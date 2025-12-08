@@ -1,7 +1,5 @@
 package apsd.classes.containers.sequences;
 
-import java.lang.reflect.Array;
-
 import apsd.classes.containers.sequences.abstractbases.DynCircularVectorBase;
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.TraversableContainer;

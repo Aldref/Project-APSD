@@ -1,6 +1,5 @@
 package apsd.classes.containers.collections.abstractcollections.bases;
 
-import apsd.classes.containers.collections.concretecollections.VSortedChain;
 import apsd.interfaces.containers.base.IterableContainer;
 import apsd.interfaces.containers.base.TraversableContainer;
 import apsd.interfaces.containers.collections.OrderedSet;

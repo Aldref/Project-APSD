@@ -95,25 +95,41 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
     return null;
   }
 
+  // PredSuccFind
+  public LLNode<Data> PredSuccFind(Data dat){
+    if(dat == null || headref.IsNull()) return null;
+    Box<LLNode<Data>> curr = headref;
+    long length = Size().ToLong();
+    LLNode<Data> predSucc = null;
+    LLNode<Data> pred = null;
+    while(length > 0 && !curr.IsNull()) {
+      long newLength = (length - 1) / 2;
+      Box<LLNode<Data>> next = curr;
+      for (long idx = 0; idx < newLength; idx++) {
+          next = next.Get().GetNext();
+      }
+      if (next.Get().Get().compareTo(dat) > 0) {
+        predSucc = pred;
+        length = newLength;
+      } else {
+        pred = next.Get();
+        curr = next.Get().GetNext();
+        length = length - newLength - 1;
+      }
+    }
+    if (!curr.IsNull() && curr.Get() != null && curr.Get().Get().compareTo(dat) > 0) {
+      predSucc = pred;
+    }
+
+    return predSucc;
+  }
+
   /* ************************************************************************ */
   /* Override specific member functions from InsertableContainer              */
   /* ************************************************************************ */
 
   // ...
   // Insert
-  // @Override
-  // public boolean Insert(Data data) {
-  //   Box<LLNode<Data>> prevNodeBox = new Box<LLNode<Data>>(head);
-  //   LLNode<Data> currNode = head.next;
-  //   while (currNode != tail && ((Comparable<Data>) currNode.data).compareTo(data) < 0) {
-  //     prevNodeBox.value = currNode;
-  //     currNode = currNode.next;
-  //   }
-  //   LLNode<Data> newNode = new LLNode<Data>(data, currNode);
-  //   prevNodeBox.value.next = newNode;
-  //   size++;
-  //   return true;
-  // }
 
   @Override
   public boolean Insert(Data data) {
@@ -124,23 +140,17 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
     if (head == null) {
       headref.Set(newNode);
       tailref.Set(newNode);
-      size.Increment();
-      return true;
-    }
-    @SuppressWarnings("unchecked")
-    Comparable<Data> firstCmp = (Comparable<Data>) head.Get();
-    if (firstCmp.compareTo(data) >= 0) {
+    } else if (head.Get().compareTo(data) >= 0) {
       newNode.SetNext(head);
       headref.Set(newNode);
-      size.Increment();
-      return true;
+    } else {
+      LLNode<Data> pred = PredFind(data);
+      Box<LLNode<Data>> nextBox = pred.GetNext();
+      LLNode<Data> next = (nextBox != null) ? nextBox.Get() : null;
+      pred.SetNext(newNode);
+      newNode.SetNext(next);
+      if (pred == tail) tailref.Set(newNode);
     }
-    LLNode<Data> pred = PredFind(data);
-    Box<LLNode<Data>> nextBox = pred.GetNext();
-    LLNode<Data> next = (nextBox != null) ? nextBox.Get() : null;
-    newNode.SetNext(next);
-    pred.SetNext(newNode);
-    if (pred == tail) tailref.Set(newNode);
     size.Increment();
     return true;
   }
@@ -203,16 +213,12 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
     return index;
   }
 
-  // @Override
-  // public Data SearchPredecessor(Data data) {
-  //   LLNode<Data> currNode = head.next;
-  //   LLNode<Data> predecessorNode = null;
-  //   while (currNode != tail && ((Comparable<Data>) currNode.data).compareTo(data) < 0) {
-  //     predecessorNode = currNode;
-  //     currNode = currNode.next;
-  //   }
-  //   return (predecessorNode != null) ? predecessorNode.data : null;
-  // }
+  @Override
+  public Data Predecessor(Data data) {
+    if (data == null || headref.IsNull()) return null;
+    LLNode<Data> pred = PredFind(data);
+    return pred == null ? null : pred.Get();
+  }
 
   @Override
   public void RemovePredecessor(Data data) {
@@ -248,14 +254,13 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
     }
     return index;
   }
-  // @Override
-  // public Data SearchSuccessor(Data data) {
-  //   LLNode<Data> currNode = head.next;
-  //   while (currNode != tail && ((Comparable<Data>) currNode.data).compareTo(data) <= 0) {
-  //     currNode = currNode.next;
-  //   }
-  //   return (currNode != tail) ? currNode.data : null;
-  // }
+
+  @Override
+  public Data Successor(Data data) {
+    if (data == null || headref.IsNull()) return null;
+    LLNode<Data> succ = SuccFind(data);
+    return succ == null ? null : succ.Get();
+  }
 
   @Override
   public void RemoveSuccessor(Data data) {

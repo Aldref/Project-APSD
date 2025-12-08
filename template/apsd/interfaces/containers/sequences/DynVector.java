@@ -98,4 +98,6 @@ public interface DynVector<Data> extends ResizableContainer, InsertableAtSequenc
   // ...
   @Override
   abstract Natural Size();
+
+  
 }

@@ -23,7 +23,6 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
     super(con);
   }
 
-
   // protected LLList(long size, LLNode<Data> head, LLNode<Data> tail)
   protected LLList(long size, LLNode<Data> head, LLNode<Data> tail) {
     super(size, head, tail);
@@ -45,6 +44,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
     return new ListFIterator();
   }
 
+  // BIterator
   @Override
   public MutableBackwardIterator<Data> BIterator() {
     return new ListBIterator();

@@ -1,7 +1,6 @@
 package apsd.interfaces.containers.base;
 
 import apsd.classes.utilities.Box;
-import apsd.classes.utilities.MutableNatural;
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.traits.Accumulator;
 import apsd.interfaces.traits.Predicate;
@@ -32,7 +31,11 @@ public interface TraversableContainer<Data> extends MembershipContainer<Data> { 
 
   // Size
   @Override
-  Natural Size();
+  default Natural Size() { 
+    final Box<Natural> count = new Box<>(Natural.ZERO);
+    TraverseForward(dat -> { count.Set(count.Get().Increment()); return false; });
+    return count.Get();
+  }
 
   /* ************************************************************************ */
   /* Override specific member functions from MembershipContainer              */

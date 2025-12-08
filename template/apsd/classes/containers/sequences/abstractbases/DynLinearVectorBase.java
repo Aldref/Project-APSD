@@ -73,7 +73,6 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
   // Expand
   @Override
   public void Expand(Natural num) {
-    Natural oldSize = Natural.Of(size);
     Natural newSize = Natural.Of(size + num.ToLong());
     if (newSize.ToLong() > Capacity().ToLong()) {
       Grow(Natural.Of(newSize.ToLong() - Capacity().ToLong()));

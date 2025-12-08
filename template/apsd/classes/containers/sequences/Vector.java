@@ -3,7 +3,6 @@ package apsd.classes.containers.sequences;
 import apsd.classes.utilities.Natural;
 import apsd.classes.containers.sequences.abstractbases.LinearVectorBase;
 import apsd.interfaces.containers.base.TraversableContainer;
-import apsd.interfaces.containers.iterators.MutableForwardIterator;
 
 /** Object: Concrete (static linear) vector implementation. */
 public class Vector<Data> extends LinearVectorBase<Data> { // Must extend LinearVectorBase
