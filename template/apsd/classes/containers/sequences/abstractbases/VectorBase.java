@@ -38,7 +38,7 @@ abstract public class VectorBase<Data> implements Vector<Data> {
   }
 
   // NewVector
-  abstract protected void NewVector(Data [] array);
+  abstract protected VectorBase<Data> NewVector(Data [] array);
   
   //ArrayAlloc
   @SuppressWarnings("unchecked")
@@ -205,8 +205,13 @@ abstract public class VectorBase<Data> implements Vector<Data> {
     long StartIdx = (start == null) ? -1 : start.ToLong();
     long EndIdx   = (end   == null) ? -1 : end.ToLong();
     if (StartIdx < 0 || EndIdx < 0 || StartIdx > EndIdx || EndIdx > Size().ToLong()) return null;
-    Vector<Data> sub = Vector.super.SubVector(start, end);
-    return (MutableSequence<Data>) sub;
+    int len = (int)(EndIdx - StartIdx);
+    @SuppressWarnings("unchecked")
+    Data[] subarr = (Data[]) new Object[len];
+    for (int i = 0; i < len; i++) {
+      subarr[i] = arr[(int)StartIdx + i];
+    }
+    return (MutableSequence<Data>) NewVector(subarr);
   }
   
 }

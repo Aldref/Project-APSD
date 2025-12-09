@@ -30,8 +30,8 @@ public class CircularVector<Data> extends CircularVectorBase<Data> { // Must ext
 
   // NewVector
   @Override
-  protected void NewVector(Data[] arr) {
-    new CircularVector<>(arr);
+  protected CircularVectorBase<Data> NewVector(Data[] arr) {
+    return new CircularVector<>(arr);
   }
 
 }

@@ -32,8 +32,8 @@ public class DynVector<Data> extends DynLinearVectorBase<Data> { // Must extend 
 
   // NewVector
   @Override
-  protected void NewVector(Data[] arr) {
-    new DynVector<>(arr);
+  protected DynLinearVectorBase<Data> NewVector(Data[] arr) {
+    return new DynVector<>(arr);
   }
 
 }
