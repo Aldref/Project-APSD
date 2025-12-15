@@ -18,7 +18,11 @@ public interface Set<Data> extends Collection<Data> {
 
   // Difference
   default void Difference(Set<Data> set){
-    if(set == null) return;
+    if (set == null) return;
+    if (set == this) { 
+      Clear();
+      return;
+    }
     set.TraverseForward(dat->{
       if (dat == null) {
         Remove(null);

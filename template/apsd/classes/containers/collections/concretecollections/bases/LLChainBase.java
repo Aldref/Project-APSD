@@ -217,30 +217,19 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   // Remove
   @Override
   public boolean Remove(Data dat) {
-    boolean removed = false;
-    LLNode<Data> prev = null;
-    LLNode<Data> curr = headref.Get();
-    while (curr != null) {
-      Data curVal = curr.Get();
-      if ((curVal == null && dat == null) || (curVal != null && curVal.equals(dat))) {
-        LLNode<Data> next = (curr.GetNext() != null ? curr.GetNext().Get() : null);
-        if (prev == null) {
-          headref.Set(next);
-        } else {
-          prev.SetNext(next);
-        }
-        if (tailref.Get() == curr) {
-          tailref.Set(prev);
-        }
+    if (dat == null) return false;
+    final Box<LLNode<Data>> prd = new Box<>();
+    return FRefIterator().ForEachForward(cur -> {
+      LLNode<Data> node = cur.Get();
+      if (node.Get().equals(dat)) {
+        cur.Set(node.GetNext().Get());
+        if (tailref.Get() == node) { tailref.Set(prd.Get()); }
         size.Decrement();
-        removed = true;
-        curr = next;
-        continue;
+        return true;
       }
-      prev = curr;
-      curr = (curr.GetNext() != null ? curr.GetNext().Get() : null);
-    }
-    return removed;
+      prd.Set(node);
+      return false;
+    });
   }
 
   /* ************************************************************************ */

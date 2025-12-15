@@ -1,5 +1,7 @@
 package apsd.classes.containers.sequences.abstractbases;
 
+import java.util.Set;
+
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.TraversableContainer;
 
@@ -79,7 +81,9 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
   // SetAt
   @Override
   public void SetAt(Data data, Natural index) {
-    long idx = ExcIfOutOfBound(index);
+    if (index == null) throw new NullPointerException("Index cannot be null!");
+    long idx = index.ToLong();
+    if (idx < 0 || idx >= Size().ToLong()) throw new IndexOutOfBoundsException("Index out of bounds: " + idx + "; Size: " + Size().ToLong() + "!");
     long realIdx = (start + idx) % arr.length;
     arr[(int) realIdx] = data;
   }
@@ -93,40 +97,36 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
   // ShiftLeft
   @Override
   public void ShiftLeft(Natural pos, Natural num) {
+    if (pos == null || num == null) throw new NullPointerException();
     long idx = ExcIfOutOfBound(pos);
     long len = num.ToLong();
+    if (len <= 0) return;
     long size = Size().ToLong();
-    len = (len <= size - idx) ? len : size - idx;
-    if (idx < size - (idx + len)){
-      long iniwrt = idx - 1 + len;
-      long wrt = iniwrt;
-      for (long rdr = wrt - len; rdr >= idx; rdr--, wrt--) {
-        Natural natrdr = Natural.Of(rdr);
-        SetAt(GetAt(natrdr), Natural.Of(wrt));
-        SetAt(null, natrdr);
-      }
-      for (; wrt - iniwrt < len; wrt++) {
-        SetAt(null, Natural.Of(wrt));
-      }
-      start = (start + len) % arr.length;
-    } else{
-      super.ShiftLeft(pos, num);
+    if (idx + len > size) len = size - idx;
+    if (len <= 0) return;
+    for (long i = idx + len; i < size; i++) {
+      SetAt(GetAt(Natural.Of(i)), Natural.Of(i - len));
+    }
+    for (long i = size - len; i < size; i++) {
+      SetAt(null, Natural.Of(i));
     }
   }
 
-  // ShiftRight
   @Override
   public void ShiftRight(Natural pos, Natural num) {
+    if (pos == null || num == null) throw new NullPointerException();
     long idx = ExcIfOutOfBound(pos);
-    long size = Size().ToLong();
     long len = num.ToLong();
+    if (len <= 0) return;
+    long size = Size().ToLong();
     if (arr == null || arr.length == 0) return;
-    for (long i = size - 1; i >= idx; i--) {
-      long wrt = i + len;
-      SetAt(GetAt(Natural.Of(i)), Natural.Of((start + wrt) % arr.length));
+    if (idx + len > size) len = size - idx;
+    if (len <= 0) return;
+    for (long i = size - 1 - len; i >= idx; i--) {
+      SetAt(GetAt(Natural.Of(i)), Natural.Of(i + len));
     }
     for (long i = idx; i < idx + len; i++) {
-      SetAt(null, Natural.Of((start + i) % arr.length));
+      SetAt(null, Natural.Of(i));
     }
   }
 

@@ -89,15 +89,13 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
     if (num == null) throw new NullPointerException("num cannot be null");
     long len = num.ToLong();
     if (len <= 0) return;
-    long newsize = size + len;
-    if (newsize > Capacity().ToLong()) {
-      Grow(Natural.Of(newsize - Capacity().ToLong()));
+    long newSize = size + len;
+    if (newSize > Capacity().ToLong()) {
+      Realloc(Natural.Of(newSize));
+      if (newSize > Capacity().ToLong()) throw new IllegalStateException("Unable to expand: capacity is still < new size");
     }
-    size = newsize;
+    size = newSize;
   }
-
-
-
 
   // Reduce
   @Override

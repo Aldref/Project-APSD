@@ -11,16 +11,20 @@ public interface DynVector<Data> extends ResizableContainer, InsertableAtSequenc
 
   // ...
   @Override
-  default void InsertAt(Data element, Natural idx) {
-    if (element == null) throw new NullPointerException("Element cannot be null");
-    if (idx == null) throw new NullPointerException("Index cannot be null");
-    long index = idx.ToLong();
-    long size  = Size().ToLong();
-    long cap   = Capacity().ToLong();
-    if (index < 0 || index > size) throw new IndexOutOfBoundsException("Index out of bounds for insert: " + index + "; Size: " + size + "!");
-    if (size + 1 > cap) Grow();
-    ShiftRight(Natural.Of(index), Natural.ONE);
-    SetAt(element, Natural.Of(index));
+  default void InsertAt(Data data, Natural pos){
+    if (data == null) throw new IllegalArgumentException("data nullo");
+    if (pos == null) throw new IndexOutOfBoundsException("Index out of bounds.");
+    long idx = pos.ToLong();
+    long size = Size().ToLong();
+    if (idx < 0 || idx > size) throw new IndexOutOfBoundsException("Index out of bounds.");
+    if (idx == size) {
+      Expand();
+      SetAt(data, pos);
+      return;
+    }
+    if (size + 1 > Capacity().ToLong()) Grow();
+    ShiftRight(pos, Natural.ONE);
+    SetAt(data, pos);
   }
 
 
@@ -30,16 +34,18 @@ public interface DynVector<Data> extends ResizableContainer, InsertableAtSequenc
 
   // ...
   @Override
-  default Data AtNRemove(Natural idx) {
-    long index = ExcIfOutOfBound(idx);
-    Data removedElement = GetAt(Natural.Of(index));
+  default Data AtNRemove(Natural pos) {
+    if (pos == null) throw new IndexOutOfBoundsException("Index out of bounds.");
+    long idx = pos.ToLong();
     long size = Size().ToLong();
-    if (index < size - 1) {
-      ShiftLeft(idx, Natural.ONE); 
+    if (idx < 0 || idx >= size) throw new IndexOutOfBoundsException("Index out of bounds.");
+    Data old = GetAt(Natural.Of(idx));
+    if (idx < size - 1) {
+      Vector.super.ShiftLeft(Natural.Of(idx), Natural.ONE);
     }
     SetAt(null, Natural.Of(size - 1));
-    Reduce();
-    return removedElement;
+    Reduce(Natural.ONE);
+    return old;
   }
 
 
@@ -71,20 +77,21 @@ public interface DynVector<Data> extends ResizableContainer, InsertableAtSequenc
     long idx = pos.ToLong();
     long len = num.ToLong();
     if (len <= 0) return;
-    long size = Size().ToLong();
-    long cap  = Capacity().ToLong();
-    if (idx < 0 || idx > size) throw new IndexOutOfBoundsException("Index out of bounds for shift right: " + idx + "; Size: " + size + "!");
-    if (size + len > cap) {
-      Realloc(Natural.Of(size + len)); 
-      if (size + len > Capacity().ToLong()) throw new IllegalStateException("Unable to grow capacity to accommodate shiftRight");
+    long oldSize = Size().ToLong();
+    if (idx < 0 || idx > oldSize) throw new IndexOutOfBoundsException("Index out of bounds for shift right: " + idx + "; Size: " + oldSize + "!");
+    long needed = oldSize + len;
+    if (needed > Capacity().ToLong()) {
+      Realloc(Natural.Of(needed));
+      if (needed > Capacity().ToLong()) throw new IllegalStateException("Unable to grow capacity to accommodate shiftRight");
     }
-    Expand(Natural.Of(len)); 
-    Vector.super.ShiftRight(pos, num);
+    Expand(Natural.Of(len));
+    for (long i = oldSize - 1; i >= idx; i--) {
+      SetAt(GetAt(Natural.Of(i)), Natural.Of(i + len));
+    }
     for (long i = idx; i < idx + len; i++) {
       SetAt(null, Natural.Of(i));
     }
   }
-
 
   @Override
   default Vector<Data> SubVector(Natural start, Natural end){
