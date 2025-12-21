@@ -33,6 +33,7 @@ public interface Chain<Data> extends RemovableAtSequence<Data>, Set<Data>{ // Mu
     if (startIdx > endIdx || endIdx >= Size().ToLong()) return null;
     return (Chain<Data>) SubSequence(start, end);
   }
+  
   /* ************************************************************************ */
   /* Override specific member functions from Sequence                         */
   /* ************************************************************************ */
