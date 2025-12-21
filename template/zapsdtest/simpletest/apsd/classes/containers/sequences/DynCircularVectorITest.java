@@ -15,8 +15,12 @@ public class DynCircularVectorITest extends XDynVectorITest {
   public void NewEmptyContainer() { container = new DynCircularVector<>(); }
 
   @Override
+  public void NewNonEmptyContainer(TraversableContainer<Long> con) { container = new DynCircularVector<>(con); }
+
+  @Override
   public DynCircularVector<Long> GetNewEmptyContainer() { return new DynCircularVector<>(); }
 
+  @Override
   public DynCircularVector<Long> GetNewNonEmptyContainer(TraversableContainer<Long> con) { return new DynCircularVector<>(con); }
 
 }

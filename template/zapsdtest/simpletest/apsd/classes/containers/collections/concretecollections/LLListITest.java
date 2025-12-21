@@ -15,8 +15,12 @@ public class LLListITest extends XListITest {
   public void NewEmptyContainer() { container = new LLList<>(); }
 
   @Override
+  public void NewNonEmptyContainer(TraversableContainer<Long> con) { container = new LLList<>(con); }
+
+  @Override
   public LLList<Long> GetNewEmptyContainer() { return new LLList<>(); }
 
+  @Override
   public LLList<Long> GetNewNonEmptyContainer(TraversableContainer<Long> con) { return new LLList<>(con); }
 
 }

@@ -59,7 +59,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
   // Realloc
   @Override
   public void Realloc(Natural newsize) {
-    if (newsize == null) throw new IllegalArgumentException("New size cannot be null!");
+    if (newsize == null) return;
     long newCap = newsize.ToLong();
     if (newCap >= Integer.MAX_VALUE) throw new ArithmeticException("Overflow: size cannot exceed Integer.MAX_VALUE!");
     Data[] oldArr = arr;
@@ -86,7 +86,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
   // Expand
   @Override
   public void Expand(Natural num) {
-    if (num == null) throw new NullPointerException("num cannot be null");
+    if (num == null) return;
     long len = num.ToLong();
     if (len <= 0) return;
     long newSize = size + len;
@@ -100,9 +100,21 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
   // Reduce
   @Override
   public void Reduce(Natural num) {
-    if (num == null) throw new IllegalArgumentException("Number to reduce cannot be null!");
-    if (num.ToLong() > size) throw new IllegalArgumentException("Cannot reduce more elements than current size!");
-    size -= num.ToLong();
+    if (num == null) return;
+    long sub = num.ToLong();
+    if (sub <= 0) return;
+    if (sub > size) throw new IllegalArgumentException("Cannot reduce more elements than current size!");
+    long oldSize = size;
+    long newSize = size - sub;
+    if (arr != null && arr.length > 0) {
+      for (long i = newSize; i < oldSize; i++) {
+        int realIdx = (int) ((start + i) % arr.length);
+        arr[realIdx] = null;
+      }
+    }
+    size = newSize;
+    if (size == 0) start = 0L;
+    Shrink();
   }
 
   /* ************************************************************************ */

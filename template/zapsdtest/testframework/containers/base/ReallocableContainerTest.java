@@ -18,9 +18,10 @@ public interface ReallocableContainerTest<Con extends ReallocableContainer> exte
 
   default void TestRealloc(Natural newSize) {
     BeginTest("Realloc");
+    long oldSize = ThisContainer().Size().ToLong();
     ThisContainer().Realloc(newSize);
-    assertTrue(ThisContainer().Size().ToLong() <= newSize.ToLong(),
-    "Size should be consistent with new size");
+    if (newSize == null) assertTrue(ThisContainer().Size().ToLong() == oldSize, "Size should not change when new size is null");
+    else assertTrue(ThisContainer().Size().ToLong() <= newSize.ToLong(), "Size should be consistent with new size");
     EndTest();
   }
 

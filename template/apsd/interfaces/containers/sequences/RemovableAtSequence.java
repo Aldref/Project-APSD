@@ -29,13 +29,13 @@ public interface RemovableAtSequence<Data> extends Sequence<Data> {
   // RemoveLast
   default void RemoveLast(){
     if (IsEmpty()) return;
-    RemoveAt(Natural.Of(Size().ToLong() - 1));
+    RemoveAt(Natural.Of(Size().Decrement()));
   }
   
   // LastNRemove
   default Data LastNRemove(){
     if (IsEmpty()) return null;
-    return AtNRemove(Natural.Of(Size().ToLong() - 1));
+    return AtNRemove(Natural.Of(Size().Decrement()));
   }
 
 }

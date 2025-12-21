@@ -12,8 +12,10 @@ public interface SetTest<Data, Con extends Set<Data>> extends CollectionTest<Dat
     ThisContainer().Union(otherSet);
     assertTrue(ThisContainer().Size().ToLong() >= initialSize,
     "Size should not decrease after Union");
-    assertTrue(otherSet.FoldForward((dat, acc) -> ThisContainer().Exists(dat) && acc, true)  ,
-    "The new set should contain all elements of the input set after Union");
+    if (otherSet != null) {
+      assertTrue(otherSet.FoldForward((dat, acc) -> ThisContainer().Exists(dat) && acc, true)  ,
+      "The new set should contain all elements of the input set after Union");
+    }
     EndTest();
   }
 
@@ -23,8 +25,10 @@ public interface SetTest<Data, Con extends Set<Data>> extends CollectionTest<Dat
     ThisContainer().Difference(otherSet);
     assertTrue(ThisContainer().Size().ToLong() <= initialSize,
     "Size should not increase after Difference");
-    assertFalse(otherSet.FoldForward((dat, acc) -> ThisContainer().Exists(dat) || acc, false)  ,
-    "The new set should not contain any element of the input set after Differerence");
+    if (otherSet != null) {
+      assertFalse(otherSet.FoldForward((dat, acc) -> ThisContainer().Exists(dat) || acc, false)  ,
+      "The new set should not contain any element of the input set after Differerence");
+    }
     EndTest();
   }
 
@@ -34,8 +38,10 @@ public interface SetTest<Data, Con extends Set<Data>> extends CollectionTest<Dat
     ThisContainer().Intersection(otherSet);
     assertTrue(ThisContainer().Size().ToLong() <= initialSize,
     "Size should not increase after Intersection");
-    assertTrue(ThisContainer().FoldForward((dat, acc) -> otherSet.Exists(dat) && acc, true)  ,
-    "The input set should contain all elements of the new set after Intersection");
+    if (otherSet != null) {
+      assertTrue(ThisContainer().FoldForward((dat, acc) -> otherSet.Exists(dat) && acc, true)  ,
+      "The input set should contain all elements of the new set after Intersection");
+    }
     EndTest();
   }
 

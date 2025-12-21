@@ -15,8 +15,12 @@ public class VOrderedSetITest extends WOrderedSetITest {
   public void NewEmptyContainer() { container = new WOrderedSet<>(); }
 
   @Override
+  public void NewNonEmptyContainer(TraversableContainer<Long> con) { container = new WOrderedSet<>(con); }
+
+  @Override
   public WOrderedSet<Long> GetNewEmptyContainer() { return new WOrderedSet<>(); }
 
+  @Override
   public WOrderedSet<Long> GetNewNonEmptyContainer(TraversableContainer<Long> con) { return new WOrderedSet<>(con); }
 
 }

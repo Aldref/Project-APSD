@@ -23,7 +23,15 @@ public class WQueue<Data> implements Queue<Data> { // Must implement Queue
 
   // public WQueue(TraversableContainer<Data> con)
   public WQueue(TraversableContainer<Data> con) {
-    lst = new VList<>(con);
+    this.lst = new VList<>();
+    if (con != null) {
+      con.TraverseForward(dat -> {
+        if (dat != null) {
+          lst.InsertLast(dat);
+        }
+        return false;
+      });
+    }
   }
 
   // public WQueue(List<Data> lst, TraversableContainer<Data> con)
@@ -31,7 +39,9 @@ public class WQueue<Data> implements Queue<Data> { // Must implement Queue
     this.lst = lst;
     if (con != null) {
       con.TraverseForward(dat -> {
-        lst.InsertIfAbsent(dat);
+        if (dat != null) {
+          lst.InsertLast(dat);
+        }
         return false;          
       });
     }
@@ -90,8 +100,15 @@ public class WQueue<Data> implements Queue<Data> { // Must implement Queue
   // Enqueue
   @Override
   public void Enqueue(Data element) {
-    if (element == null) throw new IllegalArgumentException("Element cannot be null");
+    if (element == null) return;
     lst.InsertLast(element);
+  }
+
+  @Override
+  public boolean Insert(Data data) {
+    if (data == null) return false;
+    Enqueue(data);
+    return true;
   }
 
 }

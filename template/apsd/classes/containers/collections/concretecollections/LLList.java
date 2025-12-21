@@ -53,10 +53,19 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
   /* Override specific member functions from MutableSequence                  */
   /* ************************************************************************ */
 
+  @Override
+  public boolean Insert(Data data) {
+    if (data == null) return false;
+    InsertFirst(data);
+    return true;
+  }
+
   // ...
   // SetAt
   @Override
   public void SetAt(Data data, Natural index) {
+    if (index == null) throw new NullPointerException();
+    if (data == null) return;
     if (index.ToLong() >= Size().ToLong() || index.ToLong() < 0) throw new IndexOutOfBoundsException("Index: " + index);
     LLNode<Data> node = headref.Get();
     long i = 0;
@@ -72,6 +81,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
   // SetFirst
   @Override
   public void SetFirst(Data data) {
+    if (data == null) return;
     if (headref.Get() == null) throw new IndexOutOfBoundsException("Container is empty");
     headref.Get().Set(data);
   }
@@ -79,6 +89,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
   // SetLast
   @Override
   public void SetLast(Data data) {
+    if (data == null) return;
     if (tailref.Get() == null) throw new IndexOutOfBoundsException("Container is empty");
     tailref.Get().Set(data);
   }
@@ -110,6 +121,8 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
   // InsertAt
   @Override
   public void InsertAt(Data data, Natural index) {
+    if (index == null) throw new NullPointerException();
+    if (data == null) return;
     long idx = index.ToLong();
     long sz  = size.ToLong();
     if (idx < 0 || idx > sz) throw new IndexOutOfBoundsException("Index: " + idx);
@@ -134,6 +147,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
   // InsertFirst
   @Override
   public void InsertFirst(Data data) {
+    if (data == null) return;
     LLNode<Data> newNode = new LLNode<Data>(data);
     newNode.SetNext(headref.Get());
     headref.Set(newNode);
@@ -146,6 +160,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
   // InsertLast
   @Override
   public void InsertLast(Data data) {
+    if (data == null) return;
     LLNode<Data> newNode = new LLNode<Data>(data);
     if (tailref.Get() == null) {
       headref.Set(newNode);

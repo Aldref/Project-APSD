@@ -52,6 +52,13 @@ public interface TraversableContainerTest<Data, Con extends TraversableContainer
 
   default void TestFoldForward(Accumulator<Data, Data> accumulator, Data initial, Data expected) {
     BeginTest("FoldForward");
+    if (initial == null) {
+      assertThrows(NullPointerException.class,
+      () -> ThisContainer().FoldForward(accumulator, initial),
+      "FoldForward should throw exception for null initial value");
+      EndTest();
+      return;
+    }
     Data result = ThisContainer().FoldForward(accumulator, initial);
     assertEquals(expected, result, "FoldForward should return " + expected);
     EndTest();
@@ -59,6 +66,13 @@ public interface TraversableContainerTest<Data, Con extends TraversableContainer
 
   default void TestFoldBackward(Accumulator<Data, Data> accumulator, Data initial, Data expected) {
     BeginTest("FoldBackward");
+    if (initial == null) {
+      assertThrows(NullPointerException.class,
+      () -> ThisContainer().FoldBackward(accumulator, initial),
+      "FoldBackward should throw exception for null initial value");
+      EndTest();
+      return;
+    }
     Data result = ThisContainer().FoldBackward(accumulator, initial);
     assertEquals(expected, result, "FoldBackward should return " + expected);
     EndTest();
@@ -73,5 +87,4 @@ public interface TraversableContainerTest<Data, Con extends TraversableContainer
     false
     );
   }
-
 }

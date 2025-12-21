@@ -11,7 +11,11 @@ public interface MutableSequenceTest<Data, Con extends MutableSequence<Data>> ex
 
   default void TestSetAt(Data element, Natural position, boolean edgeCase) {
     BeginTest("SetAt");
-    if (edgeCase) {
+    if (position == null) 
+      assertThrows(NullPointerException.class,
+      () -> ThisContainer().SetAt(element, position),
+      "SetAt should throw exception for null position");
+    else if (edgeCase) {
       assertThrows(IndexOutOfBoundsException.class,
       () -> ThisContainer().SetAt(element, position),
       "SetAt should throw exception for invalid position");
@@ -25,7 +29,11 @@ public interface MutableSequenceTest<Data, Con extends MutableSequence<Data>> ex
 
   default void TestGetNSetAt(Data newElement, Data expectedOld, Natural position, boolean edgeCase) {
     BeginTest("GetNSetAt");
-    if (edgeCase) {
+    if (position == null) 
+      assertThrows(NullPointerException.class,
+      () -> ThisContainer().SetAt(newElement, position),
+      "GetNSetAt should throw exception for null position");
+    else if (edgeCase) {
       assertThrows(IndexOutOfBoundsException.class,
       () -> ThisContainer().SetAt(newElement, position),
       "GetNSetAt should throw exception for invalid position");
@@ -101,7 +109,14 @@ public interface MutableSequenceTest<Data, Con extends MutableSequence<Data>> ex
 
   default void TestSwap(Natural firstPos, Natural secondPos, boolean edgeCase) {
     BeginTest("Swap");
-    if (edgeCase) {
+    if (firstPos == null || secondPos == null) {
+      assertThrows(NullPointerException.class,
+      () -> {
+        ThisContainer().GetAt(firstPos);
+        ThisContainer().GetAt(secondPos);
+      },
+      "TestSwap should throw exception for invalid position");
+    } else if (edgeCase) {
       assertThrows(IndexOutOfBoundsException.class,
       () -> {
         ThisContainer().GetAt(firstPos);

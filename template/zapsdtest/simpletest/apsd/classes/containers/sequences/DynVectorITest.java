@@ -15,8 +15,12 @@ public class DynVectorITest extends XDynVectorITest {
   public void NewEmptyContainer() { container = new DynVector<>(); }
 
   @Override
+  public void NewNonEmptyContainer(TraversableContainer<Long> con) { container = new DynVector<>(con); }
+
+  @Override
   public DynVector<Long> GetNewEmptyContainer() { return new DynVector<>(); }
 
+  @Override
   public DynVector<Long> GetNewNonEmptyContainer(TraversableContainer<Long> con) { return new DynVector<>(con); }
 
 }

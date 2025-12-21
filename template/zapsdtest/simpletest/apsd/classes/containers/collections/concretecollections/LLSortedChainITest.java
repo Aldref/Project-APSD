@@ -15,8 +15,12 @@ public class LLSortedChainITest extends XSortedChainITest {
   public void NewEmptyContainer() { container = new LLSortedChain<>(); }
 
   @Override
+  public void NewNonEmptyContainer(TraversableContainer<Long> con) { container = new LLSortedChain<>(con); }
+
+  @Override
   public LLSortedChain<Long> GetNewEmptyContainer() { return new LLSortedChain<>(); }
 
+  @Override
   public LLSortedChain<Long> GetNewNonEmptyContainer(TraversableContainer<Long> con) { return new LLSortedChain<>(con); }
 
 }

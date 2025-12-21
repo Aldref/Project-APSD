@@ -11,6 +11,11 @@ public interface VectorTest<Data, Con extends Vector<Data>> extends MutableSeque
 
   default void TestShiftLeft(Natural position, Natural number) {
     BeginTest("ShiftLeft");
+    if (position == null || number == null) {
+      assertThrows(NullPointerException.class, () -> ThisContainer().ShiftRight(position, number));
+      EndTest();
+      return;
+    }
     long initialSize = ThisContainer().Size().ToLong();
     ThisContainer().ShiftLeft(position, number);
     assertEquals(initialSize, ThisContainer().Size().ToLong(),
@@ -20,6 +25,11 @@ public interface VectorTest<Data, Con extends Vector<Data>> extends MutableSeque
 
   default void TestShiftLeft(Natural position) {
     BeginTest("ShiftLeft");
+    if (position == null) {
+      assertThrows(NullPointerException.class, () -> ThisContainer().ShiftLeft(position));
+      EndTest();
+      return;
+    }
     long initialSize = ThisContainer().Size().ToLong();
     ThisContainer().ShiftLeft(position);
     assertEquals(initialSize, ThisContainer().Size().ToLong(),
@@ -48,17 +58,27 @@ public interface VectorTest<Data, Con extends Vector<Data>> extends MutableSeque
   default void TestShiftRight(Natural position, Natural number) {
     BeginTest("ShiftRight");
     long initialSize = ThisContainer().Size().ToLong();
+    if (position == null || number == null) {
+      assertThrows(NullPointerException.class, () -> ThisContainer().ShiftRight(position, number));
+      EndTest();
+      return;
+    }
     ThisContainer().ShiftRight(position, number);
     assertEquals(initialSize, ThisContainer().Size().ToLong(),
     "Size should be preserved after ShiftRight");
-    for(long num = 0; num < number.ToLong(); num++, position = position.Increment()) {
-      assertNull(ThisContainer().GetAt(position), "Position " + position + " should be null");
+    for(long num = 0; num < number.ToLong(); num++) {
+      assertNull(ThisContainer().GetAt(Natural.Of(position.ToLong() + num)), "Position " + (position.ToLong() + num) + " should be null");
     }
     EndTest();
   }
 
   default void TestShiftRight(Natural position) {
     BeginTest("ShiftRight");
+    if (position == null) {
+      assertThrows(NullPointerException.class, () -> ThisContainer().ShiftRight(position));
+      EndTest();
+      return;
+    }
     long initialSize = ThisContainer().Size().ToLong();
     ThisContainer().ShiftRight(position);
     assertEquals(initialSize, ThisContainer().Size().ToLong(),

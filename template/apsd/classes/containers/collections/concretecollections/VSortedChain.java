@@ -6,7 +6,6 @@ import apsd.interfaces.containers.base.TraversableContainer;
 import apsd.interfaces.containers.collections.SortedChain;
 import apsd.interfaces.containers.iterators.MutableForwardIterator;
 import apsd.interfaces.containers.sequences.DynVector;
-import apsd.interfaces.containers.sequences.Sequence; // forse non serve
 
 /** Object: Concrete set implementation via (dynamic circular) vector. */
 public class VSortedChain<Data extends Comparable<? super Data>> extends VChainBase<Data> implements SortedChain<Data> { // Must extend VChainBase and implements SortedChain

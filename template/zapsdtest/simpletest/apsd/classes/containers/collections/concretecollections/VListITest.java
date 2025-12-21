@@ -13,10 +13,14 @@ public class VListITest extends XListITest {
 
   @Override
   public void NewEmptyContainer() { container = new VList<>(); }
+  
+  @Override
+  public void NewNonEmptyContainer(TraversableContainer<Long> con) { container = new VList<>(con); }
 
   @Override
   public VList<Long> GetNewEmptyContainer() { return new VList<>(); }
 
+  @Override
   public VList<Long> GetNewNonEmptyContainer(TraversableContainer<Long> con) { return new VList<>(con); }
 
 }

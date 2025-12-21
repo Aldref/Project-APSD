@@ -28,6 +28,7 @@ public class DynVector<Data> extends DynLinearVectorBase<Data> { // Must extend 
   protected DynVector(Data[] arr) {
     super(null);
     this.arr = arr;
+    this.size = arr != null ? arr.length : 0L;
   }
 
   // NewVector

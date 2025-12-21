@@ -11,7 +11,7 @@ public interface MutableSequence<Data> extends Sequence<Data>, MutableIterableCo
   default void SetAt(Data data, Natural num){
     long idx = ExcIfOutOfBound(num);
     MutableForwardIterator<Data> it = FIterator();
-    it.Next(Natural.Of(idx));          
+    it.Next(idx);          
     it.SetCurrent(data);                
   }
 
@@ -27,25 +27,23 @@ public interface MutableSequence<Data> extends Sequence<Data>, MutableIterableCo
 
   // SetFirst
   default void SetFirst(Data data) {
-    if (IsEmpty()) throw new IndexOutOfBoundsException("Sequence is empty");
     SetAt(data, Natural.ZERO);
   }
 
   // GetNSetFirst
   default Data GetNSetFirst(Data data) {
-    if (IsEmpty()) throw new IndexOutOfBoundsException("Sequence is empty");
     return GetNSetAt(data, Natural.ZERO);
   }
 
   // SetLast
   default void SetLast(Data data) {
-    if (IsEmpty()) throw new IndexOutOfBoundsException("Sequence is empty");
+    if (IsEmpty()) throw new IndexOutOfBoundsException("sequence is empty");
     SetAt(data, Size().Decrement());
   }
 
   // GetNSetLast
   default Data GetNSetLast(Data data) {
-    if (IsEmpty()) throw new IndexOutOfBoundsException("Sequence is empty");
+    if (IsEmpty()) throw new IndexOutOfBoundsException("sequence is empty");
     return GetNSetAt(data, Size().Decrement());
   }
 

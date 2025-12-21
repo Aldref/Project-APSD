@@ -15,8 +15,12 @@ public class VectorITest extends XVectorITest {
   public void NewEmptyContainer() { container = new Vector<>(); }
 
   @Override
+  public void NewNonEmptyContainer(TraversableContainer<Long> con) { container = new Vector<>(con); }
+
+  @Override
   public Vector<Long> GetNewEmptyContainer() { return new Vector<>(); }
 
+  @Override
   public Vector<Long> GetNewNonEmptyContainer(TraversableContainer<Long> con) { return new Vector<>(con); }
 
 }

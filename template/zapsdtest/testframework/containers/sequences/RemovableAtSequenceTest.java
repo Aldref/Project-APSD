@@ -9,7 +9,11 @@ public interface RemovableAtSequenceTest<Data, Con extends RemovableAtSequence<D
 
   default void TestRemoveAt(Natural position, boolean edgeCase) {
     BeginTest("RemoveAt");
-    if (edgeCase) {
+    if (position == null) 
+      assertThrows(NullPointerException.class,
+      () -> ThisContainer().RemoveAt(position),
+      "RemoveAt should throw exception for null position");
+    else if (edgeCase) {
       assertThrows(IndexOutOfBoundsException.class,
       () -> ThisContainer().RemoveAt(position),
       "RemoveAt should throw exception for invalid position");
@@ -24,7 +28,11 @@ public interface RemovableAtSequenceTest<Data, Con extends RemovableAtSequence<D
 
   default void TestAtNRemove(Natural position, Data expectedElement, boolean edgeCase) {
     BeginTest("AtNRemove");
-    if (edgeCase) {
+    if (position == null) 
+      assertThrows(NullPointerException.class,
+      () -> ThisContainer().AtNRemove(position),
+      "AtNRemove should throw exception for null position");
+    else if (edgeCase) {
       assertThrows(IndexOutOfBoundsException.class,
       () -> ThisContainer().AtNRemove(position),
       "AtNRemove should throw exception for invalid position");

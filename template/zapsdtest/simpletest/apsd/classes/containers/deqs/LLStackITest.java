@@ -16,8 +16,12 @@ public class LLStackITest extends WStackITest {
   public void NewEmptyContainer() { container = new WStack<>(new LLList<>()); }
 
   @Override
+  public void NewNonEmptyContainer(TraversableContainer<Long> con) { container = new WStack<>(new LLList<>(), con); }
+
+  @Override
   public WStack<Long> GetNewEmptyContainer() { return new WStack<>(new LLList<>()); }
 
+  @Override
   public WStack<Long> GetNewNonEmptyContainer(TraversableContainer<Long> con) { return new WStack<>(new LLList<>(), con); }
 
 }

@@ -14,7 +14,7 @@ public interface ReallocableContainer extends ClearableContainer, Reallocable {
 
   // Grow
   default void Grow(){
-    Grow(Natural.ZERO);
+    Grow(Natural.ONE);
   };
 
   default void Grow(Natural n){

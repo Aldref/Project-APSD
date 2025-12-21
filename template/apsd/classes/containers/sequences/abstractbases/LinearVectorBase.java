@@ -29,7 +29,7 @@ abstract public class LinearVectorBase<Data> extends VectorBase<Data> { // Must 
   // Realloc 
   @Override
   public void Realloc(Natural newsize) {
-    if (newsize == null) throw new IllegalArgumentException("New size cannot be null!");
+    if (newsize == null) return;
     long size = newsize.ToLong();
     if (size >= Integer.MAX_VALUE) throw new ArithmeticException("Overflow: size cannot exceed Integer.MAX_VALUE!"); 
     Data[] oldArr = arr;

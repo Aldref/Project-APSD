@@ -1,7 +1,5 @@
 package apsd.classes.containers.sequences.abstractbases;
 
-import java.util.Set;
-
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.TraversableContainer;
 
@@ -37,7 +35,7 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
   // Realloc
   @Override
   public void Realloc(Natural size) {
-    if (size == null) throw new NullPointerException("Size cannot be null!");
+    if (size == null) return;
     if (arr == null) {
       super.ArrayAlloc(size);
       start = 0L;
@@ -112,6 +110,7 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
     }
   }
 
+  // ShiftRight
   @Override
   public void ShiftRight(Natural pos, Natural num) {
     if (pos == null || num == null) throw new NullPointerException();

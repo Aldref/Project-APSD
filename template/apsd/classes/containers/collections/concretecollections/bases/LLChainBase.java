@@ -483,6 +483,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   // Filter
   @Override
   public boolean Filter(Predicate<Data> fun) {
+    if (fun == null) return false;
     boolean removedAny = false;
     LLNode<Data> prev = null;
     LLNode<Data> curr = headref.Get();

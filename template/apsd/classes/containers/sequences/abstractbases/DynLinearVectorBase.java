@@ -12,7 +12,11 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
   // DynLinearVectorBase
   protected DynLinearVectorBase(TraversableContainer<Data> con) {
     super(con);
-    
+    if (con != null) {
+      Natural conSize = con.Size();
+      size = conSize != null ? conSize.ToLong() : 0L;
+      if (arr != null && size > arr.length) size = arr.length;
+    }
   }
 
   // ArrayAlloc
@@ -52,7 +56,7 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
   // Realloc
   @Override 
   public void Realloc(Natural newsize) {
-    if (newsize == null) throw new IllegalArgumentException("New size cannot be null!");
+    if (newsize == null) return;
     long newLen = newsize.ToLong();
     if (newLen >= Integer.MAX_VALUE) throw new ArithmeticException("Overflow");
     Data[] oldArr = arr;
@@ -74,7 +78,7 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
   // Expand
   @Override
   public void Expand(Natural num) {
-    if (num == null) throw new NullPointerException();
+    if (num == null) return;
     long add = num.ToLong();
     if (add <= 0) return;
     long newSize = size + add;
@@ -86,7 +90,7 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
 
   @Override
   public void Reduce(Natural num) {
-    if (num == null) throw new NullPointerException();
+    if (num == null) return;
     long sub = num.ToLong();
     if (sub <= 0) return;
     if (sub > size) throw new IllegalArgumentException("Cannot reduce more than current size");
@@ -96,5 +100,6 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
       arr[(int) i] = null;
     }
     size = newSize;
+    Shrink();
   }
 }

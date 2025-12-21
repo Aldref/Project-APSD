@@ -16,6 +16,7 @@ public class VList<Data> extends VChainBase<Data> implements List<Data> { // Mus
   public VList() {
     super();
   }
+
   // public VList(TraversableContainer<Data> con)
   public VList(TraversableContainer<Data> con) {
     super();
@@ -37,16 +38,16 @@ public class VList<Data> extends VChainBase<Data> implements List<Data> { // Mus
   public VList<Data> NewChain(DynVector<Data> vec) {
     return new VList<Data>(vec);
   }
+  
   /* ************************************************************************ */
   /* Override specific member functions from MutableIterableContainer         */
   /* ************************************************************************ */
 
   // ...
   //FMutIterator
-  // FMutIterator
 protected class ListFIter implements MutableForwardIterator<Data> {
 
-  private Natural idx = Natural.Of(0); // non usare Natural.ZERO
+  private Natural idx = Natural.Of(0); 
 
   @Override
   public boolean IsValid() {
@@ -132,6 +133,7 @@ protected class ListFIter implements MutableForwardIterator<Data> {
   public MutableBackwardIterator<Data> BIterator() {
     return new ListBIter();
   }
+  
   /* ************************************************************************ */
   /* Override specific member functions from MutableSequence                  */
   /* ************************************************************************ */
@@ -140,6 +142,8 @@ protected class ListFIter implements MutableForwardIterator<Data> {
   // SetAt
   @Override
   public void SetAt(Data data, Natural num) {
+    if (num == null) throw new NullPointerException();
+    if (data == null) return;
     vec.SetAt(data, num);
   }
 
@@ -162,6 +166,7 @@ protected class ListFIter implements MutableForwardIterator<Data> {
     MutableSequence<Data> seq = SubSequence(from, to);
     return new VList<Data>((DynVector<Data>) seq);
   }
+  
   /* ************************************************************************ */
   /* Override specific member functions from InsertableAtSequence             */
   /* ************************************************************************ */
@@ -170,6 +175,8 @@ protected class ListFIter implements MutableForwardIterator<Data> {
   // InsertAt
   @Override
   public void InsertAt(Data data, Natural num) {
+    if (num == null) throw new NullPointerException();
+    if (data == null) return;
     vec.InsertAt(data, num);
   }
 

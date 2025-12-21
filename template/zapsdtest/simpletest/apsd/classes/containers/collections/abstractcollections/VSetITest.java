@@ -15,8 +15,12 @@ public class VSetITest extends WSetITest {
   public void NewEmptyContainer() { container = new WSet<>(); }
 
   @Override
+  public void NewNonEmptyContainer(TraversableContainer<Long> con) { container = new WSet<>(con); }
+
+  @Override
   public WSet<Long> GetNewEmptyContainer() { return new WSet<>(); }
 
+  @Override
   public WSet<Long> GetNewNonEmptyContainer(TraversableContainer<Long> con) { return new WSet<>(con); }
 
 }

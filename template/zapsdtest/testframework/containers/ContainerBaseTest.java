@@ -8,8 +8,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.xml.crypto.Data;
-
 import org.junit.jupiter.api.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -52,8 +50,10 @@ abstract public class ContainerBaseTest<Con extends Container> implements Contai
 
   abstract public void NewEmptyContainer();
   abstract public void NewNonEmptyContainer();
+  abstract public void NewNonEmptyContainer(TraversableContainer<Long> traversableContainer);
 
   abstract public Con GetNewEmptyContainer();
+  abstract public Con GetNewNonEmptyContainer(TraversableContainer<Long> traversableContainer);
 
   public void AddTest(int num) { unittestnum += num; }
 

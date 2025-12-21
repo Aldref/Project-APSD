@@ -17,8 +17,12 @@ public class LLSetITest extends WSetITest {
   public void NewEmptyContainer() { container = new WSet<>(new LLList<>()); }
 
   @Override
+  public void NewNonEmptyContainer(TraversableContainer<Long> con) { container = new WSet<>(new LLSortedChain<>(), con); }
+
+  @Override
   public WSet<Long> GetNewEmptyContainer() { return new WSet<Long>(new LLSortedChain<>()); }
 
+  @Override
   public WSet<Long> GetNewNonEmptyContainer(TraversableContainer<Long> con) { return new WSet<>(new LLSortedChain<>(), con); }
 
 }

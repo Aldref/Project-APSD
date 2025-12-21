@@ -15,8 +15,12 @@ public class VSortedChainITest extends XSortedChainITest {
   public void NewEmptyContainer() { container = new VSortedChain<>(); }
 
   @Override
+  public void NewNonEmptyContainer(TraversableContainer<Long> con) { container = new VSortedChain<>(con); }
+
+  @Override
   public VSortedChain<Long> GetNewEmptyContainer() { return new VSortedChain<>(); }
 
+  @Override
   public VSortedChain<Long> GetNewNonEmptyContainer(TraversableContainer<Long> con) { return new VSortedChain<>(con); }
 
 }

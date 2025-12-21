@@ -14,7 +14,7 @@ public class WSet<Data> extends WSetBase<Data, Chain<Data>> { // Must extend WSe
   }
   // public WSet(Chain<Data> chn)
   public WSet(Chain<Data> chn) {
-    super(chn);
+    super((TraversableContainer<Data>) chn);
   }
   // public WSet(TraversableContainer<Data> con)
   public WSet(TraversableContainer<Data> con) {

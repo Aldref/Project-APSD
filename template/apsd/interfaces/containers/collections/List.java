@@ -21,6 +21,7 @@ public interface List<Data> extends MutableSequence<Data>, InsertableAtSequence<
   // ...
   @Override
   default boolean Insert(Data data) {
+    if (data == null) return false;
     InsertFirst(data);
     return true;
   }

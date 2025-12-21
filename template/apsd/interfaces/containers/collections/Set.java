@@ -1,7 +1,6 @@
 package apsd.interfaces.containers.collections;
 
 import apsd.interfaces.containers.base.IterableContainer;
-import apsd.interfaces.containers.iterators.ForwardIterator;
 
 public interface Set<Data> extends Collection<Data> { 
 
@@ -36,8 +35,10 @@ public interface Set<Data> extends Collection<Data> {
   }
 
   // Intersection
-  default void Intersection(Set<Data> set){
-    Filter(dat->set.Exists(dat));
+  default void Intersection(Set<Data> other) {
+    if (other == null) return;
+    if (other == this) return;
+    Filter(elem -> other.Exists(elem));
   }
 
   /* ************************************************************************ */
@@ -47,17 +48,10 @@ public interface Set<Data> extends Collection<Data> {
   // ...
   // IsEqual
   @Override
-  default boolean IsEqual(IterableContainer<Data> data){
-    if (data == null) return false;
-      ForwardIterator<Data> it1 = FIterator();
-      ForwardIterator<Data> it2 = data.FIterator();
-    if (it1 == null || it2 == null) return false;
-    while (it1.IsValid() && it2.IsValid()) {
-      Data data1 = it1.DataNNext();
-      Data data2 = it2.DataNNext();
-      if (data1 == null ? data2 != null : !data1.equals(data2)) return false;
-    }
-    return !it1.IsValid() && !it2.IsValid();
+  default boolean IsEqual(IterableContainer<Data> other) {
+    if (other == null || !Size().equals(other.Size())) return false;
+    if (this == other) return true;
+    return !this.TraverseForward(elem -> !other.Exists(elem));
   }
 
 }

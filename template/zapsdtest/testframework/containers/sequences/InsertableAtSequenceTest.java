@@ -10,7 +10,15 @@ public interface InsertableAtSequenceTest<Data, Con extends InsertableAtSequence
   default void TestInsertAt(Data element, Natural position, boolean edgeCase) {
     BeginTest("InsertAt");
     long initialSize = ThisContainer().Size().ToLong();
-    if (edgeCase) {
+    if (element == null && edgeCase) {
+      ThisContainer().InsertAt(element, position);
+      assertEquals(initialSize, ThisContainer().Size().ToLong(),
+      "Size should not increase by 1 after InsertAt of null element");
+    } else if (position == null) 
+      assertThrows(NullPointerException.class,
+      () -> ThisContainer().InsertAt(element, position),
+      "InsertAt should throw exception for null position");
+    else if (edgeCase) {
       assertThrows(IndexOutOfBoundsException.class,
       () -> ThisContainer().InsertAt(element, position),
       "InsertAt should throw exception for invalid position");
@@ -25,9 +33,19 @@ public interface InsertableAtSequenceTest<Data, Con extends InsertableAtSequence
   }
 
   default void TestInsertFirst(Data element) {
+    TestInsertFirst(element, false);
+  }
+
+  default void TestInsertFirst(Data element, boolean edgeCase) {
     BeginTest("InsertFirst");
     long initialSize = ThisContainer().Size().ToLong();
     ThisContainer().InsertFirst(element);
+    if (edgeCase && element == null) {
+      assertEquals(initialSize, ThisContainer().Size().ToLong(),
+      "Size should not change after inserting null element");
+      EndTest();
+      return;
+    }
     assertEquals(initialSize + 1, ThisContainer().Size().ToLong(),
     "Size should increase by 1 after InsertFirst");
     assertEquals(element, ThisContainer().GetFirst(),
@@ -39,6 +57,12 @@ public interface InsertableAtSequenceTest<Data, Con extends InsertableAtSequence
     BeginTest("InsertLast");
     long initialSize = ThisContainer().Size().ToLong();
     ThisContainer().InsertLast(element);
+    if (element == null) {
+      assertEquals(initialSize, ThisContainer().Size().ToLong(),
+      "Size should not change after inserting null element");
+      EndTest();
+      return;
+    }
     assertEquals(initialSize + 1, ThisContainer().Size().ToLong(),
     "Size should increase by 1 after InsertLast");
     assertEquals(element, ThisContainer().GetLast(),

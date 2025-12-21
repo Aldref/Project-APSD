@@ -15,8 +15,12 @@ public class VQueueITest extends WQueueITest {
   public void NewEmptyContainer() { container = new WQueue<>(); }
 
   @Override
+  public void NewNonEmptyContainer(TraversableContainer<Long> con) { container = new WQueue<>(con); }
+
+  @Override
   public WQueue<Long> GetNewEmptyContainer() { return new WQueue<>(); }
 
+  @Override
   public WQueue<Long> GetNewNonEmptyContainer(TraversableContainer<Long> con) { return new WQueue<>(con); }
 
 }

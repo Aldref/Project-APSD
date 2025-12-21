@@ -26,7 +26,7 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
     ChainAlloc();
     if (con != null) {
       con.TraverseForward(dat -> {
-        chn.InsertIfAbsent(dat); 
+        if (dat != null) chn.InsertIfAbsent(dat);
         return false;
       });
     }
@@ -36,7 +36,8 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
     this.chn = chn;
     if (con != null) {
       con.TraverseForward(dat ->{
-        chn.InsertIfAbsent(dat); return false;
+        if (dat != null) chn.InsertIfAbsent(dat);
+        return false;
       });
     }
   }
@@ -73,6 +74,7 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
   // Insert
   @Override
   public boolean Insert(Data data) {
+    if (data == null) return false;
     return chn.InsertIfAbsent(data);
   }
 
@@ -84,6 +86,7 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
   // Remove
   @Override
   public boolean Remove(Data data) {
+    if (data == null) return false;
     return chn.Remove(data);
   }
 

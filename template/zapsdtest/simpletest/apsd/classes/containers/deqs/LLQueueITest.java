@@ -16,8 +16,12 @@ public class LLQueueITest extends WQueueITest {
   public void NewEmptyContainer() { container = new WQueue<>(new LLList<>()); }
 
   @Override
+  public void NewNonEmptyContainer(TraversableContainer<Long> con) { container = new WQueue<>(new LLList<>(), con); }
+
+  @Override
   public WQueue<Long> GetNewEmptyContainer() { return new WQueue<>(new LLList<>()); }
 
+  @Override
   public WQueue<Long> GetNewNonEmptyContainer(TraversableContainer<Long> con) { return new WQueue<>(new LLList<>(), con); }
 
 }

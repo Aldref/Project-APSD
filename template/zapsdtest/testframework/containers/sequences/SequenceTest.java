@@ -12,7 +12,11 @@ public interface SequenceTest<Data, Con extends Sequence<Data>>
 
   default void TestGetAt(Natural position, Data expectedElement, boolean edgeCase) {
     BeginTest("GetAt");
-    if (edgeCase) {
+    if (position == null) 
+      assertThrows(NullPointerException.class,
+      () -> ThisContainer().GetAt(position),
+      "GetAt should throw exception for null position");
+    else if (edgeCase) {
       assertThrows(IndexOutOfBoundsException.class, () -> ThisContainer().GetAt(position),
       "GetAt should throw IndexOutOfBoundsException for invalid position");
     } else {

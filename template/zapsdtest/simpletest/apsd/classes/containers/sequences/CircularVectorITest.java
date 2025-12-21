@@ -12,11 +12,17 @@ public class CircularVectorITest extends XVectorITest {
   }
 
   @Override
-  public void NewEmptyContainer() { container = new CircularVector<>(); }
+  public void NewEmptyContainer() { 
+    container = new CircularVector<>(); 
+  }
+
+  @Override
+  public void NewNonEmptyContainer(TraversableContainer<Long> con) { container = new CircularVector<>(con); }
 
   @Override
   public CircularVector<Long> GetNewEmptyContainer() { return new CircularVector<>(); }
 
+  @Override
   public CircularVector<Long> GetNewNonEmptyContainer(TraversableContainer<Long> con) { return new CircularVector<>(con); }
 
 }

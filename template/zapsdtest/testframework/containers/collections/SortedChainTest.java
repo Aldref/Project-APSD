@@ -27,4 +27,17 @@ public interface SortedChainTest<Data extends Comparable<? super Data>, Con exte
     EndTest();
   }
 
+  default void TestPredecessor(Data element, Data expectedElement) {
+    BeginTest("Predecessor");
+    Data pred = ThisContainer().Predecessor(element);
+    assertEquals(expectedElement, pred, "Predecessor should return " + expectedElement);
+    EndTest();
+  }
+
+  default void TestSuccessor(Data element, Data expectedElement) {
+    BeginTest("Successor");
+    Data succ = ThisContainer().Successor(element);
+    assertEquals(expectedElement, succ, "Successor should return " + expectedElement);
+    EndTest();
+  }
 }

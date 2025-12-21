@@ -7,6 +7,7 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
 
   // SearchPredecessor
   default Natural SearchPredecessor(Data data) {
+    if (data == null) return null;
     if (IsEmpty()) return null;
     Natural left = Natural.ZERO;
     Natural right = Size().Decrement();
@@ -32,6 +33,7 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
 
   // SearchSuccessor
   default Natural SearchSuccessor(Data data) {
+    if (data == null) return null;
     if (IsEmpty()) return null;
     Natural left = Natural.ZERO;
     Natural right = Size().Decrement();

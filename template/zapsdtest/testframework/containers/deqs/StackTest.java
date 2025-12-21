@@ -52,11 +52,70 @@ public interface StackTest<Data, Con extends Stack<Data>> extends ClearableConta
   default void TestPush(Data element) {
     BeginTest("Push");
     long initialSize = ThisContainer().Size().ToLong();
+    Data oldTop = ThisContainer().Top();
     ThisContainer().Push(element);
     Data top = ThisContainer().Top();
+    if (element == null) {
+      assertEquals(oldTop, top, "Top should remain " + oldTop + " after Push of null element");
+      assertEquals(initialSize, ThisContainer().Size().ToLong(),
+      "Size should not increase by 1 after Push of null element");
+      EndTest();
+      return;
+    }
     assertEquals(element, top, "Top should return " + element + " after Push");
     assertEquals(initialSize + 1, ThisContainer().Size().ToLong(),
     "Size should increase by 1 after Push");
+    EndTest();
+  }
+
+  default void TestIsEqual(Stack<Data> otherStack, boolean expectedResult) {
+    BeginTest("IsEqual");
+    if (otherStack == null) {
+      assertEquals(false, expectedResult,
+      "IsEqual should return false when other stack is null");
+      EndTest();
+      return;
+    }
+    boolean isEqual = true;
+    while (!ThisContainer().IsEmpty() && !otherStack.IsEmpty()) {
+      Data thisTop = ThisContainer().TopNPop();
+      Data otherTop = otherStack.TopNPop();
+      if (thisTop == null) {
+        if (otherTop != null) {
+          isEqual = false;
+          break;
+        }
+      } else {
+        if (!thisTop.equals(otherTop)) {
+          isEqual = false;
+          break;
+        }
+      }
+    }
+    if (!ThisContainer().IsEmpty() || !otherStack.IsEmpty()) {
+      isEqual = false;
+    }
+    assertEquals(expectedResult, isEqual,
+    "IsEqual should return " + expectedResult);
+    EndTest();
+  }
+
+  default void TestExists(Data element, boolean expectedResult) {
+    BeginTest("Exists");
+    boolean exists = false;
+    while (!ThisContainer().IsEmpty()) {
+      Data top = ThisContainer().TopNPop();
+      if (top == null) {
+        break;
+      } else {
+        if (top.equals(element)) {
+          exists = true;
+          break;
+        }
+      }
+    }
+    assertEquals(expectedResult, exists,
+    "Exists should return " + expectedResult + " for " + element);
     EndTest();
   }
 

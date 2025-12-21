@@ -15,8 +15,12 @@ public class VStackITest extends WStackITest {
   public void NewEmptyContainer() { container = new WStack<>(); }
 
   @Override
+  public void NewNonEmptyContainer(TraversableContainer<Long> con) { container = new WStack<>(con); }
+
+  @Override
   public WStack<Long> GetNewEmptyContainer() { return new WStack<>(); }
 
+  @Override
   public WStack<Long> GetNewNonEmptyContainer(TraversableContainer<Long> con) { return new WStack<>(con); }
 
 }

@@ -30,13 +30,19 @@ public interface ResizableContainerTest<Con extends ResizableContainer> extends 
     long initialSize = ThisContainer().Size().ToLong();
     long initialCapacity = ThisContainer().Size().ToLong();
     ThisContainer().Expand(number);
+    if (number == null) {
+      assertEquals(initialCapacity, ThisContainer().Size().ToLong(),
+      "Capacity should not change after Expand with null number");
+      EndTest();
+      return;
+    }
     assertEquals(initialSize + number.ToLong(), ThisContainer().Size().ToLong(),
     "Size should increase by " + number + " after Expand");
     if (initialSize + number.ToLong() < initialCapacity) {
       assertEquals(initialCapacity, ThisContainer().Size().ToLong(),
       "Capacity should not change after Expand with sufficient space");
     } else {
-      assertTrue(initialCapacity < ThisContainer().Size().ToLong(),
+      assertTrue(initialCapacity + number.ToLong() <= ThisContainer().Size().ToLong(),
       "Capacity needs to expand after Expand without sufficient space");
     }
     EndTest();
@@ -45,15 +51,15 @@ public interface ResizableContainerTest<Con extends ResizableContainer> extends 
   default void TestReduce() {
     BeginTest("Reduce");
     long initialSize = ThisContainer().Size().ToLong();
-    long initialCapacity = ThisContainer().Size().ToLong();
+    long initialCapacity = ThisContainer().Capacity().ToLong();
     ThisContainer().Reduce();
     assertEquals(initialSize - 1, ThisContainer().Size().ToLong(),
     "Size should decrease by 1 after Reduce");
-    if (ResizableContainer.THRESHOLD_FACTOR * ReallocableContainer.SHRINK_FACTOR * initialSize > initialCapacity) {
-      assertEquals(initialCapacity, ThisContainer().Size().ToLong(),
+    if (ResizableContainer.THRESHOLD_FACTOR * ReallocableContainer.SHRINK_FACTOR * (initialSize - 1) > initialCapacity) {
+      assertEquals(initialCapacity, ThisContainer().Capacity().ToLong(),
       "Capacity should not change after Reduce without much space");
     } else {
-      assertTrue(initialCapacity < ThisContainer().Size().ToLong(),
+      assertTrue(initialCapacity > ThisContainer().Capacity().ToLong(),
       "Capacity needs to reduce after Reduce with a lot of space");
     }
     EndTest();
@@ -62,16 +68,22 @@ public interface ResizableContainerTest<Con extends ResizableContainer> extends 
   default void TestReduceWithNumber(Natural number) {
     BeginTest("ReduceWithNumber");
     long initialSize = ThisContainer().Size().ToLong();
-    long initialCapacity = ThisContainer().Size().ToLong();
-    ThisContainer().Reduce();
+    long initialCapacity = ThisContainer().Capacity().ToLong();
+    ThisContainer().Reduce(number);
+    if (number == null) {
+      assertEquals(initialCapacity, ThisContainer().Capacity().ToLong(),
+      "Capacity should not change after Reduce with null number");
+      EndTest();
+      return;
+    }
     assertEquals(initialSize - number.ToLong(), ThisContainer().Size().ToLong(),
     "Size should decrease by " + number + " after Reduce");
-    if (ResizableContainer.THRESHOLD_FACTOR * ReallocableContainer.SHRINK_FACTOR * initialSize > initialCapacity) {
-      assertEquals(initialCapacity, ThisContainer().Size().ToLong(),
+    if (ResizableContainer.THRESHOLD_FACTOR * ReallocableContainer.SHRINK_FACTOR * (initialSize - number.ToLong()) > initialCapacity) {
+      assertEquals(initialCapacity, ThisContainer().Capacity().ToLong(),
       "Capacity should not change after Reduce without much space");
     } else {
-      assertTrue(initialCapacity < ThisContainer().Size().ToLong(),
-      "Capacity needs to reduce after Reduce with a lot of space");
+      assertTrue(initialCapacity > ThisContainer().Capacity().ToLong(),
+      "Capacity needs to reduce after Reduce with a lot of space " + initialCapacity + " > " + ThisContainer().Capacity().ToLong() + " size: " + ThisContainer().Size().ToLong());
     }
     EndTest();
   }

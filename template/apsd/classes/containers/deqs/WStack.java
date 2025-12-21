@@ -23,7 +23,13 @@ public class WStack<Data> implements Stack<Data> { // Must implement Stack
 
   // public WStack(TraversableContainer<Data> con)
   public WStack(TraversableContainer<Data> con) {
-    lst = new VList<>(con);
+    lst = new VList<>();
+    if (con != null) {
+      con.TraverseForward(d -> {
+        if (d != null) lst.InsertFirst(d);
+        return false;
+      });
+    }
   }
 
   // public WStack(List<Data> lst, TraversableContainer<Data> con)
@@ -31,7 +37,7 @@ public class WStack<Data> implements Stack<Data> { // Must implement Stack
     this.lst = lst;
     if (con != null) {
       con.TraverseForward(d -> {
-        this.lst.InsertLast(d);
+        if (d != null) this.lst.InsertFirst(d);
         return false;          
       });
     }
@@ -90,8 +96,20 @@ public class WStack<Data> implements Stack<Data> { // Must implement Stack
   @Override
   public void SwapTop(Data data) {
     if (IsEmpty()) return;
+    if (data == null) return;
     Pop();
     Push(data);
+  }
+
+  /* ************************************************************************ */
+  /* Override specific member functions from InsertableContainer              */
+  /* ************************************************************************ */
+
+  @Override
+  public boolean Insert(Data data) {
+    if (data == null) return false;
+    Push(data);
+    return true;
   }
 
   // TopNSwap
@@ -105,7 +123,8 @@ public class WStack<Data> implements Stack<Data> { // Must implement Stack
   // Push
   @Override
   public void Push(Data data) {
-    lst.InsertLast(data); 
+    if (data == null) return;
+    lst.InsertLast(data);
   }
 
 }

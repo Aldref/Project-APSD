@@ -16,8 +16,12 @@ public class LLOrderedSetITest extends WOrderedSetITest {
   public void NewEmptyContainer() { container = new WOrderedSet<Long>(new LLSortedChain<>()); }
 
   @Override
+  public void NewNonEmptyContainer(TraversableContainer<Long> con) { container = new WOrderedSet<>(new LLSortedChain<>(), con); }
+
+  @Override
   public WOrderedSet<Long> GetNewEmptyContainer() { return new WOrderedSet<Long>(new LLSortedChain<>()); }
 
+  @Override
   public WOrderedSet<Long> GetNewNonEmptyContainer(TraversableContainer<Long> con) { return new WOrderedSet<>(new LLSortedChain<>(), con); }
 
 }

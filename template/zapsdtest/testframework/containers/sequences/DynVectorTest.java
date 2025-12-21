@@ -11,6 +11,13 @@ public interface DynVectorTest<Data, Con extends DynVector<Data>> extends Vector
 
   default void TestInsertAtWithAutoExpansion(Natural position, Data element) {
     BeginTest("InsertAtWithAutoExpansion");
+    if (position == null) {
+      assertThrows(NullPointerException.class,
+      () -> ThisContainer().InsertAt(element, position),
+      "InsertAt should throw exception for null position");
+      EndTest();
+      return;
+    }
     long initialSize = ThisContainer().Size().ToLong();
     ThisContainer().InsertAt(element, position);
     assertEquals(initialSize + 1, ThisContainer().Size().ToLong(),
@@ -20,6 +27,13 @@ public interface DynVectorTest<Data, Con extends DynVector<Data>> extends Vector
 
   default void TestAtNRemoveWithAutoReduction(Natural position, Data expectedElement) {
     BeginTest("AtNRemoveWithAutoReduction");
+    if (position == null) {
+      assertThrows(NullPointerException.class,
+      () -> ThisContainer().AtNRemove(position),
+      "AtNRemove should throw exception for null position");
+      EndTest();
+      return;
+    }
     long initialSize = ThisContainer().Size().ToLong();
     Data removed = ThisContainer().AtNRemove(position);
     assertEquals(expectedElement, removed,
@@ -32,6 +46,13 @@ public interface DynVectorTest<Data, Con extends DynVector<Data>> extends Vector
   @Override
   default void TestShiftLeft(Natural position, Natural number) {
     BeginTest("ShiftLeft");
+    if (position == null || number == null) {
+      assertThrows(NullPointerException.class,
+      () -> ThisContainer().ShiftLeft(position, number),
+      "ShiftLeft should throw exception for null position");
+      EndTest();
+      return;
+    }
     long initialSize = ThisContainer().Size().ToLong();
     ThisContainer().ShiftLeft(position, number);
     assertEquals(initialSize - number.ToLong(), ThisContainer().Size().ToLong(),
@@ -42,6 +63,13 @@ public interface DynVectorTest<Data, Con extends DynVector<Data>> extends Vector
   @Override
   default void TestShiftLeft(Natural position) {
     BeginTest("ShiftLeft");
+    if (position == null) {
+      assertThrows(NullPointerException.class,
+      () -> ThisContainer().ShiftLeft(position),
+      "ShiftLeft should throw exception for null position");
+      EndTest();
+      return;
+    }
     long initialSize = ThisContainer().Size().ToLong();
     ThisContainer().ShiftLeft(position);
     assertEquals(initialSize - 1, ThisContainer().Size().ToLong(),
@@ -72,12 +100,19 @@ public interface DynVectorTest<Data, Con extends DynVector<Data>> extends Vector
   @Override
   default void TestShiftRight(Natural position, Natural number) {
     BeginTest("ShiftRight");
+    if (position == null || number == null) {
+      assertThrows(NullPointerException.class,
+      () -> ThisContainer().ShiftRight(position, number),
+      "ShiftRight should throw exception for null position");
+      EndTest();
+      return;
+    }
     long initialSize = ThisContainer().Size().ToLong();
     ThisContainer().ShiftRight(position, number);
     assertEquals(initialSize + number.ToLong(), ThisContainer().Size().ToLong(),
     "ShiftRight should automatically call Expand and Size should increase by " + number);
-    for(long num = 0; num < number.ToLong(); num++, position = position.Increment()) {
-      assertNull(ThisContainer().GetAt(position), "Position " + position + " should be null");
+    for(long num = 0; num < number.ToLong(); num++) {
+      assertNull(ThisContainer().GetAt(Natural.Of(position.ToLong() + num)), "Position " + (position.ToLong() + num) + " should be null");
     }
     EndTest();
   }
@@ -85,6 +120,13 @@ public interface DynVectorTest<Data, Con extends DynVector<Data>> extends Vector
   @Override
   default void TestShiftRight(Natural position) {
     BeginTest("ShiftRight");
+    if (position == null) {
+      assertThrows(NullPointerException.class,
+      () -> ThisContainer().ShiftRight(position),
+      "ShiftRight should throw exception for null position");
+      EndTest();
+      return;
+    }
     long initialSize = ThisContainer().Size().ToLong();
     ThisContainer().ShiftRight(position);
     assertEquals(initialSize + 1, ThisContainer().Size().ToLong(),
