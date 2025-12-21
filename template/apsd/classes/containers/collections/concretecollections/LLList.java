@@ -64,18 +64,8 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
   // SetAt
   @Override
   public void SetAt(Data data, Natural index) {
-    if (index == null) throw new NullPointerException();
     if (data == null) return;
-    if (index.ToLong() >= Size().ToLong() || index.ToLong() < 0) throw new IndexOutOfBoundsException("Index: " + index);
-    LLNode<Data> node = headref.Get();
-    long i = 0;
-    long target = index.ToLong();
-    while (i < target && node != null) {
-      node = node.GetNext().Get();
-      i++;
-    }
-    if (node == null) throw new IllegalStateException("Internal list structure corrupted");
-    node.Set(data);
+    List.super.SetAt(data, index);
   }
 
   // SetFirst
@@ -96,21 +86,8 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data> {
 
   // SubSequence
   @Override
-  public MutableSequence<Data> SubSequence(Natural startindex, Natural endindex) {
-    if (startindex.ToLong() < 0 || endindex.ToLong() > size.ToLong() || startindex.ToLong() > endindex.ToLong()) {
-      throw new IndexOutOfBoundsException("Invalid start or end index");
-    }
-    LLList<Data> subList = new LLList<Data>();
-    LLNode<Data> cur = headref.Get();
-    long index = 0;
-    while (cur != null && index < endindex.ToLong()) {
-      if (index >= startindex.ToLong()) {
-        subList.InsertLast(cur.Get());
-      }
-      cur = cur.GetNext().Get();
-      index++;
-    }
-    return subList;
+  public MutableSequence<Data> SubSequence(Natural from, Natural to) {
+    return (MutableSequence<Data>) super.SubSequence(from, to);
   }
 
   /* ************************************************************************ */

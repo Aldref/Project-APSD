@@ -57,6 +57,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
 
   // ...
   // Realloc
+  @SuppressWarnings("unchecked")
   @Override
   public void Realloc(Natural newsize) {
     if (newsize == null) return;

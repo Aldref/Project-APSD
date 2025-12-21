@@ -4,6 +4,7 @@ import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.IterableContainer;
 import apsd.interfaces.containers.iterators.ForwardIterator;
 import apsd.interfaces.containers.sequences.RemovableAtSequence;
+
 public interface Chain<Data> extends RemovableAtSequence<Data>, Set<Data>{ // Must extend RemovableAtSequence
 
   // InsertIfAbsent
@@ -43,7 +44,6 @@ public interface Chain<Data> extends RemovableAtSequence<Data>, Set<Data>{ // Mu
     return RemovableAtSequence.super.Search(data);
   }
 
-  // da rivedere
   @Override
   default boolean IsEqual(IterableContainer<Data> other) {
     if (other == null) return false;

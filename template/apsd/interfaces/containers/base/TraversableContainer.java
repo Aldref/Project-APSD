@@ -29,6 +29,7 @@ public interface TraversableContainer<Data> extends MembershipContainer<Data> { 
     TraverseBackward(dat -> { acc.Set(fun.Apply(dat, acc.Get())); return false; });
     return acc.Get();
   }
+  
   /* ************************************************************************ */
   /* Override specific member functions from Container                        */
   /* ************************************************************************ */

@@ -107,11 +107,9 @@ abstract public class VChainBase<Data> implements Chain<Data> { // Must implemen
   // ...
   // AtNRemove
   @Override
-  public Data AtNRemove(Natural index) {
+  public Data AtNRemove(Natural index) { 
     if (Size().IsZero()) return null;
-    Data data = vec.GetAt(index);
-    vec.ShiftLeft(index);
-    return data;
+    return vec.AtNRemove(index); 
   }
   
   /* ************************************************************************ */

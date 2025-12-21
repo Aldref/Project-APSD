@@ -200,13 +200,13 @@ abstract public class VectorBase<Data> implements Vector<Data> {
   abstract public void SetAt(Data data, Natural num);
 
   // SubSequence
+  @SuppressWarnings("unchecked")
   @Override
   public MutableSequence<Data> SubSequence(Natural start, Natural end){
     long StartIdx = (start == null) ? -1 : start.ToLong();
     long EndIdx   = (end   == null) ? -1 : end.ToLong();
     if (StartIdx < 0 || EndIdx < 0 || StartIdx > EndIdx || EndIdx > Size().ToLong()) return null;
     int len = (int)(EndIdx - StartIdx);
-    @SuppressWarnings("unchecked")
     Data[] subarr = (Data[]) new Object[len];
     for (int i = 0; i < len; i++) {
       subarr[i] = arr[(int)StartIdx + i];

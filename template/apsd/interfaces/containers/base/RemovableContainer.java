@@ -34,4 +34,6 @@ public interface RemovableContainer<Data> extends Container{
     });
     return removed.Get();
   }
+
+  
 }
